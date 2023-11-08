@@ -1,0 +1,16 @@
+{
+	"search": "Search dashboard",
+	"collapsed": "Collapsed",
+	"fullscreen": "Fullscreen",
+	"rtl": "RTL",
+	"darkMode": "Manual dark mode",
+	"autoDarkMode": "Device based auto dark mode",
+	"sidebarColor": "Sidebar Color",
+	"notifications": "Notifications",
+	"activity": "Activity",
+	"yourProfile": "Your Profile",
+	"settings": "Settings",
+	"signOut": "Log Out",
+	"english": "English (UK)",
+	"vietnamese": "Tiếng Việt"
+}
