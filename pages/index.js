@@ -1,9 +1,7 @@
-import Index from "layout/Index";
+import TattooListPage from 'layout/TattooList';
 
-const IndexPage = () => <Index />;
+const TattooList = () => {
+	return <TattooListPage />
+}
 
-IndexPage.getInitialProps = async () => ({
-  namespacesRequired: ["header", "footer", "sidebar", "dashboard"],
-});
-
-export default IndexPage;
+export default TattooList;

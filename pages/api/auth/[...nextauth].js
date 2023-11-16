@@ -30,11 +30,11 @@ const authOptions = {
 				const roleString = jwtObj['role']
 				let role
 				switch (roleString) {
-					case 'Artist':
-						role = ROLE.ARTIST
+					case 'StudioManager':
+						role = ROLE.STUDIO
 						break;
-					case 'Customer':
-						role = ROLE.CUSTOMER
+					case 'Admin':
+						role = ROLE.ADMIN
 						break;
 					default:
 						role = -1

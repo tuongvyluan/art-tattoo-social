@@ -1,7 +1,51 @@
-const data = Array(10)
+import { randomFrom0To } from 'lib';
+import { stringPlacements, stringSize } from 'lib/status';
+import { tattooStylesWithoutDescription } from 'lib/tattooStyle';
+import { v4 } from 'uuid';
+
+const data = Array(15)
 	.fill(0)
 	.map((_, i) => {
 		return {
+			id: [
+				'4e52b109-e267-4aeb-9763-090fc60b21f1',
+				'f73d647a-34e1-4cdf-88a5-3968d49bd577',
+				'009f1723-6fdc-4ef9-b8c7-5569d0d3f29e',
+				'0b8d9754-a833-467a-862a-7459fe6d8171',
+				'ae439cd0-72e3-4215-9ae9-8464bc23c09b',
+				'0be8d3c3-738d-42c5-a50a-11ffc16c3700'
+			][randomFrom0To(6)],
+			bookingId: v4() + `${i}`,
+			customer: {
+				customerId: v4() + `${i}`,
+				accountId: v4() + `${i}`,
+				firstName: [
+					'Vy',
+					'Trân',
+					'Trường',
+					'Tân',
+					'Thịnh',
+					'Bảo',
+					'Châu',
+					'Dương',
+					'Tuấn',
+					'Đức'
+				][randomFrom0To(10)],
+				lastName: [
+					'Nguyễn',
+					'Luân',
+					'Trần',
+					'Lâm',
+					'Vũ',
+					'Lê',
+					'Hoàng',
+					'Đinh',
+					'Lý',
+					'Hồ'
+				][randomFrom0To(3)],
+				email: `email${[randomFrom0To(3)]}@gmail.com`,
+				phoneNumber: '0912345678'
+			},
 			description: [
 				'Mô tả 1',
 				'Mô tả 2',
@@ -12,23 +56,8 @@ const data = Array(10)
 				'Mô tả 7',
 				'Mô tả 8'
 			][Math.floor(Math.random() * 8)],
-			size: ['Nhỏ (2-10 cm)', 'Vừa (10-20 cm)', 'Lớn (> 20 cm)'][
-				Math.floor(Math.random() * 3)
-			],
-			position: [
-				'Cánh tay/Bắp tay',
-				'Vai',
-				'Cổ tay',
-				'Bàn tay/Ngón tay',
-				'Ngực',
-				'Mạn sườn',
-				'Mắt cá chân và bàn chân',
-				'Bắp chân',
-				'Đùi',
-				'Cổ',
-				'Lưng'
-			][Math.floor(Math.random() * 11)],
-			tattooArtId: i,
+			size: stringSize.at(randomFrom0To(stringSize.length)),
+			position: stringPlacements.at(randomFrom0To(stringPlacements.length)),
 			artist: {
 				artistId: [Math.floor(Math.random() * 900)],
 				artistName: [
@@ -42,56 +71,7 @@ const data = Array(10)
 					'Samantha'
 				][Math.floor(Math.random() * 8)]
 			},
-			style: {
-				styleId: [Math.floor(Math.random() * 20)],
-				styleName: [
-					'Xăm 3D',
-					'Trừu tượng',
-					'Phát sáng (UV ink)',
-					'Dải màu (Gradient)',
-					'Graffiti',
-					'Tả thực (Hyper realistic)',
-					'Đảo nghịch màu (Inverted)',
-					'Chữ đa chiều (Ambigram)',
-					'Chữ viết (Lettering)',
-					'Đường kẻ (Line)',
-					'Phong cách Ý (Mambo)',
-					'Hoa văn (Mandala)',
-					'Mayan',
-					'Tối giản (Minimalist)',
-					'Chân dung (Portrait)',
-					'Trích dẫn (Quote/Word)',
-					'Negative Space',
-					'Cổ điển Mỹ (Neo-Traditional)',
-					'Old-school',
-					'New School',
-					'Ảo giác (Optical Illusion)',
-					'Đường viền (Outline)',
-					'Sọc (Pinstripe)',
-					'Bể hình (Pixel)',
-					'Đốm nhỏ (Pointilism)',
-					'Đại chúng (Pop Art)',
-					'Giải phẫu (Anatomical)',
-					'Cơ học (Biomechanical)',
-					'Đen và xám (Black and Grey)',
-					'Đen (Blackwork / Blackout)',
-					'Blast over',
-					'Bóng đen (Silhouette)',
-					'Ký hoạ (Sketch)',
-					'Bắc Âu, Viking',
-					'Vết cọ vẽ (Paint brush stroke)',
-					'Điểm chấm (Dotwork)',
-					'Hình học (Geometric)',
-					'Nhiễu sóng (Glitch)',
-					'Chicano',
-					'Kính vỡ (Broken Glass)',
-					'Kính màu',
-					'Thổ dân (Tribal / Polynesian / Maori / Hawaiian)',
-					'Màu nước (Watercolor)',
-					'Mực trắng (White Ink)',
-					'Chạm khắc gỗ (Wood Carving)'
-				][Math.floor(Math.random() * 45)]
-			},
+			style: tattooStylesWithoutDescription[randomFrom0To(45)],
 			images: [
 				{
 					imageId: [Math.floor(Math.random() * 50)],
@@ -139,9 +119,30 @@ const data = Array(10)
 			tattooMedias: [
 				{
 					tattooMediaId: Math.floor(Math.random() * 1000),
-					tattooArtStage: null,
+					tattooArtStage: [
+						'Trước khi xăm',
+						'Thiết kế',
+						'Scan trên da',
+						'Đi nét viền',
+						'Đánh bóng',
+						'Tô màu',
+						'Sau khi xăm',
+						'Trước khi xoá',
+						'Sau khi xoá xăm'
+					][Math.floor(Math.random() * 8)],
 					type: 0, //0: image, 1: video
-					url: 'https://d1kq2dqeox7x40.cloudfront.net/images/posts/20190412_XlimSpuXS7GEu1V.jpg?w=600',
+					url: [
+						'https://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/fg3okai6ykckrt3ayhnb.webp',
+						'https://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/jsmevnjedqggvb7ug4ly.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/tmthhhbasigujjqxenl1.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/olc0mzjoybrf1odeynnu.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/v10zlbwlh43gfbsu7ksy.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/tefad0rzugdnekvxd14f.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/bucnozik8rmqepiw2gky.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618041/ilgkjxvfhahlfjwckp1i.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618041/iwiyxibenpxfubc5gb54.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618041/lurefci1dfzvrrahx4sy.webp'
+					][randomFrom0To(10)],
 					description: 'Mô tả media 1'
 				},
 				{
@@ -157,7 +158,18 @@ const data = Array(10)
 						'Sau xăm'
 					][Math.floor(Math.random() * 8)],
 					type: 0, //0: image, 1: video
-					url: 'https://d1kq2dqeox7x40.cloudfront.net/images/posts/20190825_dMKWevjZG9nKAIz.jpg?w=600',
+					url: [
+						'https://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/fg3okai6ykckrt3ayhnb.webp',
+						'https://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/jsmevnjedqggvb7ug4ly.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/tmthhhbasigujjqxenl1.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/olc0mzjoybrf1odeynnu.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/v10zlbwlh43gfbsu7ksy.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/tefad0rzugdnekvxd14f.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/bucnozik8rmqepiw2gky.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618041/ilgkjxvfhahlfjwckp1i.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618041/iwiyxibenpxfubc5gb54.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618041/lurefci1dfzvrrahx4sy.webp'
+					][randomFrom0To(10)],
 					description: 'Mô tả media 1'
 				},
 				{
@@ -174,11 +186,33 @@ const data = Array(10)
 						'Sau khi xoá xăm'
 					][Math.floor(Math.random() * 8)],
 					type: 0, //0: image, 1: video
-					url: 'https://tadashitattoo.com/wp-content/uploads/2019/12/huong-dan-scan-hinh-xam-768x508.jpg',
+					url: [
+						'https://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/fg3okai6ykckrt3ayhnb.webp',
+						'https://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/jsmevnjedqggvb7ug4ly.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/tmthhhbasigujjqxenl1.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/olc0mzjoybrf1odeynnu.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/v10zlbwlh43gfbsu7ksy.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/tefad0rzugdnekvxd14f.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618040/bucnozik8rmqepiw2gky.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618041/ilgkjxvfhahlfjwckp1i.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618041/iwiyxibenpxfubc5gb54.webp',
+						'http://res.cloudinary.com/didbpuxlt/image/upload/v1699618041/lurefci1dfzvrrahx4sy.webp'
+					][randomFrom0To(10)],
 					description: 'Mô tả media 1'
 				}
-			]
+			],
+			bookingDetails: [
+				{
+					bookingDetailsId: v4(),
+					operationName: 'Xăm trọn gói',
+					price: randomFrom0To(8) * 1200000 + 1000000
+				}
+			],
+			placement: randomFrom0To(stringPlacements.length),
+			createdAt: new Date(),
 		};
 	});
 
-export default (req, res) => res.json(data);
+const getTattooArts = (req, res) => res.json(data);
+
+export default getTattooArts;

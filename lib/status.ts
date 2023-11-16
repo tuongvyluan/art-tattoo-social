@@ -78,6 +78,17 @@ export const stringBookingStatuses = [
 	'Đã xoá'
 ];
 
+export const operationNames = [
+	'Full combo xăm',
+	'Xăm',
+	'Thiết kế',
+	'Xoá xăm',
+	'Sửa xăm/Xăm đè',
+	'Xăm dặm lại',
+	'Đi nét viền',
+	'Tô màu'
+]
+
 export const enum TATTOO_ART_STATUS {
 	AVAILABLE = 0,
 	UNAVAILABLE = 1,
@@ -110,7 +121,7 @@ export const enum PLACEMENT {
 }
 
 export const stringPlacements = [
-	'Khác',
+	'Vị trí khác',
 	'Full lưng',
 	'Nửa lưng',
 	'Full ngực',
