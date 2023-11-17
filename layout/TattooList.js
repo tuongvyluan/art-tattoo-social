@@ -1,18 +1,22 @@
 import { IoMdHeartEmpty, IoIosLink } from 'react-icons/io';
 import { stringPlacements, stringSize } from 'lib/status';
+import { FiFilter } from 'react-icons/fi';
 import { usePaginate } from 'lib/usePagination';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Card, CardBody, Link, Loading, WidgetPostCard } from 'ui';
+import { Link, Loading, WidgetPostCard } from 'ui';
 import { randomFrom0To } from 'lib';
 import { filterColor, filterSize } from 'lib/filterTattoo';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Pill from 'components/Pill';
 
 const TattooIndexPage = () => {
 	const { items, error, isLoadingMore, size, setSize, isReachingEnd } = usePaginate(
 		'/api/tattooArt',
 		20
 	);
-	
+
+	const [visible, setVisible] = useState(false);
+
 	const [filter, setFilter] = useState({
 		size: '-1',
 		style: '-1',
@@ -20,8 +24,6 @@ const TattooIndexPage = () => {
 		hasColor: '-1',
 		placement: '-1'
 	});
-
-	console.log(filter)
 
 	const handleFilterChange = (name, value) => {
 		setFilter({
@@ -45,45 +47,46 @@ const TattooIndexPage = () => {
 
 	return (
 		<div className="relative">
-			<div className="w-48 top-16 mt-2.5 left-4 bottom-5 overflow-y-auto fixed z-10">
-				<div className={'h-full relative min-w-0 break-words rounded-lg overflow-hidden shadow-md w-full bg-white dark:bg-gray-600'}>
-					<CardBody>
-						<div>
-							<h1 className="font-semibold">Size</h1>
+			<div onClick={() => setVisible(!visible)} className="fixed z-50 right-5 bottom-5 bg-white border border-gray-700 rounded-full cursor-pointer">
+				<FiFilter size={40} className='p-2 ' />
+			</div>
+			<div
+				className={`w-full z-10 overflow-y-auto pb-2 bg-gray-50 ${
+					visible ? 'fixed top-12 pt-7' : 'absolute top-0'
+				}`}
+			>
+				<div className="flex flex-wrap gap-5 items-center">
+					<div>
+						<h1 className="font-semibold">Size</h1>
+						<div className="flex flex-wrap gap-2">
 							{[...filterSize()].map(([key, value], sizeIndex) => (
-								<div onClick={() => handleFilterChange('size', key)} className="flex items-center gap-1 py-1 cursor-pointer" key={key}>
-									<input
-										onChange={() => handleFilterChange('size', key)}
-										type="radio"
-										name="size"
-										value={key}
-										checked={filter.size === key}
-										className="w-3 h-3"
-									/>
-									<div>{value}</div>
+								<div
+									onClick={() => handleFilterChange('size', key)}
+									className="flex items-center gap-1 py-1 cursor-pointer"
+									key={key}
+								>
+									<Pill selected={filter.size === key}>{value}</Pill>
 								</div>
 							))}
 						</div>
-						<div>
-							<h1 className="font-semibold pt-3">Màu sắc</h1>
+					</div>
+					<div>
+						<h1 className="font-semibold">Màu sắc</h1>
+						<div className="flex flex-wrap gap-2">
 							{[...filterColor()].map(([key, value], colorIndex) => (
-								<div onClick={() => handleFilterChange('hasColor', key)} className="flex items-center gap-1 py-1 cursor-pointer" key={key}>
-									<input
-										onChange={() => handleFilterChange('hasColor', key)}
-										value={value}
-										type="radio"
-										name="hasColor"
-										checked={filter.hasColor === key}
-										className="w-3 h-3"
-									/>
-									<div>{value}</div>
+								<div
+									onClick={() => handleFilterChange('hasColor', key)}
+									className="flex items-center gap-1 py-1 cursor-pointer"
+									key={key}
+								>
+									<Pill selected={filter.hasColor === key}>{value}</Pill>
 								</div>
 							))}
 						</div>
-					</CardBody>
+					</div>
 				</div>
 			</div>
-			<div className="pl-52">
+			<div className=' pt-20'>
 				<InfiniteScroll
 					dataLength={items.length}
 					next={() => setSize(size + 1)}
@@ -118,7 +121,7 @@ const TattooIndexPage = () => {
 											/>
 										</div>
 										<div className="flex gap-1 items-end text-gray-700">
-											<div className="text-center text-xs font-semibold">
+											<div className="text-left text-xs font-semibold w-14">
 												{2 + randomFrom0To(30)} likes
 											</div>
 										</div>
