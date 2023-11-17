@@ -24,6 +24,7 @@ const NonDashboardRoutes = [
 ];
 
 const FooterHidden = [
+  "/",
   "/messages",
   "/taskboard",
   "/maps/dark",
@@ -80,9 +81,9 @@ const Page = ({ children }) => {
     onSetOpen: onSetOpen,
     breakpoint: state.mobile,
     sidebarClass: `${
-      state.stickySidebar ? "md:sticky md:h-screen" : "md:relative"
+      state.stickySidebar ? "md:sticky h-screen" : "md:relative"
     }`,
-    contentClass: "md:min-h-screen",
+    contentClass: "min-h-screen",
   };
 
   const pageName = asPath.split("/").reverse()[1];
