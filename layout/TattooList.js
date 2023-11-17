@@ -5,17 +5,25 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { Card, CardBody, Link, Loading, WidgetPostCard } from 'ui';
 import { randomFrom0To } from 'lib';
 import { filterColor, filterSize } from 'lib/filterTattoo';
+import { useState } from 'react';
 
 const TattooIndexPage = () => {
 	const { items, error, isLoadingMore, size, setSize, isReachingEnd } = usePaginate(
 		'/api/tattooArt',
 		20
 	);
-	const filter = {
+	const [filter, setFilter] = useState({
 		size: -1,
 		style: -1,
 		image: -1,
 		hasColor: -1
+	});
+
+	const handleFilterChange = (e) => {
+		setFilter({
+			...filter,
+			[e.target.name]: [e.target.value]
+		});
 	};
 
 	if (error)
@@ -32,17 +40,19 @@ const TattooIndexPage = () => {
 		);
 
 	return (
-		<div className="lg:pr-2 relative">
-			<div className="w-48 top-20 left-3 bottom-5 overflow-y-auto fixed z-10">
+		<div className="relative">
+			<div className="w-48 top-20 left-4 bottom-5 overflow-y-auto fixed z-10">
 				<Card>
 					<CardBody>
 						<div>
-							<h1 className='font-semibold'>Size</h1>
+							<h1 className="font-semibold">Size</h1>
 							{[...filterSize()].map(([key, value], sizeIndex) => (
 								<div className="flex items-center gap-1 py-1" key={key}>
 									<input
+										onClick={handleFilterChange}
 										type="radio"
 										name="size"
+										value={value}
 										checked={filter.size === key}
 										className="w-3 h-3"
 									/>
@@ -51,10 +61,12 @@ const TattooIndexPage = () => {
 							))}
 						</div>
 						<div>
-							<h1 className='font-semibold pt-3'>Màu sắc</h1>
+							<h1 className="font-semibold pt-3">Màu sắc</h1>
 							{[...filterColor()].map(([key, value], colorIndex) => (
 								<div className="flex items-center gap-1 py-1" key={key}>
 									<input
+										onClick={handleFilterChange}
+										value={value}
 										type="radio"
 										name="hasColor"
 										checked={filter.hasColor === key}
@@ -67,7 +79,7 @@ const TattooIndexPage = () => {
 					</CardBody>
 				</Card>
 			</div>
-			<div className='pl-52 pt-1'>
+			<div className="pl-52 pt-1">
 				<InfiniteScroll
 					dataLength={items.length}
 					next={() => setSize(size + 1)}
