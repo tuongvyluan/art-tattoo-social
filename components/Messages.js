@@ -59,10 +59,10 @@ const Messages = () => {
                 />
               </span>
 
-              <span className="w-full hidden lg:block ltr:ml-3 rtl:mr-3">
+              <span className="w-full hidden lg:block ml-3 rtl:mr-3">
                 <small className="flex w-full text-gray-500">
                   <span>{message.from}</span>
-                  <span className="ltr:mr-auto rtl:ml-auto" />
+                  <span className="mr-auto rtl:ml-auto" />
                   <span>
                     {formatDistance(new Date(message.date), new Date(), {
                       addSuffix: true,
@@ -84,7 +84,7 @@ const Messages = () => {
       <div className="flex flex-row overflow-auto w-0 min-w-full">
         {data && (
           <div className="flex flex-row overflow-auto w-0 min-w-full p-4 -mb-10 pb-10">
-            <div className="text-center ltr:mr-4 rtl:ml-4">
+            <div className="text-center mr-4 rtl:ml-4">
               <button
                 className="relative flex flex-shrink-0 focus:outline-none block bg-indigo-500 text-white rounded-full w-10 h-10 items-center justify-center shadow mx-auto"
                 type="button"
@@ -95,7 +95,7 @@ const Messages = () => {
               <span className="text-xs mt-2 block">Compose</span>
             </div>
             {data.map((message, index) => (
-              <div className="text-center ltr:mr-4 rtl:ml-4 w-16" key={index}>
+              <div className="text-center mr-4 rtl:ml-4 w-16" key={index}>
                 <Avatar
                   src={message.avatar ? message.avatar : ""}
                   alt={message.from}
@@ -179,7 +179,7 @@ const Message = ({ id }) => {
       <div className="overflow-y-auto p-4 w-full">
         <div className="px-5">
           <div className="block sm:flex items-center mb-3">
-            <span className="ml-0 mr-0 sm:ltr:mr-3 sm:rtl:ml-3 relative">
+            <span className="ml-0 mr-0 sm:mr-3 sm:rtl:ml-3 relative">
               <Avatar
                 src={data.avatar ? data.avatar : ""}
                 alt={data.from}
@@ -187,7 +187,7 @@ const Message = ({ id }) => {
                 status={data.status}
               />
             </span>
-            <div className="pl-0 pr-0 sm:ltr:pl-3 sm:rtl:pr-3">
+            <div className="pl-0 pr-0 sm:pl-3 sm:rtl:pr-3">
               <div className="text-gray-600 text-sm">
                 {format(new Date(data.date), "MMMM Do yyyy hh:mm")}
               </div>

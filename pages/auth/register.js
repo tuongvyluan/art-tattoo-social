@@ -1,12 +1,11 @@
 import Register from 'components/Register';
 import { fetcherPost } from 'lib';
+import { BASE_URL } from 'lib/env';
 import { ROLE } from 'lib/status';
 import { useSession } from 'next-auth/react';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import { Alert } from 'ui';
-
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASEURL;
 
 const RegisterPage = () => {
 	const { status, data } = useSession();
@@ -16,7 +15,7 @@ const RegisterPage = () => {
 			Router.replace('/');
 		}
 	}, [status]);
-	
+
 	const [user, setUser] = useState({
 		firstName: '',
 		lastName: '',
@@ -24,7 +23,7 @@ const RegisterPage = () => {
 		phoneNumber: '',
 		password: '',
 		cpassword: '',
-		role: ROLE.STUDIO
+		role: ROLE.CUSTOMER
 	});
 	const [showAlert, setShowAlert] = useState(false);
 

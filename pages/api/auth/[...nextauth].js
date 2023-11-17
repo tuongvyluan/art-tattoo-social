@@ -3,7 +3,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { ROLE } from '../../../lib/status';
 import { fetcherPost, readJwt } from 'lib';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASEURL
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASEURL;
 const authOptions = {
 	session: {
 		strategy: 'jwt'
@@ -21,29 +21,36 @@ const authOptions = {
 				const payload = {
 					email: email,
 					password: password
-				}
-				const res = await fetcherPost(BASE_URL + '/Auth/Login', payload)
+				};
+				const res = await fetcherPost(BASE_URL + '/Auth/Login', payload);
 
 				// Read token from response
-				const jwtObj = readJwt(res.jwt)
+				const jwtObj = readJwt(res.jwt);
 				// Check role
-				const roleString = jwtObj['role']
-				let role
+				const roleString = jwtObj['role'];
+				let role;
 				switch (roleString) {
-					case 'StudioManager':
-						role = ROLE.STUDIO
+					case 'Customer':
+						role = ROLE.CUSTOMER;
+						break;
+					case 'Artist':
+						role = ROLE.ARTIST;
 						break;
 					case 'Admin':
-						role = ROLE.ADMIN
+						role = ROLE.ADMIN;
+						break;
+					case 'StudioManager':
+						role = ROLE.STUDIO;
 						break;
 					default:
-						role = -1
+						role = -1;
+						break;
 				}
 
 				if (role === -1) {
-					throw new Error('You are not allowed to access')
+					throw new Error('You are not allowed to access');
 				}
-				
+
 				// if everything is fine
 				return {
 					id: res.accountId,
@@ -64,16 +71,16 @@ const authOptions = {
 					id: user.id,
 					role: user.role,
 					firstName: user.firstName
-				}
-			};
+				};
+			}
 			return token;
 		},
 		async session({ session, token }) {
 			if (token && session.user) {
-				session.user.role = token.role
-				session.user.id = token.id
-				session.user.accessToken = token.accessToken
-				session.user.firstName = token.firstName
+				session.user.role = token.role;
+				session.user.id = token.id;
+				session.user.accessToken = token.accessToken;
+				session.user.firstName = token.firstName;
 			}
 			return session;
 		}

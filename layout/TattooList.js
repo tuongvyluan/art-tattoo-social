@@ -12,17 +12,21 @@ const TattooIndexPage = () => {
 		'/api/tattooArt',
 		20
 	);
+	
 	const [filter, setFilter] = useState({
-		size: -1,
-		style: -1,
-		image: -1,
-		hasColor: -1
+		size: '-1',
+		style: '-1',
+		image: '-1',
+		hasColor: '-1',
+		placement: '-1'
 	});
 
-	const handleFilterChange = (e) => {
+	console.log(filter)
+
+	const handleFilterChange = (name, value) => {
 		setFilter({
 			...filter,
-			[e.target.name]: [e.target.value]
+			[name]: value
 		});
 	};
 
@@ -41,18 +45,18 @@ const TattooIndexPage = () => {
 
 	return (
 		<div className="relative">
-			<div className="w-48 top-20 left-4 bottom-5 overflow-y-auto fixed z-10">
-				<Card>
+			<div className="w-48 top-16 mt-2.5 left-4 bottom-5 overflow-y-auto fixed z-10">
+				<div className={'h-full relative min-w-0 break-words rounded-lg overflow-hidden shadow-md w-full bg-white dark:bg-gray-600'}>
 					<CardBody>
 						<div>
 							<h1 className="font-semibold">Size</h1>
 							{[...filterSize()].map(([key, value], sizeIndex) => (
-								<div className="flex items-center gap-1 py-1" key={key}>
+								<div onClick={() => handleFilterChange('size', key)} className="flex items-center gap-1 py-1 cursor-pointer" key={key}>
 									<input
-										onClick={handleFilterChange}
+										onChange={() => handleFilterChange('size', key)}
 										type="radio"
 										name="size"
-										value={value}
+										value={key}
 										checked={filter.size === key}
 										className="w-3 h-3"
 									/>
@@ -63,9 +67,9 @@ const TattooIndexPage = () => {
 						<div>
 							<h1 className="font-semibold pt-3">Màu sắc</h1>
 							{[...filterColor()].map(([key, value], colorIndex) => (
-								<div className="flex items-center gap-1 py-1" key={key}>
+								<div onClick={() => handleFilterChange('hasColor', key)} className="flex items-center gap-1 py-1 cursor-pointer" key={key}>
 									<input
-										onClick={handleFilterChange}
+										onChange={() => handleFilterChange('hasColor', key)}
 										value={value}
 										type="radio"
 										name="hasColor"
@@ -77,9 +81,9 @@ const TattooIndexPage = () => {
 							))}
 						</div>
 					</CardBody>
-				</Card>
+				</div>
 			</div>
-			<div className="pl-52 pt-1">
+			<div className="pl-52">
 				<InfiniteScroll
 					dataLength={items.length}
 					next={() => setSize(size + 1)}
@@ -87,9 +91,9 @@ const TattooIndexPage = () => {
 					loader={<Loading />}
 					className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2"
 				>
-					{items.map((item) => (
+					{items.map((item, index) => (
 						<WidgetPostCard
-							key={item.id}
+							key={index}
 							images={item.tattooMedias.map((media) => media.url)}
 							imageHeight={200}
 						>

@@ -121,7 +121,7 @@ export const enum PLACEMENT {
 }
 
 export const stringPlacements = [
-	'Vị trí khác',
+	'Vị trí bất kỳ',
 	'Full lưng',
 	'Nửa lưng',
 	'Full ngực',

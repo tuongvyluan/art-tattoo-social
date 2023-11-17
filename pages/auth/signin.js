@@ -12,7 +12,7 @@ const LoginPage = () => {
 			Router.replace('/');
 		}
 	}, [status]);
-	
+
 	const [user, setUser] = useState({ email: '', password: '' });
 	const [showAlert, setShowAlert] = useState(false);
 	const [alertContent, setAlertContent] = useState({

@@ -3,11 +3,19 @@ import { Link, Logo } from 'ui';
 
 import Illustration from 'public/images/illustrations/undraw_secure_data_0rwp.svg';
 import Button from './Button';
+import { ROLE } from 'lib/status';
 
 const Register = ({ user, setUser, handleSubmit }) => {
-
 	const handleFormChange = (e) => {
 		setUser({ ...user, [e.target.name]: e.target.value });
+	};
+
+	const handleCheckbox = () => {
+		if (user.role === ROLE.CUSTOMER) {
+			setUser({ ...user, role: ROLE.ARTIST });
+		} else {
+			setUser({ ...user, role: ROLE.CUSTOMER });
+		}
 	};
 
 	return (
@@ -114,9 +122,9 @@ const Register = ({ user, setUser, handleSubmit }) => {
 											placeholder={'Xác nhận password'}
 										/>
 									</div>
-									<div className="flex gap-1 mb-3">
-										<input type='checkbox' name='role' />
-										<label>Tạo tài khoản nghệ sĩ xăm</label>
+									<div className="flex items-center gap-1 mb-3">
+										<input type="checkbox" name="role" onChange={handleCheckbox} checked={user.role !== ROLE.CUSTOMER} />
+										<label className='cursor-pointer' onClick={handleCheckbox}>Tạo tài khoản nghệ sĩ xăm</label>
 									</div>
 								</div>
 

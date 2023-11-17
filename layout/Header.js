@@ -196,37 +196,39 @@ const Header = ({ toggleOpen }) => {
 								/>
 							</DropdownToggle>
 							<DropdownMenu>
-								<div className="py-1">
-									<a
-										href="#"
-										className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
-									>
-										<LightningBolt width={16} height={16} />{' '}
-										<span className="ml-3">Hoạt động</span>
-									</a>
-									<a
-										href="#"
-										className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
-									>
-										<User width={16} height={16} />{' '}
-										<span className="ml-3">Hồ sơ</span>
-									</a>
-									<a
-										href="#"
-										className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
-									>
-										<Cog width={16} height={16} />{' '}
-										<span className="ml-3">Cài đặt</span>
-									</a>
+								<div>
 									{status === 'authenticated' ? (
-										<a
-											href="#"
-											onClick={() => signOut()}
-											className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out border-t border-1 border-gray-100"
-										>
-											<Logout width={16} height={16} />{' '}
-											<div className="ml-3">Đăng xuất</div>
-										</a>
+										<div>
+											<a
+												href="#"
+												className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
+											>
+												<LightningBolt width={16} height={16} />{' '}
+												<span className="ml-3">Hoạt động</span>
+											</a>
+											<a
+												href="#"
+												className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
+											>
+												<User width={16} height={16} />{' '}
+												<span className="ml-3">Hồ sơ</span>
+											</a>
+											<a
+												href="#"
+												className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
+											>
+												<Cog width={16} height={16} />{' '}
+												<span className="ml-3">Cài đặt</span>
+											</a>
+											<a
+												href="#"
+												onClick={() => signOut()}
+												className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out border-t border-1 border-gray-100"
+											>
+												<Logout width={16} height={16} />{' '}
+												<div className="ml-3">Đăng xuất</div>
+											</a>
+										</div>
 									) : (
 										<a
 											href="#"

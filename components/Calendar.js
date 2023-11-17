@@ -59,12 +59,12 @@ const CalendarApp = () => {
 
     return (
       <div className="flex flex-wrap justify-center sm:justify-between items-center px-5 py-2">
-        <div className="w-full sm:w-auto text-center sm:ltr:text-left sm:rtl:text-righ py-1">
+        <div className="w-full sm:w-auto text-center sm:text-left sm:rtl:text-righ py-1">
           <h3 className="mb-0">{label()}</h3>
         </div>
         <div className="inline-flex px-2 py-1">
           <button
-            className="relative inline-flex justify-center ltr:rounded-l-lg rtl:rounded-r-lg border border-transparent px-4 py-3 bg-white text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline transition ease-in-out duration-150 text-sm leading-none"
+            className="relative inline-flex justify-center rounded-l-lg rtl:rounded-r-lg border border-transparent px-4 py-3 bg-white text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline transition ease-in-out duration-150 text-sm leading-none"
             onClick={goToDayView}
           >
             {t("day")}
@@ -78,7 +78,7 @@ const CalendarApp = () => {
             <Ripple color="black" />
           </button>
           <button
-            className="relative inline-flex justify-center ltr:rounded-r-lg rtl:rounded-l-lg border border-transparent px-4 py-3 bg-white text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline transition ease-in-out duration-150 text-sm leading-none"
+            className="relative inline-flex justify-center rounded-r-lg rtl:rounded-l-lg border border-transparent px-4 py-3 bg-white text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline transition ease-in-out duration-150 text-sm leading-none"
             onClick={goToMonthView}
           >
             {t("month")}
@@ -88,7 +88,7 @@ const CalendarApp = () => {
 
         <div className="inline-flex px-2 py-1">
           <button
-            className="relative inline-flex justify-center ltr:rounded-l-lg rtl:rounded-r-lg border border-transparent px-4 py-3 bg-white text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline transition ease-in-out duration-150 text-sm leading-none"
+            className="relative inline-flex justify-center rounded-l-lg rtl:rounded-r-lg border border-transparent px-4 py-3 bg-white text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline transition ease-in-out duration-150 text-sm leading-none"
             onClick={goToBack}
           >
             {t("back")}
@@ -102,7 +102,7 @@ const CalendarApp = () => {
             <Ripple color="black" />
           </button>
           <button
-            className="relative inline-flex justify-center ltr:rounded-r-lg rtl:rounded-l-lg border border-transparent px-4 py-3 bg-white text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline transition ease-in-out duration-150 text-sm leading-none"
+            className="relative inline-flex justify-center rounded-r-lg rtl:rounded-l-lg border border-transparent px-4 py-3 bg-white text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline transition ease-in-out duration-150 text-sm leading-none"
             onClick={goToNext}
           >
             {t("next")}

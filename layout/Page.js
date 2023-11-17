@@ -5,7 +5,6 @@ import Head from "next/head";
 import Header from "./Header";
 import NProgress from "nprogress";
 import Router from "next/router";
-import Sidebar from "./Sidebar";
 import SidebarMenu from "./SidebarMenu";
 import { capitalize } from "lib";
 import { useAppState } from "components/AppProvider";
@@ -13,7 +12,7 @@ import { useRouter } from "next/router";
 
 const NonDashboardRoutes = [
   "/auth/signin",
-  "/register",
+  "/auth/register",
   "/forgot",
   "/lockscreen",
   "/_error",
