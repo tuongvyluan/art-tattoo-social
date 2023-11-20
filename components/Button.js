@@ -1,6 +1,17 @@
 import PropTypes from 'prop-types';
 
-const Button = ({ children, onClick, outline = false }) => {
+const Button = ({ children, onClick, outline = false, warn = false }) => {
+	if (warn) {
+		return (
+			<button
+			type="submit"
+			onClick={onClick}
+			className="text-white bg-red-600 hover:bg-red-700 font-medium rounded-lg text-sm py-2 px-2 w-full"
+		>
+			{children}
+		</button>
+		)
+	}
 	return outline ? (
 		<button
 			type="submit"
@@ -23,7 +34,8 @@ const Button = ({ children, onClick, outline = false }) => {
 Button.propTypes = {
 	children: PropTypes.node.isRequired,
 	onClick: PropTypes.func,
-	outline: PropTypes.bool
+	outline: PropTypes.bool,
+	warn: PropTypes.bool
 };
 
 export default Button;
