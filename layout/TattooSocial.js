@@ -135,6 +135,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 			status: 0,
 			reportType: myReportType
 		}).catch((e) => console.log(e));
+    setCommentList(commentList.filter((cmt) => cmt.id !== reportedCommentId))
 		setReportedCommentId(null);
     setMyReportType(0);
     setMyReportContent('');
