@@ -1,3 +1,4 @@
+/** @type {import('tailwindcss').Config} */
 const defaultTheme = require('tailwindcss/defaultTheme');
 const plugin = require('tailwindcss/plugin');
 
@@ -27,6 +28,12 @@ module.exports = {
 			boxShadow: {
 				xs: '0 0 0 1px rgba(0, 0, 0, 0.05)',
 				outline: '0 0 0 3px rgba(66, 153, 225, 0.5)'
+			},
+			height: {
+				'152': '37.5rem'
+			},
+			widths: {
+				'152': '37.5rem'
 			}
 		}
 	},

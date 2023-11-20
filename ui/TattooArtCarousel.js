@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 
 export const TattooArtCarousel = ({
-  children,
   images,
   imageHeight,
 }) => {
@@ -62,7 +61,6 @@ export const TattooArtCarousel = ({
 };
 
 TattooArtCarousel.propTypes = {
-  children: PropTypes.node.isRequired,
   images: PropTypes.array.isRequired,
   imageHeight: PropTypes.number.isRequired,
 };

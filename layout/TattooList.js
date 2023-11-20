@@ -99,6 +99,7 @@ const TattooIndexPage = () => {
 							key={index}
 							image={item.thumbnail}
 							imageHeight={200}
+							link={`/tattoo/${item.id}`}
 						>
 							<div className="flex justify-between gap-2">
 								<Link href={`/artist/${item.artist.id}`}>
