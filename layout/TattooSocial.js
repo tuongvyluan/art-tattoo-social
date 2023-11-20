@@ -136,6 +136,8 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 			reportType: myReportType
 		}).catch((e) => console.log(e));
 		setReportedCommentId(null);
+    setMyReportType(0);
+    setMyReportContent('');
 		setReportModal(false);
 	};
 
@@ -356,7 +358,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 				onSubmit={handleSubmitReport}
 			>
 				<div>
-					<ul className="h-80 overflow-y-auto">
+					<ul className="h-72 pb-6 overflow-y-auto">
 						{stringReports.map((reportType, index) => (
 							<li className="my-1 full px-3 flex items-center gap-2 cursor-pointer" onClick={() => setMyReportType(index)} key={index}>
 								<input
