@@ -97,7 +97,7 @@ const TattooIndexPage = () => {
 					{items.map((item, index) => (
 						<WidgetPostCard
 							key={index}
-							images={item.tattooMedias.map((media) => media.url)}
+							image={item.thumbnail}
 							imageHeight={200}
 						>
 							<div className="flex justify-between gap-2">
