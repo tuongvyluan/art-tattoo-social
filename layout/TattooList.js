@@ -20,6 +20,7 @@ import { useRouter } from 'next/router';
 import debounce from 'lodash.debounce';
 import { ChevronDown } from 'icons/solid';
 import Button from 'components/Button';
+import { Tooltip } from 'flowbite-react';
 
 const TattooIndexPage = () => {
 	const { items, error, size, setSize, isReachingEnd } = usePaginate(
@@ -64,9 +65,9 @@ const TattooIndexPage = () => {
 
 	const onScroll = useCallback((event) => {
 		const { scrollY } = window;
-		let base = 88
+		let base = 88;
 		if (showMoreFilter) {
-			base += 139
+			base += 139;
 		}
 		if (scrollY > base) {
 			setShowVisible(true);
@@ -106,7 +107,12 @@ const TattooIndexPage = () => {
 					!showVisible ? 'hidden' : ''
 				} w-10 z-50 right-5 bottom-5 bg-gray-700 text-white border border-gray-700 rounded-full cursor-pointer`}
 			>
-				<FiFilter size={40} className="p-2 " />
+				<Tooltip
+					content={visible ? 'Ẩn thanh tìm kiếm' : 'Hiện thanh tìm kiếm'}
+					placement="left-start"
+				>
+					<FiFilter size={40} className="p-2 " />
+				</Tooltip>
 			</div>
 			<div
 				className={`w-full z-10 pb-4 bg-gray-50 ${
@@ -190,7 +196,7 @@ const TattooIndexPage = () => {
 									</DropdownToggle>
 									<DropdownMenu className={'top-2 -right-6 fixed z-40'}>
 										<div className="">
-											<ul className="">
+											<ul className="h-32 overflow-y-auto">
 												{[...filterSize()].map(([key, value], sizeIndex) => (
 													<li
 														onClick={() => handleFilterChange('size', key)}
@@ -231,7 +237,7 @@ const TattooIndexPage = () => {
 									</DropdownToggle>
 									<DropdownMenu className={'top-2 -right-6 fixed z-40'}>
 										<div className="">
-											<ul className="h-44 overflow-y-auto">
+											<ul className="h-32 overflow-y-auto">
 												{stringPlacements.map((placement, placementIndex) => (
 													<li
 														onClick={() =>
@@ -257,18 +263,20 @@ const TattooIndexPage = () => {
 							}
 							<div>
 								<h1 className="font-semibold">Thêm</h1>
-								<Button
-									onClick={() => {
-										setShowMoreFilter(!showMoreFilter);
-									}}
-									outline
-									className="border-2 border-gray-700"
-								>
-									<div className="flex gap-1 items-center py-1">
-										<FiFilter size={12} />
-										<div>Filters</div>
-									</div>
-								</Button>
+								<Tooltip content="Chọn theo style" placement="bottom-start">
+									<Button
+										onClick={() => {
+											setShowMoreFilter(!showMoreFilter);
+										}}
+										outline
+										className="border-2 border-gray-700"
+									>
+										<div className="flex gap-1 items-center py-1">
+											<FiFilter size={12} />
+											<div>Filters</div>
+										</div>
+									</Button>
+								</Tooltip>
 							</div>
 						</div>
 					</div>

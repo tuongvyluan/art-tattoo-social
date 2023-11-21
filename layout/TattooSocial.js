@@ -10,11 +10,12 @@ import Button from 'components/Button';
 import { stringSize } from 'lib/status';
 import { useSession } from 'next-auth/react';
 import debounce from 'lodash.debounce';
-import { fetcherDelete, fetcherPost } from 'lib';
+import { fetcherDelete, fetcherPost, fetcherPut } from 'lib';
 import { BASE_URL } from 'lib/env';
-import { v4 } from 'uuid';
 import MyModal from 'components/MyModal';
 import { stringReports } from 'lib/reportType';
+import Router from 'next/router';
+import { Tooltip } from 'flowbite-react';
 
 const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 	const { status, data } = useSession();
@@ -25,11 +26,14 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 	const [myComment, setMyComment] = useState('');
 	const [authen, setAuthen] = useState(false);
 	const [reportModal, setReportModal] = useState(false);
-	const [deleteCmtModel, setDeleteCmtModal] = useState(false);
+	const [deleteCmtModal, setDeleteCmtModal] = useState(false);
 	const [myReportContent, setMyReportContent] = useState('');
 	const [myReportType, setMyReportType] = useState(0);
 	const [reportedCommentId, setReportedCommentId] = useState(null);
 	const [deletedCommentId, setDeletedCommentId] = useState('');
+	const [hidePostModal, setHidePostModal] = useState(false);
+	const [shareTooltipContent, setShareTooltipContent] =
+		useState('Copy link bài viết');
 
 	if (status === 'loading') {
 		return (
@@ -88,7 +92,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 						accountId: data.user.id,
 						content: myComment
 					}
-				].concat(commentList)
+				].concat(commentList);
 				setCommentList(newCommentList);
 			});
 
@@ -102,8 +106,12 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 				accountId: data.user.id,
 				tattooArtId: tattoo.id
 			});
+			setCountLike(countLike + 1);
 		} else {
-			fetcherDelete(`${BASE_URL}/Media/DeleteLikeById?userId=${data.user.id}&artTattooId=${tattoo.id}`);
+			fetcherDelete(
+				`${BASE_URL}/Media/DeleteLikeById?userId=${data.user.id}&artTattooId=${tattoo.id}`
+			);
+			setCountLike(countLike - 1);
 		}
 		setMyLike(!myLike);
 	};
@@ -131,20 +139,39 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 			status: 0,
 			reportType: myReportType
 		}).catch((e) => console.log(e));
-		setCommentList(commentList.filter((cmt) => cmt.id !== reportedCommentId));
-		setReportedCommentId(null);
+		if (reportedCommentId) {
+			setCommentList(commentList.filter((cmt) => cmt.id !== reportedCommentId));
+			setReportedCommentId(null);
+		}
 		setMyReportType(0);
 		setMyReportContent('');
 		setReportModal(false);
 	};
 
 	const handleSubmitDelete = () => {
-		fetcherDelete(`${BASE_URL}/Media/DeleteCommentById?id=${deletedCommentId}`).catch(
-			(e) => console.log(e)
-		);
+		fetcherDelete(
+			`${BASE_URL}/Media/DeleteCommentById?id=${deletedCommentId}`
+		).catch((e) => console.log(e));
 		setCommentList(commentList.filter((cmt) => cmt.id !== deletedCommentId));
 		setDeletedCommentId(null);
 		setDeleteCmtModal(false);
+	};
+
+	const handleOpenHideTattooModal = () => {
+		setHidePostModal(true);
+	};
+
+	const handleHideTattoo = () => {
+		fetcherPut(`${BASE_URL}/TattooArts/UpdateTattoo`, {
+			id: tattoo.id,
+			isPublicized: false
+		}).catch((e) => console.log(e));
+		Router.replace('/');
+	};
+
+	const handleCopyLink = () => {
+		setShareTooltipContent('Copy link thành công');
+		navigator.clipboard.writeText(window.location.href);
 	};
 
 	return (
@@ -193,13 +220,43 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 								// Tattoo info
 							}
 							<div className="px-5 py-3 border-b-2 border-t-2 border-gray-200">
-								<div className="flex gap-2 pb-3">
-									<div className="px-2 bg-gray-700 text-white rounded-2xl shadow-2xl cursor-pointer">
-										{tattoo.style.name}
+								<div className="flex justify-between">
+									<div className="flex gap-2 pb-3">
+										<div className="px-2 bg-gray-700 text-white rounded-2xl shadow-2xl cursor-pointer">
+											{tattoo.style.name}
+										</div>
+										<div className="px-2 bg-gray-700 text-white rounded-2xl shadow-2xl cursor-pointer">
+											{stringSize.at(tattoo.size)}
+										</div>
 									</div>
-									<div className="px-2 bg-white bg-gray-700 text-white rounded-2xl shadow-2xl cursor-pointer">
-										{stringSize.at(tattoo.size)}
-									</div>
+									{authen && (
+										<div className="pt-1">
+											<Dropdown className={'relative'}>
+												<DropdownToggle>
+													<div>
+														<HiDotsVertical size={12} className="text-gray-500" />
+													</div>
+												</DropdownToggle>
+												<DropdownMenu className={'top-2 left-2'}>
+													{tattoo.artistId === data.user.id ? (
+														<div
+															onClick={handleOpenHideTattooModal}
+															className="px-2 py-1.5 cursor-pointer hover:bg-gray-100 font-semibold"
+														>
+															Ẩn bài đăng
+														</div>
+													) : (
+														<div
+															onClick={() => handleOpenReportModal(undefined)}
+															className="px-2 py-1.5 cursor-pointer hover:bg-gray-100 font-semibold"
+														>
+															Báo cáo bài đăng
+														</div>
+													)}
+												</DropdownMenu>
+											</Dropdown>
+										</div>
+									)}
 								</div>
 								<div className="pb-3">{tattoo.description}</div>
 								<div className="flex items-start gap-1">
@@ -208,7 +265,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 											<div onClick={handleSetLike}>
 												{myLike ? (
 													<IoMdHeart
-														className="hover:text-gray-600 font-semibold cursor-pointer"
+														className="text-red-500 hover:text-red-600 font-semibold cursor-pointer"
 														size={20}
 													/>
 												) : (
@@ -239,17 +296,26 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 											</div>
 										</div>
 									</div>
-									<div className="flex gap-1 items-center cursor-pointer">
-										<div>
-											<IoIosLink
-												className="hover:text-gray-600 cursor-pointer"
-												size={20}
-											/>
+									<Tooltip
+										onMouseLeave={() => setShareTooltipContent('Copy link bài viết')}
+										content={shareTooltipContent}
+										placement="bottom"
+									>
+										<div
+											onClick={handleCopyLink}
+											className="flex gap-1 items-center cursor-pointer"
+										>
+											<div>
+												<IoIosLink
+													className="hover:text-gray-600 cursor-pointer"
+													size={20}
+												/>
+											</div>
+											<div className="text-left text-xs font-semibold w-14">
+												Chia sẻ
+											</div>
 										</div>
-										<div className="text-left text-xs font-semibold w-14">
-											Chia sẻ
-										</div>
-									</div>
+									</Tooltip>
 								</div>
 							</div>
 							{
@@ -334,13 +400,25 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 				// Modal warning when remove comment
 			}
 			<MyModal
-				openModal={deleteCmtModel}
+				openModal={deleteCmtModal}
 				setOpenModal={setDeleteCmtModal}
 				warn={true}
 				title="Xoá bình luận"
 				onSubmit={handleSubmitDelete}
 			>
 				<div>Bạn có chắc sẽ xoá bình luận này chứ?</div>
+			</MyModal>
+			{
+				// Modal warning when hide tattoo art
+			}
+			<MyModal
+				openModal={hidePostModal}
+				setOpenModal={setHidePostModal}
+				warn={true}
+				title="Ẩn bài đăng"
+				onSubmit={handleHideTattoo}
+			>
+				<div>Bạn có chắc sẽ ẩn bài đăng này chứ?</div>
 			</MyModal>
 			{
 				// Modal warning when report
