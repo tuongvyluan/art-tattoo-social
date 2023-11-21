@@ -103,10 +103,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 				tattooArtId: tattoo.id
 			});
 		} else {
-			fetcherPost(`${BASE_URL}/Media/DeleteLikeById`, {
-				accountId: data.user.id,
-				tattooArtId: tattoo.id
-			});
+			fetcherDelete(`${BASE_URL}/Media/DeleteLikeById?userId=${data.user.id}&artTattooId=${tattoo.id}`);
 		}
 		setMyLike(!myLike);
 	};
@@ -261,15 +258,12 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 							<div className="px-5 pt-3">
 								<div className="text-base font-semibold">Bình luận</div>
 								<div className="pt-1">
-									{commentList.length === 0 && (
-										<div>Hãy là người bình luận đầu tiên</div>
-									)}
 									<div className="relative flex gap-2">
 										<textarea
 											aria-label={'Comment'}
 											name="comment"
 											type="text"
-											rows={4}
+											rows={2}
 											value={myComment}
 											onChange={handleSetComment}
 											onKeyDown={onKeyDown}
