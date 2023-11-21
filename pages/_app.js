@@ -40,6 +40,7 @@ class MyApp extends App {
 					/>
 					<meta name="msapplication-TileColor" content="#da532c" />
 					<meta name="theme-color" content="#ffffff" />
+					<meta property="og:image" content="/images/ATL.png"></meta>
 					<link rel="preconnect" href="https://fonts.gstatic.com"></link>
 					<title>ATL - Art Tattoo Lover Platform</title>
 				</Head>

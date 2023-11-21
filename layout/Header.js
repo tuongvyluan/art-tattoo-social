@@ -15,6 +15,7 @@ import Notifications from './Notifications';
 import PropTypes from 'prop-types';
 import { useAppState } from 'components/AppProvider';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const colors = [
 	'gray',
@@ -46,8 +47,10 @@ const Header = ({ toggleOpen }) => {
 		>
 			<div className="w-full mx-auto h-full">
 				<div className="relative flex items-center justify-between h-full">
-					<div className='pl-4'>
-						<Image width={39} height={39} alt="ATL logo" src={'/images/ATL.png'} />
+					<div className="pl-4 cursor-pointer">
+						<Link href={'/'}>
+							<Image width={39} height={39} alt="ATL logo" src={'/images/ATL.png'} />
+						</Link>
 					</div>
 					<div className="flex justify-end items-center">
 						<div className="inset-y-0 right-0 items-center px-4 sm:static sm:inset-auto flex h-full">
@@ -65,9 +68,7 @@ const Header = ({ toggleOpen }) => {
 												<div
 													className={`text-center py-3 px-3 cursor-pointer flex flex-1`}
 												>
-													<a className="text-gray-900 hover:text-indigo">
-														Cài đặt
-													</a>
+													<a className="text-gray-900 hover:text-indigo">Cài đặt</a>
 												</div>
 											</div>
 										</div>

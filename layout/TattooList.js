@@ -50,7 +50,6 @@ const TattooIndexPage = () => {
 	const router = useRouter();
 	const search = router.query.search ? router.query.search : '';
 	const [searchKey, setSearchKey] = useState(search);
-	const tattooListRef = useRef()
 
 	const handleFilterChange = (name, value) => {
 		setFilter({
@@ -65,7 +64,7 @@ const TattooIndexPage = () => {
 
 	const onScroll = useCallback((event) => {
 		const { scrollY } = window;
-		let base = tattooListRef.current.offsetTop
+		let base = 88
 		if (showMoreFilter) {
 			base += 139
 		}
@@ -100,7 +99,7 @@ const TattooIndexPage = () => {
 		);
 
 	return (
-		<div className="relative pt-2">
+		<div className="relative">
 			<div
 				onClick={() => setVisible(!visible)}
 				className={`fixed ${
@@ -110,7 +109,7 @@ const TattooIndexPage = () => {
 				<FiFilter size={40} className="p-2 " />
 			</div>
 			<div
-				className={`w-full z-10 pb-2 bg-gray-50 ${
+				className={`w-full z-10 pb-4 bg-gray-50 ${
 					showMoreFilter ? 'overflow-x-auto' : ''
 				} ${visible ? 'fixed top-11 pt-7' : ''}`}
 			>
@@ -317,9 +316,9 @@ const TattooIndexPage = () => {
 					</div>
 				)}
 			</div>
-			<div ref={tattooListRef}>
+			<div>
 				<div>
-					<div className="pt-2">
+					<div>
 						<InfiniteScroll
 							dataLength={items.length}
 							next={() => setSize(size + 1)}
