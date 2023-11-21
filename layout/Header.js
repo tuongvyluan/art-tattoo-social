@@ -191,7 +191,7 @@ const Header = ({ toggleOpen }) => {
 								<DropdownToggle>
 									<Avatar
 										size={28}
-										src={`images/avatar.png`}
+										src={`/images/avatar.png`}
 										alt={data ? data.user.firstName : 'Unknown'}
 									/>
 								</DropdownToggle>

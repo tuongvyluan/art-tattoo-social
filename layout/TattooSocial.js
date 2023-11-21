@@ -81,18 +81,17 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 				accountId: data.user.id,
 				tattooArtId: tattoo.id,
 				content: myComment
+			}).then((response) => {
+				const newCommentList = [
+					{
+						id: response.id,
+						accountId: data.user.id,
+						content: myComment
+					}
+				].concat(commentList)
+				setCommentList(newCommentList);
 			});
-			const newCommentList = [
-				{
-					id: v4(),
-					accountId: data.user.id,
-					content: myComment
-				}
-			];
-			commentList.map((cmt) => {
-				newCommentList.push(cmt);
-			});
-			setCommentList(newCommentList);
+
 			setMyComment('');
 		}
 	};
@@ -135,18 +134,18 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 			status: 0,
 			reportType: myReportType
 		}).catch((e) => console.log(e));
-    setCommentList(commentList.filter((cmt) => cmt.id !== reportedCommentId))
+		setCommentList(commentList.filter((cmt) => cmt.id !== reportedCommentId));
 		setReportedCommentId(null);
-    setMyReportType(0);
-    setMyReportContent('');
+		setMyReportType(0);
+		setMyReportContent('');
 		setReportModal(false);
 	};
 
 	const handleSubmitDelete = () => {
-		fetcherDelete(`${BASE_URL}/Media/DeleteComentById?id=${deletedCommentId}`).catch(
+		fetcherDelete(`${BASE_URL}/Media/DeleteCommentById?id=${deletedCommentId}`).catch(
 			(e) => console.log(e)
 		);
-    setCommentList(commentList.filter((cmt) => cmt.id !== deletedCommentId))
+		setCommentList(commentList.filter((cmt) => cmt.id !== deletedCommentId));
 		setDeletedCommentId(null);
 		setDeleteCmtModal(false);
 	};
@@ -361,7 +360,11 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 				<div>
 					<ul className="h-72 pb-6 overflow-y-auto">
 						{stringReports.map((reportType, index) => (
-							<li className="my-1 full px-3 flex items-center gap-2 cursor-pointer" onClick={() => setMyReportType(index)} key={index}>
+							<li
+								className="my-1 full px-3 flex items-center gap-2 cursor-pointer"
+								onClick={() => setMyReportType(index)}
+								key={index}
+							>
 								<input
 									type="radio"
 									value={index}
