@@ -1,5 +1,4 @@
 import { IoMdHeartEmpty, IoIosLink } from 'react-icons/io';
-import PropTypes from 'prop-types';
 import { stringPlacements } from 'lib/status';
 import { FiFilter } from 'react-icons/fi';
 import { usePaginate } from 'lib/usePagination';
@@ -14,24 +13,27 @@ import {
 } from 'ui';
 import { randomFrom0To } from 'lib';
 import { filterColor, filterSize } from 'lib/filterTattoo';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Pill from 'components/Pill';
 import { tattooStylesWithoutDescription } from 'lib/tattooStyle';
 import { useRouter } from 'next/router';
+import debounce from 'lodash.debounce';
+import { ChevronDown } from 'icons/solid';
+import Button from 'components/Button';
 
-const TattooIndexPage = ({ yOffset = 0 }) => {
-	const { items, error, isLoadingMore, size, setSize, isReachingEnd } = usePaginate(
+const TattooIndexPage = () => {
+	const { items, error, size, setSize, isReachingEnd } = usePaginate(
 		'/api/tattooArt',
 		20
 	);
 
 	const firstRowStyle = [{ id: -1, name: 'Tất cả' }].concat(
-		tattooStylesWithoutDescription.filter((s) => s.id < 15)
+		tattooStylesWithoutDescription.filter((s) => s.id < 16)
 	);
 	const secondRowStyle = tattooStylesWithoutDescription.filter(
-		(s) => s.id >= 15 && s.id < 30
+		(s) => s.id >= 16 && s.id < 31
 	);
-	const thirdRowStyle = tattooStylesWithoutDescription.filter((s) => s.id >= 30);
+	const thirdRowStyle = tattooStylesWithoutDescription.filter((s) => s.id >= 31);
 
 	const [visible, setVisible] = useState(false);
 	const [showVisible, setShowVisible] = useState(false);
@@ -41,13 +43,14 @@ const TattooIndexPage = ({ yOffset = 0 }) => {
 		style: -1,
 		image: '-1',
 		hasColor: '-1',
-		placement: '-1'
+		placement: 0
 	});
 
 	const [showMoreFilter, setShowMoreFilter] = useState(false);
 	const router = useRouter();
 	const search = router.query.search ? router.query.search : '';
 	const [searchKey, setSearchKey] = useState(search);
+	const tattooListRef = useRef()
 
 	const handleFilterChange = (name, value) => {
 		setFilter({
@@ -62,20 +65,24 @@ const TattooIndexPage = ({ yOffset = 0 }) => {
 
 	const onScroll = useCallback((event) => {
 		const { scrollY } = window;
-		if (scrollY > yOffset + 88) {
+		let base = tattooListRef.current.offsetTop
+		if (showMoreFilter) {
+			base += 139
+		}
+		if (scrollY > base) {
 			setShowVisible(true);
 		} else {
-			setVisible(false)
+			setVisible(false);
 			setShowVisible(false);
 		}
 	}, []);
 
 	useEffect(() => {
 		//add eventlistener to window
-		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('scroll', debounce(onScroll, 100, true));
 		// remove event on unmount to prevent a memory leak with the cleanup
 		return () => {
-			window.removeEventListener('scroll', onScroll, { passive: true });
+			window.removeEventListener('scroll', debounce(onScroll, 100, true));
 		};
 	}, []);
 
@@ -93,7 +100,7 @@ const TattooIndexPage = ({ yOffset = 0 }) => {
 		);
 
 	return (
-		<div className="relative">
+		<div className="relative pt-2">
 			<div
 				onClick={() => setVisible(!visible)}
 				className={`fixed ${
@@ -107,7 +114,7 @@ const TattooIndexPage = ({ yOffset = 0 }) => {
 					showMoreFilter ? 'overflow-x-auto' : ''
 				} ${visible ? 'fixed top-11 pt-7' : ''}`}
 			>
-				<div className="flex flex-wrap gap-3">
+				<div className="flex flex-wrap justify-between gap-3">
 					{
 						// Search tattoo
 					}
@@ -119,78 +126,151 @@ const TattooIndexPage = ({ yOffset = 0 }) => {
 							onChange={handleSearchChange}
 							aria-label={'Search'}
 							name="search"
-							className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
+							className="appearance-none relative block w-full px-3 py-3 border-2 border-gray-700 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
 							placeholder={'Tìm kiếm'}
 						/>
 					</div>
-					<div className="flex gap-3">
-						{
-							// Filter color
-						}
-						<div>
-							<h1 className="font-semibold">Màu sắc</h1>
-							<Dropdown className={'relative'}>
-								<DropdownToggle>
-									<div className="w-28">
-										<div className="appearance-none block w-full px-3 py-3 ring-1 ring-gray-700 dark:ring-gray-700 ring-opacity-8 rounded-lg text-sm">
-											{filterColor().get(filter.hasColor)}
+					<div className={`flex flex-wrap gap-3 px-1 ${visible ? 'mr-7' : ''}`}>
+						<div className="flex gap-3">
+							{
+								// Filter color
+							}
+							<div>
+								<h1 className="font-semibold">Màu sắc</h1>
+								<Dropdown className={'relative'}>
+									<DropdownToggle>
+										<div className="w-28 relative">
+											<div className="appearance-none block w-full px-3 py-3 ring-1 ring-gray-700 dark:ring-gray-700 rounded-lg text-sm">
+												{filterColor().get(filter.hasColor)}
+											</div>
+											<ChevronDown
+												width={20}
+												height={20}
+												className="absolute right-2 top-3"
+											/>
 										</div>
-									</div>
-								</DropdownToggle>
-								<DropdownMenu className={'top-2 -right-20 fixed z-40'}>
-									<div className="">
-										<ul className="">
-											{[...filterColor()].map(([key, value], colorIndex) => (
-												<li
-													onClick={() => handleFilterChange('hasColor', key)}
-													className={`cursor-pointer p-2 text-center text-gray-800 ${
-														key === filter.hasColor
-															? 'text-black bg-gray-50'
-															: 'hover:text-black hover:bg-gray-50'
-													}`}
-													key={key}
-												>
-													{value}
-												</li>
-											))}
-										</ul>
-									</div>
-								</DropdownMenu>
-							</Dropdown>
+									</DropdownToggle>
+									<DropdownMenu className={'top-2 -right-10 fixed z-40'}>
+										<div className="">
+											<ul className="">
+												{[...filterColor()].map(([key, value], colorIndex) => (
+													<li
+														onClick={() => handleFilterChange('hasColor', key)}
+														className={`cursor-pointer p-2 text-center text-gray-800 ${
+															key === filter.hasColor
+																? 'text-black bg-gray-50'
+																: 'hover:text-black hover:bg-gray-50'
+														}`}
+														key={key}
+													>
+														{value}
+													</li>
+												))}
+											</ul>
+										</div>
+									</DropdownMenu>
+								</Dropdown>
+							</div>
+							{
+								// Filter size
+							}
+							<div>
+								<h1 className="font-semibold">Size</h1>
+								<Dropdown className={'relative'}>
+									<DropdownToggle>
+										<div className="w-32 relative">
+											<div className="appearance-none block w-full px-3 py-3 ring-1 ring-gray-700 dark:ring-gray-700 rounded-lg text-sm">
+												{filterSize().get(filter.size)}
+											</div>
+											<ChevronDown
+												width={20}
+												height={20}
+												className="absolute right-2 top-3"
+											/>
+										</div>
+									</DropdownToggle>
+									<DropdownMenu className={'top-2 -right-6 fixed z-40'}>
+										<div className="">
+											<ul className="">
+												{[...filterSize()].map(([key, value], sizeIndex) => (
+													<li
+														onClick={() => handleFilterChange('size', key)}
+														className={`cursor-pointer p-2 text-center text-gray-800 ${
+															key === filter.size
+																? 'text-black bg-gray-50'
+																: 'hover:text-black hover:bg-gray-50'
+														}`}
+														key={key}
+													>
+														{value}
+													</li>
+												))}
+											</ul>
+										</div>
+									</DropdownMenu>
+								</Dropdown>
+							</div>
 						</div>
-						{
-							// Filter size
-						}
-						<div>
-							<h1 className="font-semibold">Size</h1>
-							<Dropdown className={'relative'}>
-								<DropdownToggle>
-									<div className="w-32">
-										<div className="appearance-none block w-full px-3 py-3 ring-1 ring-gray-700 dark:ring-gray-700 ring-opacity-8 rounded-lg text-sm">
-											{filterSize().get(filter.size)}
+						<div className="flex gap-3">
+							{
+								// Filter placement
+							}
+							<div>
+								<h1 className="font-semibold">Vị trí xăm</h1>
+								<Dropdown className={'relative'}>
+									<DropdownToggle>
+										<div className="w-32 relative">
+											<div className="appearance-none block w-full px-3 py-3 ring-1 ring-gray-700 dark:ring-gray-700 rounded-lg text-sm">
+												{stringPlacements.at(filter.placement)}
+											</div>
+											<ChevronDown
+												width={20}
+												height={20}
+												className="absolute right-2 top-3"
+											/>
 										</div>
+									</DropdownToggle>
+									<DropdownMenu className={'top-2 -right-6 fixed z-40'}>
+										<div className="">
+											<ul className="h-44 overflow-y-auto">
+												{stringPlacements.map((placement, placementIndex) => (
+													<li
+														onClick={() =>
+															handleFilterChange('placement', placementIndex)
+														}
+														className={`cursor-pointer p-2 text-center text-gray-800 ${
+															placementIndex === filter.placement
+																? 'text-black bg-gray-50'
+																: 'hover:text-black hover:bg-gray-50'
+														}`}
+														key={placementIndex}
+													>
+														{placement}
+													</li>
+												))}
+											</ul>
+										</div>
+									</DropdownMenu>
+								</Dropdown>
+							</div>
+							{
+								// Show more filter button
+							}
+							<div>
+								<h1 className="font-semibold">Thêm</h1>
+								<Button
+									onClick={() => {
+										setShowMoreFilter(!showMoreFilter);
+									}}
+									outline
+									className="border-2 border-gray-700"
+								>
+									<div className="flex gap-1 items-center py-1">
+										<FiFilter size={12} />
+										<div>Filters</div>
 									</div>
-								</DropdownToggle>
-								<DropdownMenu className={'top-2 -right-10 fixed z-40'}>
-									<div className="">
-										<ul className="">
-											{[...filterSize()].map(([key, value], sizeIndex) => (
-												<li
-													onClick={() => handleFilterChange('size', key)}
-													className={`cursor-pointer p-2 text-center text-gray-800 ${
-														key === filter.size
-															? 'text-black bg-gray-50'
-															: 'hover:text-black hover:bg-gray-50'
-													}`}
-													key={key}
-												>
-													{value}
-												</li>
-											))}
-										</ul>
-									</div>
-								</DropdownMenu>
-							</Dropdown>
+								</Button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -237,7 +317,7 @@ const TattooIndexPage = ({ yOffset = 0 }) => {
 					</div>
 				)}
 			</div>
-			<div>
+			<div ref={tattooListRef}>
 				<div>
 					<div className="pt-2">
 						<InfiniteScroll
@@ -303,10 +383,6 @@ const TattooIndexPage = ({ yOffset = 0 }) => {
 			</div>
 		</div>
 	);
-};
-
-TattooIndexPage.propTypes = {
-	yOffset: PropTypes.number
 };
 
 TattooIndexPage.getInitialProps = async () => ({

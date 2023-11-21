@@ -59,7 +59,9 @@ const TattooDetails = () => {
 				{
 					// More tattoo arts
 				}
-				<TattooListPage />
+				<div>
+					<TattooListPage />
+				</div>
 			</div>
 		);
 };

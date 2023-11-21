@@ -32,8 +32,15 @@ module.exports = {
 			height: {
 				'152': '37.5rem'
 			},
-			widths: {
+			width: {
 				'152': '37.5rem'
+			},
+			borderWidth: {
+				'1.5': '1.5px',
+				'0.5': '0.5px'
+			},
+			padding: {
+				'4.5': '1.125rem'
 			}
 		}
 	},
