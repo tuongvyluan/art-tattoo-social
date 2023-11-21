@@ -5,7 +5,6 @@ import {
 	Cog,
 	LightningBolt,
 	Logout,
-	MenuAlt1,
 	Pencil,
 	User
 } from 'icons/solid';

@@ -13,7 +13,7 @@ import {
 } from 'ui';
 import { randomFrom0To } from 'lib';
 import { filterColor, filterSize } from 'lib/filterTattoo';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Pill from 'components/Pill';
 import { tattooStylesWithoutDescription } from 'lib/tattooStyle';
 import { useRouter } from 'next/router';
@@ -21,12 +21,14 @@ import debounce from 'lodash.debounce';
 import { ChevronDown } from 'icons/solid';
 import Button from 'components/Button';
 import { Tooltip } from 'flowbite-react';
+import { useSession } from 'next-auth/react';
 
 const TattooIndexPage = () => {
 	const { items, error, size, setSize, isReachingEnd } = usePaginate(
 		'/api/tattooArt',
 		20
 	);
+	const { status, data } = useSession();
 
 	const firstRowStyle = [{ id: -1, name: 'Tất cả' }].concat(
 		tattooStylesWithoutDescription.filter((s) => s.id < 16)
@@ -38,6 +40,8 @@ const TattooIndexPage = () => {
 
 	const [visible, setVisible] = useState(false);
 	const [showVisible, setShowVisible] = useState(false);
+	const [shareTooltipContent, setShareTooltipContent] =
+		useState('Copy link bài viết');
 
 	const [filter, setFilter] = useState({
 		size: '-1',
@@ -46,6 +50,7 @@ const TattooIndexPage = () => {
 		hasColor: '-1',
 		placement: 0
 	});
+	const [authen, setAuthen] = useState(false);
 
 	const [showMoreFilter, setShowMoreFilter] = useState(false);
 	const router = useRouter();
@@ -61,6 +66,11 @@ const TattooIndexPage = () => {
 
 	const handleSearchChange = (e) => {
 		setSearchKey(e.target.value);
+	};
+
+	const handleCopyLink = (id) => {
+		setShareTooltipContent('Copy link thành công');
+		navigator.clipboard.writeText(`${window.location.origin}/tattoo/${id}`);
 	};
 
 	const onScroll = useCallback((event) => {
@@ -86,16 +96,34 @@ const TattooIndexPage = () => {
 		};
 	}, []);
 
+	if (status === 'loading' || !items) {
+		return (
+			<div className="flex items-center justify-center h-full">
+				<Loading />
+			</div>
+		);
+	}
+
+	if (status === 'authenticated') {
+		if (!authen) {
+			setAuthen(true);
+		}
+	}
+
+	if (status === 'unauthenticated') {
+		function remindLogin() {
+			window.open('/auth/signin', 'blank');
+		}
+		const elements = document.getElementsByClassName('myInteraction');
+		Array.from(elements).forEach(function (element) {
+			element.addEventListener('click', remindLogin);
+		});
+	}
+
 	if (error)
 		return (
 			<div className="flex items-center justify-center h-full">
 				Failed to load data
-			</div>
-		);
-	if (!items)
-		return (
-			<div className="flex items-center justify-center h-full">
-				<Loading />
 			</div>
 		);
 
@@ -108,6 +136,7 @@ const TattooIndexPage = () => {
 				} w-10 z-50 right-5 bottom-5 bg-gray-700 text-white border border-gray-700 rounded-full cursor-pointer`}
 			>
 				<Tooltip
+					arrow={false}
 					content={visible ? 'Ẩn thanh tìm kiếm' : 'Hiện thanh tìm kiếm'}
 					placement="left-start"
 				>
@@ -263,7 +292,11 @@ const TattooIndexPage = () => {
 							}
 							<div>
 								<h1 className="font-semibold">Thêm</h1>
-								<Tooltip content="Chọn theo style" placement="bottom-start">
+								<Tooltip
+									arrow={false}
+									content="Chọn theo style"
+									placement="bottom-start"
+								>
 									<Button
 										onClick={() => {
 											setShowMoreFilter(!showMoreFilter);
@@ -348,12 +381,24 @@ const TattooIndexPage = () => {
 											</div>
 										</Link>
 										<div className="flex items-start gap-1">
-											<div>
-												<IoIosLink
-													className="hover:text-gray-600 cursor-pointer"
-													size={20}
-												/>
-											</div>
+											<Tooltip
+												arrow={false}
+												onMouseLeave={() =>
+													setShareTooltipContent('Copy link bài viết')
+												}
+												content={shareTooltipContent}
+												placement="bottom"
+											>
+												<div
+													onClick={() => handleCopyLink(item.id)}
+													className="flex gap-1 items-center cursor-pointer"
+												>
+													<IoIosLink
+														className="hover:text-gray-600 cursor-pointer"
+														size={20}
+													/>
+												</div>
+											</Tooltip>
 											<div className="flex gap-1 items-center">
 												<div>
 													<IoMdHeartEmpty

@@ -10,21 +10,21 @@ const MyModal = ({
 	warn = false,
 	openModal,
 	setOpenModal,
-  onSubmit
+	onSubmit
 }) => {
 	return (
-		<>
-			<Modal show={openModal} onClose={() => setOpenModal(false)}>
-				<Modal.Header>{title}</Modal.Header>
-				<Modal.Body>{children}</Modal.Body>
-				<Modal.Footer>
-					<Button outline onClick={() => setOpenModal(false)}>{cancelTitle}</Button>
-					<Button warn={warn} onClick={onSubmit}>
-						{confirmTitle}
-					</Button>
-				</Modal.Footer>
-			</Modal>
-		</>
+		<Modal show={openModal} onClose={() => setOpenModal(false)}>
+			<Modal.Header>{title}</Modal.Header>
+			<Modal.Body>{children}</Modal.Body>
+			<Modal.Footer>
+				<Button outline onClick={() => setOpenModal(false)}>
+					{cancelTitle}
+				</Button>
+				<Button warn={warn} onClick={onSubmit}>
+					{confirmTitle}
+				</Button>
+			</Modal.Footer>
+		</Modal>
 	);
 };
 
@@ -34,9 +34,9 @@ MyModal.propTypes = {
 	confirmTitle: PropTypes.string,
 	cancelTitle: PropTypes.string,
 	warn: PropTypes.bool,
-  openModal: PropTypes.bool.isRequired,
-  setOpenModal: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired
+	openModal: PropTypes.bool.isRequired,
+	setOpenModal: PropTypes.func.isRequired,
+	onSubmit: PropTypes.func.isRequired
 };
 
 export default MyModal;

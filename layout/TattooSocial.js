@@ -20,7 +20,7 @@ import { Tooltip } from 'flowbite-react';
 const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 	const { status, data } = useSession();
 	const [countLike, setCountLike] = useState(likes.length);
-	const [myLike, setMyLike] = useState(false);
+	const [likeList, setLikeList] = useState(likes);
 	const images = medias.map((media) => media.url);
 	const [commentList, setCommentList] = useState(comments);
 	const [myComment, setMyComment] = useState('');
@@ -46,12 +46,6 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 	if (status === 'authenticated') {
 		if (!authen) {
 			setAuthen(true);
-		}
-		if (
-			!myLike &&
-			likes.filter((like) => like.accountId === data.user.id).length > 0
-		) {
-			setMyLike(true);
 		}
 	}
 
@@ -85,35 +79,42 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 				accountId: data.user.id,
 				tattooArtId: tattoo.id,
 				content: myComment
-			}).then((response) => {
-				const newCommentList = [
-					{
-						id: response.id,
-						accountId: data.user.id,
-						content: myComment
-					}
-				].concat(commentList);
-				setCommentList(newCommentList);
-			});
+			})
+				.then((response) => {
+					const newCommentList = [
+						{
+							id: response.id,
+							accountId: data.user.id,
+							content: myComment
+						}
+					].concat(commentList);
+					setCommentList(newCommentList);
+				})
+				.catch((e) => console.log(e));
 
 			setMyComment('');
 		}
 	};
 
-	const handleSetLike = () => {
-		if (!myLike) {
+	const handleSetLike = debounce(() => {
+		handleCallLikeApi();
+	}, 200);
+
+	const handleCallLikeApi = () => {
+		if (likeList.filter((like) => like.accountId === data.user.id).length > 0) {
+			fetcherDelete(
+				`${BASE_URL}/Media/DeleteLikeById?userId=${data.user.id}&artTattooId=${tattoo.id}`
+			).catch((e) => console.log(e));
+			setLikeList(likeList.filter((like) => like.accountId !== data.user.id));
+			setCountLike(countLike - 1);
+		} else {
 			fetcherPost(`${BASE_URL}/Media/CreateLike`, {
 				accountId: data.user.id,
 				tattooArtId: tattoo.id
-			});
+			}).catch((e) => console.log(e));
+			likeList.push({ accountId: data.user.id });
 			setCountLike(countLike + 1);
-		} else {
-			fetcherDelete(
-				`${BASE_URL}/Media/DeleteLikeById?userId=${data.user.id}&artTattooId=${tattoo.id}`
-			);
-			setCountLike(countLike - 1);
 		}
-		setMyLike(!myLike);
 	};
 
 	const handleSetReportContent = (e) => {
@@ -175,7 +176,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 	};
 
 	return (
-		<div className="relative">
+		<div className="relative pb-5">
 			<Link href={'/tattoo'}>
 				<ChevronLeft
 					width={30}
@@ -262,8 +263,9 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 								<div className="flex items-start gap-1">
 									<div className="flex gap-1 items-center">
 										{authen ? (
-											<div onClick={handleSetLike}>
-												{myLike ? (
+											<div key={countLike} onClick={handleSetLike}>
+												{likeList.filter((like) => like.accountId === data.user.id)
+													.length > 0 ? (
 													<IoMdHeart
 														className="text-red-500 hover:text-red-600 font-semibold cursor-pointer"
 														size={20}
@@ -276,19 +278,18 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 												)}
 											</div>
 										) : (
-											<div className="myInteraction">
-												{myLike ? (
-													<IoMdHeart
-														className="hover:text-gray-600 font-semibold cursor-pointer"
-														size={20}
-													/>
-												) : (
+											<Tooltip
+												arrow={false}
+												content="Đăng nhập để thích bài viết"
+												placement="bottom"
+											>
+												<div className="myInteraction">
 													<IoMdHeartEmpty
 														className="hover:text-gray-600 font-semibold cursor-pointer"
 														size={20}
 													/>
-												)}
-											</div>
+												</div>
+											</Tooltip>
 										)}
 										<div className="flex gap-1 items-end text-gray-700">
 											<div className="text-left text-xs font-semibold w-14">
@@ -297,6 +298,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 										</div>
 									</div>
 									<Tooltip
+										arrow={false}
 										onMouseLeave={() => setShareTooltipContent('Copy link bài viết')}
 										content={shareTooltipContent}
 										placement="bottom"
@@ -324,25 +326,32 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 							<div className="px-5 pt-3">
 								<div className="text-base font-semibold">Bình luận</div>
 								<div className="pt-1">
-									<div className="relative flex gap-2">
-										<textarea
-											aria-label={'Comment'}
-											name="comment"
-											type="text"
-											rows={2}
-											value={myComment}
-											onChange={handleSetComment}
-											onKeyDown={onKeyDown}
-											className="myInteraction appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
-											placeholder={'Thêm bình luận'}
-										/>
-										<button onClick={sendCommend}>
-											<IoMdSend
-												className="hover:text-gray-600 cursor-pointer"
-												size={20}
+									<Tooltip
+										arrow={false}
+										trigger={authen ? '' : 'hover'}
+										placement="top"
+										content="Đăng nhập để được bình luận"
+									>
+										<div className="relative flex gap-2">
+											<textarea
+												aria-label={'Comment'}
+												name="comment"
+												type="text"
+												rows={2}
+												value={myComment}
+												onChange={handleSetComment}
+												onKeyDown={onKeyDown}
+												className="myInteraction appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
+												placeholder={'Thêm bình luận'}
 											/>
-										</button>
-									</div>
+											<button onClick={sendCommend}>
+												<IoMdSend
+													className="hover:text-gray-600 cursor-pointer"
+													size={20}
+												/>
+											</button>
+										</div>
+									</Tooltip>
 									{commentList.map((cmt, cmtIndex) => (
 										<div
 											key={cmt.id}
@@ -430,7 +439,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 				onSubmit={handleSubmitReport}
 			>
 				<div>
-					<ul className="h-72 pb-6 overflow-y-auto">
+					<ul className="h-72 pb-6 overflow-y-auto grid grid-cols-1 sm:grid-cols-2">
 						{stringReports.map((reportType, index) => (
 							<li
 								className="my-1 full px-3 flex items-center gap-2 cursor-pointer"
