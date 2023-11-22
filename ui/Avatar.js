@@ -16,7 +16,7 @@ export const Avatar = ({
 
   const circle = status && (
     <span
-      className={`bg-${status}-500 status absolute right-0 top-0 rounded-full ring-white dark:ring-gray-700 ${
+      className={`bg-${status}-500 status absolute right-0 top-0 rounded-full ring-white dark:ring-gray-300 ${
         size <= 32 ? "ring-1" : "ring-2"
       }`}
       style={{

@@ -27,6 +27,7 @@ const FooterHidden = [
 	'/tattoo',
 	'/tattoo/[id]',
 	'/artist/[id]',
+  '/booking/new',
 	'/messages',
 	'/taskboard',
 	'/maps/dark',
@@ -97,7 +98,7 @@ const Page = ({ children }) => {
 			</Head>
 
 			<div
-				className={`antialiased font-sans text-sm text-gray-900 dark:text-white flex flex-col w-full h-full min-h-screen bg-body dark:bg-gray-700 z-0 ${
+				className={`antialiased font-sans text-sm text-gray-900 dark:text-white w-full h-full min-h-screen bg-body dark:bg-gray-700 z-0 ${
 					state.collapsed && 'page-sidebar-collapsed'
 				} `}
 				dir={state.rtl ? 'rtl' : 'ltr'}

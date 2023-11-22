@@ -216,7 +216,9 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 									</div>
 								</div>
 								<div>
-									<Button>Đặt hẹn</Button>
+									<a target='_blank' href={`/booking/new?artist=${artist.id}`} >
+										<Button>Đặt hẹn</Button>
+									</a>
 								</div>
 							</div>
 							{

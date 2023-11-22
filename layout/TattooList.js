@@ -29,6 +29,7 @@ const TattooIndexPage = () => {
 		20
 	);
 	const { status, data } = useSession();
+	const [tattooCol, setTattooCol] = useState(2);
 
 	const firstRowStyle = [{ id: -1, name: 'Tất cả' }].concat(
 		tattooStylesWithoutDescription.filter((s) => s.id < 16)
@@ -87,6 +88,18 @@ const TattooIndexPage = () => {
 		}
 	}, []);
 
+	const onResize = useCallback((event) => {
+		const { innerWidth } = window;
+		let cols = 2;
+		if (innerWidth >= 640) {
+			cols = 3;
+		}
+		if (innerWidth >= 1024) {
+			cols = 5;
+		}
+		setTattooCol(cols);
+	}, []);
+
 	const onKeyDown = (e) => {
 		handleKeyDown(e);
 	};
@@ -103,10 +116,13 @@ const TattooIndexPage = () => {
 
 	useEffect(() => {
 		//add eventlistener to window
+		onResize();
 		window.addEventListener('scroll', debounce(onScroll, 100, true));
+		window.addEventListener('resize', debounce(onResize, 100, true));
 		// remove event on unmount to prevent a memory leak with the cleanup
 		return () => {
 			window.removeEventListener('scroll', debounce(onScroll, 100, true));
+			window.removeEventListener('resize', debounce(onResize, 100, true));
 		};
 	}, []);
 
@@ -147,7 +163,7 @@ const TattooIndexPage = () => {
 				onClick={() => setVisible(!visible)}
 				className={`fixed ${
 					!showVisible ? 'hidden' : ''
-				} w-10 z-50 right-5 bottom-5 bg-gray-700 text-white border border-gray-700 rounded-full cursor-pointer`}
+				} w-10 z-50 right-5 bottom-5 bg-gray-700 text-white border border-gray-300 rounded-full cursor-pointer`}
 			>
 				<Tooltip
 					arrow={false}
@@ -168,7 +184,7 @@ const TattooIndexPage = () => {
 					}
 					<div className="sm:w-96 w-full min-w-max">
 						<h1 className="font-semibold">Tìm kiếm</h1>
-						<div className='flex gap-2 items-center'>
+						<div className="flex gap-2 items-center">
 							<input
 								value={searchKey}
 								type="text"
@@ -176,7 +192,7 @@ const TattooIndexPage = () => {
 								onKeyDown={onKeyDown}
 								aria-label={'Search'}
 								name="search"
-								className="appearance-none relative block w-full px-3 py-3 border-2 border-gray-700 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
+								className="appearance-none relative block w-full px-3 py-3 border-2 border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
 								placeholder={'Tìm kiếm'}
 							/>
 							<button onClick={handleSearch}>
@@ -194,7 +210,7 @@ const TattooIndexPage = () => {
 								<Dropdown className={'relative'}>
 									<DropdownToggle>
 										<div className="w-28 relative">
-											<div className="appearance-none block w-full px-3 py-3 ring-1 bg-white ring-gray-700 dark:ring-gray-700 rounded-lg text-sm">
+											<div className="appearance-none block w-full px-3 py-3 ring-1 bg-white ring-gray-300 dark:ring-gray-300 rounded-lg text-sm">
 												{filterColor().get(filter.hasColor)}
 											</div>
 											<ChevronDown
@@ -233,7 +249,7 @@ const TattooIndexPage = () => {
 								<Dropdown className={'relative'}>
 									<DropdownToggle>
 										<div className="w-32 relative">
-											<div className="appearance-none block w-full px-3 py-3 ring-1 bg-white ring-gray-700 dark:ring-gray-700 rounded-lg text-sm">
+											<div className="appearance-none block w-full px-3 py-3 ring-1 bg-white ring-gray-300 dark:ring-gray-300 rounded-lg text-sm">
 												{filterSize().get(filter.size)}
 											</div>
 											<ChevronDown
@@ -274,7 +290,7 @@ const TattooIndexPage = () => {
 								<Dropdown className={'relative'}>
 									<DropdownToggle>
 										<div className="w-32 relative">
-											<div className="appearance-none block w-full px-3 py-3 ring-1 bg-white ring-gray-700 dark:ring-gray-700 rounded-lg text-sm">
+											<div className="appearance-none block w-full px-3 py-3 ring-1 bg-white ring-gray-300 dark:ring-gray-300 rounded-lg text-sm">
 												{stringPlacements.at(filter.placement)}
 											</div>
 											<ChevronDown
@@ -322,7 +338,7 @@ const TattooIndexPage = () => {
 											setShowMoreFilter(!showMoreFilter);
 										}}
 										outline
-										className="border-2 border-gray-700"
+										className="border-2 border-gray-300"
 									>
 										<div className="flex gap-1 items-center py-1">
 											<FiFilter size={12} />
@@ -387,67 +403,76 @@ const TattooIndexPage = () => {
 							loader={<Loading />}
 							className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2"
 						>
-							{items.map((item, index) => (
-								<WidgetPostCard
-									key={index}
-									image={item.thumbnail}
-									imageHeight={200}
-									link={`/tattoo/${item.id}`}
-								>
-									<div className="flex justify-between gap-2">
-										<Link href={`/artist/${item.artist.id}`}>
-											<div className="cursor-pointer font-semibold">
-												{item.artist.name}
-											</div>
-										</Link>
-										<div className="flex items-start gap-1">
-											<Tooltip
-												arrow={false}
-												onMouseLeave={() =>
-													setShareTooltipContent('Copy link bài viết')
-												}
-												content={shareTooltipContent}
-												placement="bottom"
-											>
-												<div
-													onClick={() => handleCopyLink(item.id)}
-													className="flex gap-1 items-center cursor-pointer"
+							{Array.from({ length: tattooCol }).map((col, colIndex) => (
+								<div key={colIndex}>
+									{items.map((item, index) => (
+										<div key={index}>
+											{index % tattooCol === colIndex && (
+												<WidgetPostCard
+													image={item.thumbnail}
+													link={`/tattoo/${item.id}`}
 												>
-													<IoIosLink
-														className="hover:text-gray-600 cursor-pointer"
-														size={20}
-													/>
-												</div>
-											</Tooltip>
-											<div className="flex gap-1 items-center">
-												<div>
-													<IoMdHeartEmpty
-														className="hover:text-gray-600 font-semibold cursor-pointer"
-														size={20}
-													/>
-												</div>
-												<div className="flex gap-1 items-end text-gray-700">
-													<div className="text-left text-xs font-semibold w-14">
-														{2 + randomFrom0To(30)} likes
+													<div className="flex justify-between gap-2">
+														<Link href={`/artist/${item.artist.id}`}>
+															<div className="cursor-pointer font-semibold">
+																{item.artist.name}
+															</div>
+														</Link>
+														<div className="flex items-start gap-1">
+															<Tooltip
+																arrow={false}
+																onMouseLeave={() =>
+																	setShareTooltipContent('Copy link bài viết')
+																}
+																content={shareTooltipContent}
+																placement="bottom"
+															>
+																<div
+																	onClick={() => handleCopyLink(item.id)}
+																	className="flex gap-1 items-center cursor-pointer"
+																>
+																	<IoIosLink
+																		className="hover:text-gray-600 cursor-pointer"
+																		size={20}
+																	/>
+																</div>
+															</Tooltip>
+															<div className="flex gap-1 items-center">
+																<div>
+																	<IoMdHeartEmpty
+																		className="hover:text-gray-600 font-semibold cursor-pointer"
+																		size={20}
+																	/>
+																</div>
+																<div className="flex gap-1 items-end text-gray-700">
+																	<div className="text-left text-xs font-semibold w-14">
+																		{2 + randomFrom0To(30)} likes
+																	</div>
+																</div>
+															</div>
+														</div>
 													</div>
-												</div>
-											</div>
+													<Link href={`/tattoo/${item.id}`}>
+														<div className="cursor-pointer">
+															<div className="text-gray-400">
+																Vị trí xăm:{' '}
+																<span className="text-black">
+																	{stringPlacements.at(item.placement)}
+																</span>
+															</div>
+															<div className="text-gray-400">
+																Style:{' '}
+																<span className="text-black">
+																	{item.style?.name}
+																</span>
+															</div>
+														</div>
+													</Link>
+												</WidgetPostCard>
+											)}
 										</div>
-									</div>
-									<Link href={`/tattoo/${item.id}`}>
-										<div className="cursor-pointer">
-											<div className="text-gray-400">
-												Vị trí xăm:{' '}
-												<span className="text-black">
-													{stringPlacements.at(item.placement)}
-												</span>
-											</div>
-											<div className="text-gray-400">
-												Style: <span className="text-black">{item.style?.name}</span>
-											</div>
-										</div>
-									</Link>
-								</WidgetPostCard>
+									))}
+								</div>
 							))}
 						</InfiniteScroll>
 					</div>

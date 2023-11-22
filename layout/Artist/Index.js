@@ -36,7 +36,9 @@ const ArtistPage = ({ artist }) => {
 						</div>
 						<div className="pb-3 flex justify-center flex-wrap gap-2 w-full">
 							<div className="w-20">
-								<Button>Đặt hẹn</Button>
+								<a target="_blank" href={`/booking/new?artist=${artist.id}`}>
+									<Button>Đặt hẹn</Button>
+								</a>
 							</div>
 							<div className="w-20">
 								<Button outline>Theo dõi</Button>
@@ -61,7 +63,7 @@ const ArtistPage = ({ artist }) => {
 							</div>
 						</div>
 						<div className={`${showMoreInfo ? 'block' : 'hidden'} lg:block`}>
-							<div className='pb-5 border-b border-gray-300'>
+							<div className="pb-5 border-b border-gray-300">
 								<h1 className="font-semibold text-base pb-2">Bio</h1>
 								<div>Đây là bio</div>
 							</div>

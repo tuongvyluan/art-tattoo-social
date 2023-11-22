@@ -3,17 +3,29 @@ import { Card } from './Card';
 import { BackgroundImg } from './BackgroundImg';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
+import Image from 'next/future/image';
 
 export const WidgetPostCard = ({ children, image, imageHeight, link = '#' }) => {
 	return (
 		<Card>
 			<Link href={link}>
 				<div className="relative w-full">
-					<BackgroundImg
-						className="relative w-full bg-center bg-cover bg-fallback"
-						image={image}
-						height={imageHeight}
-					/>
+					{imageHeight ? (
+						<BackgroundImg
+							className="relative w-full bg-center bg-cover bg-fallback"
+							image={image}
+							height={imageHeight}
+						/>
+					) : (
+						<Image
+							className="relative w-full h-auto"
+							src={image}
+							width={0}
+							height={0}
+							sizes='100vw'
+							alt="image"
+						/>
+					)}
 				</div>
 			</Link>
 
@@ -26,5 +38,5 @@ WidgetPostCard.propTypes = {
 	link: PropTypes.string,
 	children: PropTypes.node.isRequired,
 	image: PropTypes.string.isRequired,
-	imageHeight: PropTypes.number.isRequired
+	imageHeight: PropTypes.number
 };
