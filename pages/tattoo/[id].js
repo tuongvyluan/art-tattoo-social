@@ -60,7 +60,7 @@ const TattooDetails = () => {
 					// More tattoo arts
 				}
 				<div>
-					<TattooListPage />
+					<TattooListPage url="/api/tattooArt" pageSize={20} />;
 				</div>
 			</div>
 		);

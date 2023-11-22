@@ -3,6 +3,7 @@ import { stringPlacements } from 'lib/status';
 import { FiFilter } from 'react-icons/fi';
 import { usePaginate } from 'lib/usePagination';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import PropTypes from 'prop-types';
 import {
 	Dropdown,
 	DropdownMenu,
@@ -23,10 +24,10 @@ import Button from 'components/Button';
 import { Tooltip } from 'flowbite-react';
 import { useSession } from 'next-auth/react';
 
-const TattooIndexPage = () => {
+const TattooIndexPage = ({url, pageSize = 20}) => {
 	const { items, error, size, setSize, isReachingEnd } = usePaginate(
-		'/api/tattooArt',
-		20
+		url,
+		pageSize
 	);
 	const { status, data } = useSession();
 	const [tattooCol, setTattooCol] = useState(2);
@@ -480,6 +481,11 @@ const TattooIndexPage = () => {
 			</div>
 		</div>
 	);
+};
+
+TattooIndexPage.propTypes = {
+	url: PropTypes.string.isRequired,
+	pageSize: PropTypes.number
 };
 
 TattooIndexPage.getInitialProps = async () => ({
