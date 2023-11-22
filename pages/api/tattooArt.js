@@ -59,7 +59,7 @@ const data = Array(15)
 			size: stringSize.at(randomFrom0To(stringSize.length)),
 			position: stringPlacements.at(randomFrom0To(stringPlacements.length)),
 			artist: {
-				artistId: [Math.floor(Math.random() * 900)],
+				id: [Math.floor(Math.random() * 900)],
 				name: [
 					'Megan',
 					'Jeffrey',

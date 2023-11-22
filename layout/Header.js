@@ -1,13 +1,6 @@
 import { Avatar, Badge, Dropdown, DropdownMenu, DropdownToggle } from 'ui';
 import { signIn, signOut, useSession } from 'next-auth/react';
-import {
-	Bell,
-	Cog,
-	LightningBolt,
-	Logout,
-	Pencil,
-	User
-} from 'icons/solid';
+import { Bell, Cog, LightningBolt, Logout, Pencil, User } from 'icons/solid';
 import { useTranslation } from 'i18n';
 
 import Notifications from './Notifications';
@@ -15,6 +8,7 @@ import PropTypes from 'prop-types';
 import { useAppState } from 'components/AppProvider';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Calendar } from 'icons/outline';
 
 const colors = [
 	'gray',
@@ -47,8 +41,15 @@ const Header = ({ toggleOpen }) => {
 			<div className="w-full mx-auto h-full">
 				<div className="relative flex items-center justify-between h-full">
 					<div className="pl-4 cursor-pointer">
-						<Link href={'/'}>
-							<Image width={39} height={39} alt="ATL logo" src={'/images/ATL.png'} />
+						<Link href='/'>
+							<div>
+								<Image
+									width={39}
+									height={39}
+									alt="ATL logo"
+									src={'/images/ATL.png'}
+								/>
+							</div>
 						</Link>
 					</div>
 					<div className="flex justify-end items-center">
@@ -199,26 +200,24 @@ const Header = ({ toggleOpen }) => {
 										{status === 'authenticated' ? (
 											<div>
 												<a
-													href="#"
+													href="/favorite"
 													className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
 												>
 													<LightningBolt width={16} height={16} />{' '}
-													<span className="ml-3">Hoạt động</span>
+													<span className="ml-3">Yêu thích</span>
 												</a>
-												<a
-													href="#"
-													className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
-												>
-													<User width={16} height={16} />{' '}
-													<span className="ml-3">Hồ sơ</span>
-												</a>
-												<a
-													href="#"
-													className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
-												>
-													<Cog width={16} height={16} />{' '}
-													<span className="ml-3">Cài đặt</span>
-												</a>
+												<Link href="/profile">
+													<div className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
+														<User width={16} height={16} />{' '}
+														<span className="ml-3">Hồ sơ</span>
+													</div>
+												</Link>
+												<Link href="/booking">
+													<div className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
+														<Calendar width={16} height={16} />{' '}
+														<span className="ml-3">Lịch hẹn</span>
+													</div>
+												</Link>
 												<a
 													href="#"
 													onClick={() => signOut()}

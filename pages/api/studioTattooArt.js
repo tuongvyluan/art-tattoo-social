@@ -55,7 +55,7 @@ const data = {
 	size: randomFrom0To(stringSize.length),
 	placement: randomFrom0To(stringPlacements.length),
 	artist: {
-		artistId: Math.floor(Math.random() * 900),
+		id: Math.floor(Math.random() * 900),
 		firstName: [
 			'Megan',
 			'Jeffrey',

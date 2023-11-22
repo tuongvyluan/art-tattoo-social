@@ -1,4 +1,4 @@
-import { IoMdHeartEmpty, IoIosLink } from 'react-icons/io';
+import { IoMdHeartEmpty, IoIosLink, IoMdSend } from 'react-icons/io';
 import { stringPlacements } from 'lib/status';
 import { FiFilter } from 'react-icons/fi';
 import { usePaginate } from 'lib/usePagination';
@@ -87,6 +87,20 @@ const TattooIndexPage = () => {
 		}
 	}, []);
 
+	const onKeyDown = (e) => {
+		handleKeyDown(e);
+	};
+
+	const handleKeyDown = debounce((e) => {
+		if (e.keyCode === 13 || e.key === 'Enter') {
+			handleSearch();
+		}
+	}, 300);
+
+	const handleSearch = () => {
+		console.log(searchKey);
+	};
+
 	useEffect(() => {
 		//add eventlistener to window
 		window.addEventListener('scroll', debounce(onScroll, 100, true));
@@ -154,15 +168,21 @@ const TattooIndexPage = () => {
 					}
 					<div className="sm:w-96 w-full min-w-max">
 						<h1 className="font-semibold">Tìm kiếm</h1>
-						<input
-							value={searchKey}
-							type="text"
-							onChange={handleSearchChange}
-							aria-label={'Search'}
-							name="search"
-							className="appearance-none relative block w-full px-3 py-3 border-2 border-gray-700 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
-							placeholder={'Tìm kiếm'}
-						/>
+						<div className='flex gap-2 items-center'>
+							<input
+								value={searchKey}
+								type="text"
+								onChange={handleSearchChange}
+								onKeyDown={onKeyDown}
+								aria-label={'Search'}
+								name="search"
+								className="appearance-none relative block w-full px-3 py-3 border-2 border-gray-700 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
+								placeholder={'Tìm kiếm'}
+							/>
+							<button onClick={handleSearch}>
+								<IoMdSend className="hover:text-gray-600 cursor-pointer" size={20} />
+							</button>
+						</div>
 					</div>
 					<div className={`flex flex-wrap gap-3 px-1 ${visible ? 'mr-7' : ''}`}>
 						<div className="flex gap-3">
@@ -174,7 +194,7 @@ const TattooIndexPage = () => {
 								<Dropdown className={'relative'}>
 									<DropdownToggle>
 										<div className="w-28 relative">
-											<div className="appearance-none block w-full px-3 py-3 ring-1 ring-gray-700 dark:ring-gray-700 rounded-lg text-sm">
+											<div className="appearance-none block w-full px-3 py-3 ring-1 bg-white ring-gray-700 dark:ring-gray-700 rounded-lg text-sm">
 												{filterColor().get(filter.hasColor)}
 											</div>
 											<ChevronDown
@@ -213,7 +233,7 @@ const TattooIndexPage = () => {
 								<Dropdown className={'relative'}>
 									<DropdownToggle>
 										<div className="w-32 relative">
-											<div className="appearance-none block w-full px-3 py-3 ring-1 ring-gray-700 dark:ring-gray-700 rounded-lg text-sm">
+											<div className="appearance-none block w-full px-3 py-3 ring-1 bg-white ring-gray-700 dark:ring-gray-700 rounded-lg text-sm">
 												{filterSize().get(filter.size)}
 											</div>
 											<ChevronDown
@@ -254,7 +274,7 @@ const TattooIndexPage = () => {
 								<Dropdown className={'relative'}>
 									<DropdownToggle>
 										<div className="w-32 relative">
-											<div className="appearance-none block w-full px-3 py-3 ring-1 ring-gray-700 dark:ring-gray-700 rounded-lg text-sm">
+											<div className="appearance-none block w-full px-3 py-3 ring-1 bg-white ring-gray-700 dark:ring-gray-700 rounded-lg text-sm">
 												{stringPlacements.at(filter.placement)}
 											</div>
 											<ChevronDown
@@ -277,7 +297,7 @@ const TattooIndexPage = () => {
 																? 'text-black bg-gray-50'
 																: 'hover:text-black hover:bg-gray-50'
 														}`}
-														key={placementIndex}
+														key={placement}
 													>
 														{placement}
 													</li>

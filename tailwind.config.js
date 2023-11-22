@@ -30,17 +30,21 @@ module.exports = {
 				outline: '0 0 0 3px rgba(66, 153, 225, 0.5)'
 			},
 			height: {
-				'152': '37.5rem'
+				152: '37.5rem',
+				body: 'calc(100vh - 120px)'
+			},
+			minHeight: {
+				body: 'calc(100vh - 120px)'
 			},
 			width: {
-				'152': '37.5rem'
+				152: '37.5rem'
 			},
 			borderWidth: {
-				'1.5': '1.5px',
-				'0.5': '0.5px'
+				1.5: '1.5px',
+				0.5: '0.5px'
 			},
 			padding: {
-				'4.5': '1.125rem'
+				4.5: '1.125rem'
 			}
 		}
 	},

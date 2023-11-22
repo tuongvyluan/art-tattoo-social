@@ -3,8 +3,16 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Card, CardBody } from 'ui';
 
-function StudioInfo({ studio, handleSubmit }) {
-	const [profile, setProfile] = useState(JSON.parse(JSON.stringify(studio)));
+function ArtistInfo({ account, handleSubmit }) {
+	const [profile, setProfile] = useState(JSON.parse(JSON.stringify(account)));
+	const [artistStyles, setArtistStyles] = useState([]);
+	const [artistStudios, setArtistStudios] = useState([]);
+
+	if (account.styles) {
+		setArtistStyles(JSON.parse(JSON.stringify(account.styles)));
+		setArtistStudios(JSON.parse(JSON.stringify(account.studios)));
+	}
+
 	const handleFormChange = (e) => {
 		setProfile({ ...profile, [e.target.name]: e.target.value });
 	};
@@ -12,60 +20,51 @@ function StudioInfo({ studio, handleSubmit }) {
 	const handleFormSubmit = (e) => {
 		e.preventDefault();
 		handleSubmit({
-			...profile,
-			openTime: profile.openTime,
-			closeTime: profile.closeTime
+			account: profile,
+			artistStyles: artistStyles,
+			artistStudios: artistStudios
 		});
+	};
+
+	const handleFormReset = () => {
+		setProfile(JSON.parse(JSON.stringify(account)));
+		setArtistStyles(JSON.parse(JSON.stringify(account.styles)));
+		setArtistStudios(JSON.parse(JSON.stringify(account.studios)));
 	};
 	return (
 		<div className="sm:px-12 md:px-16 lg:px-32 xl:px-56">
 			<Card>
 				<CardBody>
 					<h1 className="border-b border-gray-300 pb-3 text-base">
-						Thông tin studio
+						Thông tin cá nhân
 					</h1>
 					<form method="post" className="pt-3" onSubmit={handleFormSubmit}>
-						<div className="flex flex-wrap items-center justify-between mb-3">
-							<div className="w-full sm:w-2/5 lg:w-1/2 sm:pb-0 pb-6">
-								<label>{'Tên'}</label>
+						<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+							<div className="w-full pb-0">
+								<label>{'Họ'}</label>
 								<input
-									aria-label={'studioName'}
-									name="studioName"
+									aria-label={'firstName'}
+									name="firstName"
 									type="text"
-									value={profile.studioName}
+									value={profile.firstName}
 									onChange={handleFormChange}
 									required
 									className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
-									placeholder={'Tên studio'}
+									placeholder={'Họ'}
 								/>
 							</div>
-							<div className="flex gap-5 mb-3 sm:mb-0 ">
-								<div>
-									<label>{'Giờ mở cửa'}</label>
-									<input
-										aria-label={'openTime'}
-										name="openTime"
-										type="time"
-										step={1}
-										value={profile.openTime}
-										onChange={handleFormChange}
-										required
-										className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
-									/>
-								</div>
-								<div>
-									<label>{'Giờ đóng cửa'}</label>
-									<input
-										aria-label={'closeTime'}
-										name="closeTime"
-										type="time"
-										value={profile.closeTime}
-										step={1}
-										onChange={handleFormChange}
-										required
-										className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
-									/>
-								</div>
+							<div className="w-full">
+								<label>{'Tên'}</label>
+								<input
+									aria-label={'lastName'}
+									name="lastName"
+									type="text"
+									value={profile.lastName}
+									onChange={handleFormChange}
+									required
+									className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
+									placeholder={'Tên'}
+								/>
 							</div>
 						</div>
 
@@ -84,22 +83,38 @@ function StudioInfo({ studio, handleSubmit }) {
 						</div>
 
 						<div className="block mb-3">
-							<label>{'Bio'}</label>
-							<textarea
-								aria-label={'bioContent'}
-								name="bioContent"
-								type="text"
-								value={profile.bioContent}
+							<label>{'Điện thoại'}</label>
+							<input
+								aria-label={'phoneNumber'}
+								name="phoneNumber"
+								type="tel"
+								value={profile.phoneNumber}
 								onChange={handleFormChange}
 								required
-								rows={5}
 								className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
-								placeholder={'Nhập bio cho studio'}
+								placeholder={'Điện thoại'}
 							/>
 						</div>
+
+						{account.bio && (
+							<div className="block mb-3">
+								<label>{'Bio'}</label>
+								<textarea
+									aria-label={'bioContent'}
+									name="bioContent"
+									type="text"
+									value={profile.bioContent}
+									onChange={handleFormChange}
+									required
+									rows={5}
+									className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
+									placeholder={'Nhập bio cho studio'}
+								/>
+							</div>
+						)}
 						<div className="flex justify-end gap-2">
 							<div className="w-16">
-								<Button type="reset" outline>
+								<Button onClick={handleFormReset} type="reset" outline>
 									Reset
 								</Button>
 							</div>
@@ -114,9 +129,9 @@ function StudioInfo({ studio, handleSubmit }) {
 	);
 }
 
-StudioInfo.propTypes = {
-	studio: PropTypes.object.isRequired,
+ArtistInfo.propTypes = {
+	account: PropTypes.object.isRequired,
 	handleSubmit: PropTypes.func
 };
 
-export default StudioInfo;
+export default ArtistInfo;

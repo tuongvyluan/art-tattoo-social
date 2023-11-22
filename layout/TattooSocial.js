@@ -199,13 +199,15 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 							}
 							<div className="flex justify-between px-5">
 								<div className="flex gap-3 items-center pb-2">
-									<div className="cursor-pointer">
-										<Avatar
-											size={40}
-											src={artist.avatar ? artist.avatar : ''}
-											alt={artist.firstName}
-										/>
-									</div>
+									<Link href={`/artist/${artist.id}`}>
+										<div className="cursor-pointer">
+											<Avatar
+												size={40}
+												src={artist.avatar ? artist.avatar : '/images/avatar.png'}
+												alt={artist.firstName}
+											/>
+										</div>
+									</Link>
 									<div className="cursor-pointer">
 										<div className="font-semibold">
 											{artist.firstName} {artist.lastName}

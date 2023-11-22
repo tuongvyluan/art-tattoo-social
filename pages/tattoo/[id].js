@@ -8,12 +8,12 @@ import { useState } from 'react';
 import { Loading } from 'ui';
 
 const TattooDetails = () => {
-	// Get bookingId
+	// Get tattooId
 	const router = useRouter();
 	const { id } = router.query;
 	const [artTattoo, setArtTattoo] = useState(undefined);
 	const [artist, setArtist] = useState({
-		artistId: [Math.floor(Math.random() * 900)],
+		id: [Math.floor(Math.random() * 900)],
 		firstName: 'Vy',
 		lastName: 'Luân'
 	});

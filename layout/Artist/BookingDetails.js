@@ -6,8 +6,8 @@ import Image from 'next/image';
 import { Card, CardBody, Link } from 'ui';
 import { WidgetOrderStatus } from 'ui/WidgetOrderStatus';
 
-function BookingDetailsPage({ data }) {
-	const timeline = extractBookingStatusTimeline(data);
+function BookingDetailsPage({ booking }) {
+	const timeline = extractBookingStatusTimeline(booking);
 	return (
 		<div className="sm:px-12 md:px-16 lg:px-32 xl:px-56">
 			<Card>
@@ -22,9 +22,9 @@ function BookingDetailsPage({ data }) {
 							</div>
 						</Link>
 						<div>
-							<span>Mã đơn hàng: {data.id.split('-').reverse().at(0)} | </span>
+							<span>Mã đơn hàng: {booking.id.split('-').reverse().at(0)} | </span>
 							<span className="text-red-500">
-								{stringBookingStatuses[data.status]}
+								{stringBookingStatuses[booking.status]}
 							</span>
 						</div>
 					</div>
@@ -35,9 +35,9 @@ function BookingDetailsPage({ data }) {
 						<div className="font-semibold text-lg pb-2">Thông tin đơn hàng</div>
 						<div className="flex justify-start flex-wrap">
 							<div className="w-full pr-1 md:w-1/4 lg:w-1/3 sm:border-r sm:border-gray-300">
-								<div className="text-base">{data.customer.firstName}</div>
-								<div>{data.customer.phoneNumber}</div>
-								<div>{data.customer.email}</div>
+								<div className="text-base">{booking.customer.firstName}</div>
+								<div>{booking.customer.phoneNumber}</div>
+								<div>{booking.customer.email}</div>
 							</div>
 							<div className="flex flex-col justify-center flex-grow pt-3 md:pt-0">
 								{timeline.length > 0 ? (
@@ -56,26 +56,14 @@ function BookingDetailsPage({ data }) {
 					<div className="pt-3">
 						<div className="flex justify-between items-center font-semibold text-lg pb-2">
 							<div>Chi tiết đơn hàng</div>
-							{
-								// Button thêm hình xăm cho đơn hàng
-								data.status === BOOKING_STATUS.PENDING ? (
-									<Link href={`/tattoo/new?booking=${data.id}`}>
-										<span className="text-white cursor-pointer bg-gray-800 hover:bg-gray-700 font-medium rounded-lg text-sm py-2 px-2 dark:bg-indigo-600 dark:hover:bg-indigo-500 focus:outline-none dark:focus:ring-blue-800">
-											Thêm hình xăm
-										</span>
-									</Link>
-								) : (
-									<></>
-								)
-							}
 						</div>
 
 						{
 							// List hình xăm
 						}
-						{data.artTattoos?.map((tattoo, tattooIndex) => (
+						{booking.artTattoos?.map((tattoo, tattooIndex) => (
 							<div key={tattoo.id}>
-								<Link href={`/tattoo/${tattoo.id}?booking=${data.id}`}>
+								<Link href={`/tattoo/${tattoo.id}?booking=${booking.id}`}>
 									<div className="cursor-pointer py-2 flex justify-start gap-3 flex-wrap">
 										<div className="relative w-32 h-32">
 											<Image
@@ -124,12 +112,12 @@ function BookingDetailsPage({ data }) {
 										Tổng tiền
 									</th>
 									<td className="py-3 text-right text-xl text-red-500">
-										{formatPrice(data.total)}
+										{formatPrice(booking.total)}
 									</td>
 								</tr>
 								{
 									// Button thêm hình xăm cho đơn hàng
-									data.status === BOOKING_STATUS.COMPLETED ? (
+									booking.status === BOOKING_STATUS.COMPLETED ? (
 										<tr className="border-t border-gray-300">
 											<th className="py-3 text-gray-500 w-fit sm:w-1/2 md:w-2/3 border-r pr-3 border-gray-300 text-right text-sm font-normal">
 												Phương thức thanh toán
@@ -149,6 +137,6 @@ function BookingDetailsPage({ data }) {
 	);
 }
 BookingDetailsPage.propTypes = {
-	data: PropTypes.object
+	booking: PropTypes.object
 };
 export default BookingDetailsPage;
