@@ -2,7 +2,6 @@ import TattooListPage from 'layout/TattooList';
 import TattooSocial from 'layout/TattooSocial';
 import { fetcher } from 'lib';
 import { BASE_URL } from 'lib/env';
-import { tattooStyleById } from 'lib/tattooStyle';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Loading } from 'ui';
@@ -22,10 +21,10 @@ const TattooDetails = () => {
 	const [comments, setComments] = useState([]);
 
 	if (!artTattoo) {
-		fetcher(`${BASE_URL}/TattooArts/GetTattooArtMediaById?id=${id}`).then((data) => {
+		fetcher(`${BASE_URL}/TattooArts/GetTattooArtMediaById?id=${id}&isAll=false`).then((data) => {
 			setArtTattoo({
 				id: data.id,
-				style: tattooStyleById(data.styleId),
+				style: data.style,
 				placement: {
 					id: data.placement,
 					name: data.placementName
@@ -60,7 +59,10 @@ const TattooDetails = () => {
 					// More tattoo arts
 				}
 				<div>
-					<TattooListPage url="/api/tattooArt" pageSize={20} />;
+					<TattooListPage
+						url={`${BASE_URL}/TattooArts/AllTattooArts`}
+						pageSize={25}
+					/>
 				</div>
 			</div>
 		);
