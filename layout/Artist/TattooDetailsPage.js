@@ -11,15 +11,20 @@ import {
 	Link
 } from 'ui';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from 'components/Button';
-import { fetcherPost, randomFrom0To } from 'lib';
+import { fetcherPost } from 'lib';
 import { CldUploadButton } from 'next-cloudinary';
 import { generateSHA1, generateSignature } from 'lib/cloudinary_signature';
 import { AiOutlineClose } from 'react-icons/ai';
 import { extractPublicId } from 'cloudinary-build-url';
 import MoneyInput from 'components/MoneyInput';
-import { operationNames, stringPlacements, stringSize } from 'lib/status';
+import {
+	operationNames,
+	stringColor,
+	stringPlacements,
+	stringSize
+} from 'lib/status';
 import { tattooStyleById, tattooStyleList } from 'lib/tattooStyle';
 import { v4 } from 'uuid';
 
@@ -33,16 +38,12 @@ function TattooDetailsPage({ bookingId, artTattoo, artist, handleSubmit }) {
 		typeof artTattoo !== 'undefined'
 			? artTattoo
 			: {
-					bookingId: artTattoo ? artTattoo.id : bookingId,
-					artistId: artist.id,
-					artist: artist,
-					bookingDetails: [
-						{
-							bookingDetailsId: v4(),
-							operationName: 'Xăm trọn gói',
-							price: randomFrom0To(8) * 1200000 + 1000000
-						}
-					],
+					id: '',
+					bookingId: bookingId,
+					artist: {
+						id: artist.id,
+						firstName: artist.firstName
+					},
 					styleId: 14,
 					stages: [
 						{
@@ -58,9 +59,16 @@ function TattooDetailsPage({ bookingId, artTattoo, artist, handleSubmit }) {
 								// }
 							]
 						}
-					]
+					],
+					thumbnail: '',
+					price: 0,
+					isPublicized: false,
+					hasColor: false,
+					size: 0
 			  };
+
 	const [tattoo, setTattoo] = useState(JSON.parse(JSON.stringify(defaultTattoo)));
+	const [thumbnailKey, setThumbnailKey] = useState(0);
 
 	const handleStageChange = (e, stageIndex) => {
 		const stages = tattoo.stages;
@@ -189,6 +197,7 @@ function TattooDetailsPage({ bookingId, artTattoo, artist, handleSubmit }) {
 	const setTattooState = (key, newValue) => {
 		if (tattoo[key] !== newValue) {
 			setTattoo({ ...tattoo, [key]: newValue });
+			console.log(newValue);
 		}
 	};
 
@@ -213,6 +222,10 @@ function TattooDetailsPage({ bookingId, artTattoo, artist, handleSubmit }) {
 		handleSubmit(tattoo);
 		defaultTattoo = JSON.parse(JSON.stringify(tattoo));
 	};
+
+	useEffect(() => {
+		setThumbnailKey(Math.random());
+	}, [tattoo]);
 
 	return (
 		<div className="sm:px-12 md:px-16 lg:px-32 xl:px-56">
@@ -248,7 +261,7 @@ function TattooDetailsPage({ bookingId, artTattoo, artist, handleSubmit }) {
 					<div className="py-3 border-b border-gray-300 flex gap-5 flex-wrap">
 						<div className="w-full min-w-min sm:w-1/2 md:w-1/3 lg:w-1/4">
 							<div className="flex justify-center">
-								<di>
+								<div key={thumbnailKey}>
 									<Avatar
 										circular={false}
 										src={
@@ -257,22 +270,21 @@ function TattooDetailsPage({ bookingId, artTattoo, artist, handleSubmit }) {
 										alt={'Thumbnail'}
 										size={150}
 									/>
-								</di>
+								</div>
 							</div>
 							<div className="flex flex-wrap items-center mt-1">
 								<div className="mx-auto">
 									<CldUploadButton
 										onSuccess={(result, options) =>
-											setTattooState('thumbnail', result.info?.thumbnail)
+											setTattooState('thumbnail', result.info?.url)
 										}
 										uploadPreset={UPLOAD_PRESET}
+										className="text-gray-800 bg-white ring-1 ring-gray-300 hover:text-white hover:bg-gray-700 font-medium rounded-lg text-sm py-2 px-2 w-full"
 									>
-										<Button outline>
-											<div className="flex gap-1 items-center">
-												<MdUpload size={16} />
-												<div>Thay thumbnail</div>
-											</div>
-										</Button>
+										<div className="flex gap-1 items-center">
+											<MdUpload size={16} />
+											<div>Thay thumbnail</div>
+										</div>
 									</CldUploadButton>
 								</div>
 							</div>
@@ -281,9 +293,7 @@ function TattooDetailsPage({ bookingId, artTattoo, artist, handleSubmit }) {
 							<div className="font-semibold text-lg pb-2">Thông tin hình xăm</div>
 							<div className="pb-3 flex items-center gap-1">
 								<div className="w-20">Nghệ sĩ xăm:</div>
-								<span className="font-semibold">
-									{/* {tattoo.artist.firstName} */}
-								</span>
+								<span className="font-semibold">{tattoo.artist.firstName}</span>
 							</div>
 							<div className="pb-3 flex items-center gap-1">
 								<div className="w-20">Kích thước: </div>
@@ -336,6 +346,36 @@ function TattooDetailsPage({ bookingId, artTattoo, artist, handleSubmit }) {
 								</Dropdown>
 							</div>
 							<div className="pb-3 flex gap-1 items-center">
+								<div className="w-20">Màu xăm:</div>
+								<Dropdown className="relative h-full flex items-center">
+									<DropdownToggle>
+										<div className="w-28 rounded-lg p-1 border border-gray-300">
+											{stringColor(tattoo.hasColor)}
+										</div>
+									</DropdownToggle>
+									<DropdownMenu className={'top-2 left-2'}>
+										<div className="h-16 overflow-y-auto">
+											<div
+												onClick={() => setTattooState('hasColor', false)}
+												className={`px-2 py-1 cursor-pointer hover:bg-gray-100 ${
+													tattoo.hasColor === false ? 'bg-indigo-100' : ''
+												}`}
+											>
+												Trắng đen
+											</div>
+											<div
+												onClick={() => setTattooState('hasColor', true)}
+												className={`px-2 py-1 cursor-pointer hover:bg-gray-100 ${
+													tattoo.hasColor === true ? 'bg-indigo-100' : ''
+												}`}
+											>
+												Màu sắc
+											</div>
+										</div>
+									</DropdownMenu>
+								</Dropdown>
+							</div>
+							<div className="pb-3 flex gap-1 items-center">
 								<div className="w-20">Style:</div>
 								<Dropdown className="relative h-full flex items-center">
 									<DropdownToggle>
@@ -362,11 +402,13 @@ function TattooDetailsPage({ bookingId, artTattoo, artist, handleSubmit }) {
 							</div>
 							<div className="pb-3 flex gap-1 items-center">
 								<div className="w-20">Giá:</div>
-								<MoneyInput
-									value={tattoo.price}
-									disabled={bookingId}
-									onAccept={(value, mask) => setTattooState('price', value)}
-								/>
+								<div className="w-48">
+									<MoneyInput
+										value={tattoo.price}
+										disabled={bookingId !== ''}
+										onAccept={(value, mask) => setTattooState('price', value)}
+									/>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -470,7 +512,7 @@ function TattooDetailsPage({ bookingId, artTattoo, artist, handleSubmit }) {
 											{
 												// Remove stage icon
 											}
-											<div className='w-full pb-3 flex justify-end'>
+											<div className="w-full pb-3 flex justify-end">
 												<button
 													className={`hover:scale-125 hover:text-red-500 ${
 														stageLength > 1 ? '' : 'hidden'
@@ -521,13 +563,12 @@ function TattooDetailsPage({ bookingId, artTattoo, artist, handleSubmit }) {
 																	handleUploadImage(result, options, stageIndex)
 																}
 																uploadPreset={UPLOAD_PRESET}
+																className="text-gray-800 bg-white ring-1 ring-gray-300 hover:text-white hover:bg-gray-700 font-medium rounded-lg text-sm py-2 px-2 w-full"
 															>
-																<Button outline>
-																	<div className="flex gap-1 items-center">
-																		<MdUpload size={16} />
-																		<div>Upload</div>
-																	</div>
-																</Button>
+																<div className="flex gap-1 items-center">
+																	<MdUpload size={16} />
+																	<div>Upload</div>
+																</div>
 															</CldUploadButton>
 														</div>
 													</div>

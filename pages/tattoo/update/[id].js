@@ -1,5 +1,6 @@
 import TattooDetailsPage from 'layout/Artist/TattooDetailsPage';
-import { fetcher } from 'lib';
+import TattooDetailNoUpdatePage from 'layout/TattooDetailNoUpdatePage';
+import { fetcher, fetcherPost } from 'lib';
 import { BASE_URL } from 'lib/env';
 import { ROLE } from 'lib/status';
 import { useSession } from 'next-auth/react';
@@ -20,8 +21,27 @@ const TattooDetails = () => {
 		artistName: 'Vy'
 	});
 
+	const handleSubmit = (newArtTattoo) => {
+		if (id === 'new') {
+			const newTattoo = {
+				artistId: newArtTattoo.artist.id,
+				styleId: newArtTattoo.styleId,
+				size: newArtTattoo.size,
+				placement: newArtTattoo.placement,
+				thumbnail: newArtTattoo.thumbnail,
+				isPublicized: newArtTattoo.isPublicized
+			};
+			fetcherPost(`${BASE_URL}/TattooArts/CreateTattoo`, newTattoo);
+		} else {
+			console.log('Update');
+		}
+		setArtTattoo(newArtTattoo);
+		console.log(newArtTattoo);
+	};
+
+	// Nếu đang xem hình xăm cũ và chưa load hình xăm
 	if (id !== 'new' && !artTattoo) {
-		fetcher(`${BASE_URL}/TattooArts/Details?id=${id}&is`).then((data) => {
+		fetcher(`${BASE_URL}/TattooArts/Details?id=${id}`).then((data) => {
 			const stageMap = new Map(
 				data.medias.map((obj) => {
 					return [
@@ -57,16 +77,6 @@ const TattooDetails = () => {
 		});
 	}
 
-	const handleSubmit = (newArtTattoo) => {
-		if (id === 'new') {
-			console.log('Create');
-		} else {
-			console.log('Update');
-		}
-		setArtTattoo(newArtTattoo);
-		console.log(newArtTattoo);
-	};
-
 	if (status === 'loading') {
 		return (
 			<div className="flex items-center justify-center h-full">
@@ -75,12 +85,35 @@ const TattooDetails = () => {
 		);
 	}
 
-	if (status === 'authenticated' && data.user.role === ROLE.ARTIST) {
+	if (status === 'authenticated') {
 		if (id !== 'new' && (!artTattoo || !artist)) {
 			return (
 				<div className="flex items-center justify-center h-full">
 					<Loading />
 				</div>
+			);
+		}
+		if (id === 'new' && data.user.role === ROLE.ARTIST) {
+			const artistInfo = {
+				id: data.user.id,
+				firstName: data.user.firstName
+			};
+			return (
+				<TattooDetailsPage
+					bookingId={booking}
+					artTattoo={artTattoo}
+					artist={artistInfo}
+					handleSubmit={handleSubmit}
+				/>
+			);
+		}
+		if (data.user.role !== ROLE.ARTIST) {
+			return (
+				<TattooDetailNoUpdatePage
+					bookingId={booking}
+					artTattoo={artTattoo}
+					artist={artist}
+				/>
 			);
 		}
 		return (

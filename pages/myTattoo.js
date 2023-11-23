@@ -1,6 +1,10 @@
-import TattooListPage from 'layout/TattooList';
+import ArtistMyTattooPage from 'layout/Artist/MyTattoo';
+import TattooListNotFilter from 'layout/TattooListNotFilter';
+import TattooListUpdate from 'layout/TattooListUpdate';
+import { BASE_URL } from 'lib/env';
 import { ROLE } from 'lib/status';
 import { useSession } from 'next-auth/react';
+import Router from 'next/router';
 import { useState } from 'react';
 import { Loading } from 'ui';
 
@@ -16,16 +20,18 @@ const MyTattooPage = () => {
 		);
 	}
 
-	if (!url) {
+	if (status === 'unauthenticated') {
+		Router.replace('/');
+	} else if (!url) {
 		switch (data.user.role) {
 			case ROLE.CUSTOMER:
-				setUrl(`/api/tattooArt?customer=${data.user.id}`);
+				setUrl(`${BASE_URL}/TattooArts/TattooUser?customerId=${data.user.id}`);
 				break;
 			case ROLE.ARTIST:
-				setUrl(`/api/tattooArt?artist=${data.user.id}`);
+				setUrl(`${BASE_URL}/TattooArts/TattooUser?artistId=${data.user.id}`);
 				break;
 			case ROLE.STUDIO:
-				setUrl(`/api/tattooArt?studio=${data.user.id}`);
+				setUrl(`${BASE_URL}/TattooArts/TattooUser?studioId=${data.user.id}`);
 				break;
 		}
 		return (
@@ -34,7 +40,13 @@ const MyTattooPage = () => {
 			</div>
 		);
 	}
-	return <TattooListPage url={url} showFilter={false} />;
+
+	if (data.user.role !== ROLE.ARTIST) {
+		return (
+			<TattooListUpdate role={data.user.role} url={url} showFilter={false} />
+		);
+	}
+	return <ArtistMyTattooPage url={url} />;
 };
 
 export default MyTattooPage;

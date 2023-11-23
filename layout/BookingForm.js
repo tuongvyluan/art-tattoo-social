@@ -2,8 +2,6 @@ import { Avatar, BackgroundImg } from 'ui';
 import Button from 'components/Button';
 import { UPLOAD_PRESET } from 'lib/env';
 import PropTypes from 'prop-types';
-import Footer from './Footer';
-import MyModal from 'components/MyModal';
 import BookingModal from 'components/BookingModal';
 import Link from 'next/link';
 
