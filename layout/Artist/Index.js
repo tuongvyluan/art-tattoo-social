@@ -1,5 +1,6 @@
 import Button from 'components/Button';
 import { ChevronDown, ChevronUp } from 'icons/outline';
+import TattooIndexPage from 'layout/TattooList';
 import { usePaginate } from 'lib/usePagination';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
@@ -12,20 +13,22 @@ const ArtistPage = ({ artist }) => {
 	const [showMoreInfo, setShowMoreInfo] = useState(false);
 
 	return (
-		<div className="relative lg:flex lg:gap-4">
+		<div className="relative">
 			{
 				// Artist profile
 			}
-			<div className="w-full lg:w-72">
+			<div className="w-full lg:px-52 xl:px-80">
 				<Card>
 					<CardBody>
-						<div className="mx-auto text-center lg:mx-0 lg:text-left lg:flex lg:gap-3 lg:items-center pb-2">
-							<div className="cursor-pointer text-center w-max mx-auto lg:mx-0">
-								<Avatar
-									size={60}
-									src={artist.avatar ? artist.avatar : '/images/avatar.png'}
-									alt={artist.firstName}
-								/>
+						<div className="mx-auto text-center pb-2">
+							<div className="cursor-pointer text-center w-max mx-auto">
+								<div>
+									<Avatar
+										size={60}
+										src={artist.avatar ? artist.avatar : '/images/avatar.png'}
+										alt={artist.firstName}
+									/>
+								</div>
 							</div>
 							<div className="cursor-pointer">
 								<div className="font-semibold text-base">
@@ -49,7 +52,7 @@ const ArtistPage = ({ artist }) => {
 						}
 						<div
 							onClick={() => setShowMoreInfo(!showMoreInfo)}
-							className="block lg:hidden text-center"
+							className="block text-center"
 						>
 							<div className="mx-auto text-base cursor-pointer text-gray-700">
 								{showMoreInfo ? 'Ẩn bớt' : 'Xem thêm'}
@@ -62,15 +65,32 @@ const ArtistPage = ({ artist }) => {
 								)}
 							</div>
 						</div>
-						<div className={`${showMoreInfo ? 'block' : 'hidden'} lg:block`}>
+						<div className={`${showMoreInfo ? 'block' : 'hidden'}`}>
 							<div className="pb-5 border-b border-gray-300">
 								<h1 className="font-semibold text-base pb-2">Bio</h1>
 								<div>Đây là bio</div>
+							</div>
+							<div className="pb-5 border-b border-gray-300 pt-3">
+								<h1 className="font-semibold text-base pb-2">Tiệm xăm</h1>
+								<div className='flex gap-4 items-center'>
+									<Avatar size={44} src={'/images/ATL.png'} alt='studio logo' />
+									<div>
+										<div className='font-semibold'>Studio name</div>
+										<div>Hồ Chí Minh, Gò Vấp</div>
+									</div>
+								</div>
+							</div>
+							<div className="py-3">
+								<h1 className="font-semibold text-base pb-2">Styles</h1>
+								<div className='flex gap-4 items-center'>
+									
+								</div>
 							</div>
 						</div>
 					</CardBody>
 				</Card>
 			</div>
+			<TattooIndexPage url="/api/tattooArt" pageSize={20} />
 		</div>
 	);
 };
