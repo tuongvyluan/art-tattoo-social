@@ -68,18 +68,18 @@ export const enum BOOKING_STATUS {
 	WAITING = 0,
 	CONFIRMED = 1,
 	PENDING = 2,
-	COMPLETED = 3,
-	CUSTOMER_CANCEL = 4,
-	STUDIO_CANCEL = 5
+	CUSTOMER_CANCEL = 3,
+	STUDIO_CANCEL = 4,
+	COMPLETED = 5
 }
 
 export const stringBookingStatuses = [
 	'Chờ xác nhận',
 	'Đã xác nhận',
 	'Đang thực hiện',
-	'Đã hoàn thành',
 	'Khách hàng huỷ',
-	'Studio huỷ'
+	'Studio huỷ',
+	'Đã hoàn thành',
 ];
 
 export const operationNames = [

@@ -2,7 +2,6 @@ import Button from 'components/Button';
 import { ChevronDown, ChevronUp } from 'icons/outline';
 import TattooListNotFilter from 'layout/TattooListNotFilter';
 import { BASE_URL } from 'lib/env';
-import { usePaginate } from 'lib/usePagination';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Avatar, Card, CardBody } from 'ui';

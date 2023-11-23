@@ -1,23 +1,12 @@
-import { ChevronDown, ChevronLeft } from 'icons/solid';
-import { MdUpload } from 'react-icons/md';
+import { ChevronLeft } from 'icons/solid';
 import {
 	Avatar,
 	BackgroundImg,
 	Card,
 	CardBody,
-	Dropdown,
-	DropdownMenu,
-	DropdownToggle,
 	Link
 } from 'ui';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
-import Button from 'components/Button';
-import { fetcherPost } from 'lib';
-import { CldUploadButton } from 'next-cloudinary';
-import { generateSHA1, generateSignature } from 'lib/cloudinary_signature';
-import { AiOutlineClose } from 'react-icons/ai';
-import { extractPublicId } from 'cloudinary-build-url';
 import MoneyInput from 'components/MoneyInput';
 import {
 	operationNames,
@@ -25,13 +14,7 @@ import {
 	stringPlacements,
 	stringSize
 } from 'lib/status';
-import { tattooStyleById, tattooStyleList } from 'lib/tattooStyle';
-import { v4 } from 'uuid';
-
-const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
-const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-const API_KEY = process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY;
-const API_SECRET = process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET;
+import { tattooStyleById } from 'lib/tattooStyle';
 
 function TattooDetailNoUpdatePage({ bookingId, artTattoo, artist }) {
 	const [tattoo, setTattoo] = useState(JSON.parse(JSON.stringify(artTattoo)));
@@ -41,7 +24,7 @@ function TattooDetailNoUpdatePage({ bookingId, artTattoo, artist }) {
 			<Card>
 				<CardBody>
 					<div className="flex justify-between border-b border-gray-300 pb-3">
-						<Link href={bookingId !== '' ? `/booking/${bookingId}` : '/tattoo'}>
+						<Link href={bookingId !== '' ? `/booking/${bookingId}` : '/myTattoo'}>
 							<div className="cursor-pointer flex gap-1 text-gray-500 hover:text-indigo-500">
 								<ChevronLeft width={20} heigh={20} /> TRỞ LẠI
 							</div>
@@ -109,7 +92,7 @@ function TattooDetailNoUpdatePage({ bookingId, artTattoo, artist }) {
 									{tattooStyleById(tattoo.styleId)?.name}
 								</div>
 							</div>
-							<div className="pb-3 flex gap-1 items-center">
+							{/* <div className="pb-3 flex gap-1 items-center">
 								<div className="w-20">Giá:</div>
 								<div className="w-48">
 									<MoneyInput
@@ -118,7 +101,7 @@ function TattooDetailNoUpdatePage({ bookingId, artTattoo, artist }) {
 										onAccept={(value, mask) => setTattooState('price', value)}
 									/>
 								</div>
-							</div>
+							</div> */}
 						</div>
 					</div>
 					{
@@ -145,11 +128,11 @@ function TattooDetailNoUpdatePage({ bookingId, artTattoo, artist }) {
 										>
 											<div className="relative flex flex-wrap justify-between items-center w-full">
 												<div className="text-base w-40 flex flex-row items-center rounded-lg p-2 border border-gray-300 relative">
-													<div className="h-6">{detail.operationName}</div>
+													<div className="h-6">{operationNames.at(detail.operationId)}</div>
 												</div>
 
 												<div className="text-base relative">
-													<MoneyInput value={detail.price} disabled={true} />
+													<MoneyInput value={detail.totalRevenue} disabled={true} />
 												</div>
 											</div>
 										</div>

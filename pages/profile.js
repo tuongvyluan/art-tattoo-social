@@ -1,5 +1,5 @@
 import ArtistInfo from 'layout/Artist/Profile';
-import { fetcher, fetcherPost } from 'lib';
+import { fetcher, fetcherPost, fetcherPut } from 'lib';
 import { BASE_URL } from 'lib/env';
 import { ARTIST_STATUS, ROLE } from 'lib/status';
 import { useSession } from 'next-auth/react';
@@ -14,7 +14,7 @@ const ProfilePage = () => {
 	const [styles, setStyles] = useState([]);
 
 	const handleSubmit = (account, artistStyles, artistStudios) => {
-		console.log(artist, artistStyles, artistStudios);
+		fetcherPut(`${BASE_URL}/artist-profile`, account)
 	};
 
 	if (status === 'loading') {
@@ -28,6 +28,7 @@ const ProfilePage = () => {
 	if (status === 'authenticated') {
 		if (!profile) {
 			let myProfile = {
+				id: data.user.id,
 				firstName: '',
 				lastName: '',
 				email: '',
@@ -36,48 +37,43 @@ const ProfilePage = () => {
 			if (data.user.role === ROLE.ARTIST) {
 				myProfile = {
 					...myProfile,
-					bio: '',
+					bioContent: '',
 					styles: [],
-					studios: []
+					studios: [],
+					role: ROLE.ARTIST
 				};
 				fetcher(`${BASE_URL}/artists/${data.user.id}/artist-details`)
 					.then((data) => {
-						console.log('success');
+						myProfile = {
+							id: data.id,
+							firstName: data.firstName,
+							lastName: data.lastName,
+							role: ROLE.ARTIST,
+							bioContent: data.bioContent ? data.bioContent : '',
+							avatar: data.avatar ? data.avatar : '/images/avatar.png',
+							styles: data.artistStyles,
+							studios: data.studioArtists
+						};
+						setProfile(myProfile);
 					})
 					.catch((e) => {
-						fetcherPost(`${BASE_URL}/Auth/CreateArtist`, {
-							id: data.user.id,
-							bioContent: '',
-							status: ARTIST_STATUS.AVAILABLE,
-							styleIds: []
-						})
-							.then((data) => {
-								fetcher(`${BASE_URL}/artists/${data.user.id}/artist-details`)
-									.then((data) => {
-										myProfile = data;
-									})
-									.catch((e) => {
-										console.log(e);
-									});
-							})
-							.catch((e) => {
-								console.log(e);
-							});
+						console.log(e);
 					});
+			} else {
+				setProfile(myProfile);
 			}
-			setProfile(myProfile);
-			console.log([profile]);
+
 			return (
 				<div className="flex items-center justify-center h-full">
 					<Loading />
 				</div>
 			);
+		} else {
+			return <ArtistInfo handleSubmit={handleSubmit} account={profile} />;
 		}
 	} else {
 		Router.replace('/');
 	}
-
-	return <ArtistInfo handleSubmit={handleSubmit} account={profile} />;
 };
 
 export default ProfilePage;

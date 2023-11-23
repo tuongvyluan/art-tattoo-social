@@ -1,5 +1,4 @@
 import ArtistMyTattooPage from 'layout/Artist/MyTattoo';
-import TattooListNotFilter from 'layout/TattooListNotFilter';
 import TattooListUpdate from 'layout/TattooListUpdate';
 import { BASE_URL } from 'lib/env';
 import { ROLE } from 'lib/status';

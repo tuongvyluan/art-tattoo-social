@@ -1,6 +1,6 @@
 import TattooDetailsPage from 'layout/Artist/TattooDetailsPage';
 import TattooDetailNoUpdatePage from 'layout/TattooDetailNoUpdatePage';
-import { fetcher, fetcherPost } from 'lib';
+import { fetcher } from 'lib';
 import { BASE_URL } from 'lib/env';
 import { ROLE } from 'lib/status';
 import { useSession } from 'next-auth/react';
@@ -22,21 +22,7 @@ const TattooDetails = () => {
 	});
 
 	const handleSubmit = (newArtTattoo) => {
-		if (id === 'new') {
-			const newTattoo = {
-				artistId: newArtTattoo.artist.id,
-				styleId: newArtTattoo.styleId,
-				size: newArtTattoo.size,
-				placement: newArtTattoo.placement,
-				thumbnail: newArtTattoo.thumbnail,
-				isPublicized: newArtTattoo.isPublicized
-			};
-			fetcherPost(`${BASE_URL}/TattooArts/CreateTattoo`, newTattoo);
-		} else {
-			console.log('Update');
-		}
 		setArtTattoo(newArtTattoo);
-		console.log(newArtTattoo);
 	};
 
 	// Nếu đang xem hình xăm cũ và chưa load hình xăm
@@ -62,6 +48,11 @@ const TattooDetails = () => {
 			});
 			const renderData = {
 				...data,
+				artist: {
+					id: data.artistId,
+					firstName: data.firstName
+				},
+				bookingId: data.bookingId ? data.bookingId : '',
 				stages: Array.from(stageMap, ([id, value]) => value)
 			};
 			if (renderData.stages.length === 0) {
