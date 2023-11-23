@@ -30,7 +30,6 @@ const ArtistPage = ({ artist }) => {
 								<div className="font-semibold text-base">
 									{artist.firstName} {artist.lastName}
 								</div>
-								<div className="text-gray-700">200 người theo dõi</div>
 							</div>
 						</div>
 						<div className="pb-3 flex justify-center flex-wrap gap-2 w-full">
@@ -64,29 +63,32 @@ const ArtistPage = ({ artist }) => {
 						<div className={`${showMoreInfo ? 'block' : 'hidden'}`}>
 							<div className="pb-5 border-b border-gray-300">
 								<h1 className="font-semibold text-base pb-2">Bio</h1>
-								<div>Đây là bio</div>
+								<div>{artist.bioContent}</div>
 							</div>
 							<div className="pb-5 border-b border-gray-300 pt-3">
 								<h1 className="font-semibold text-base pb-2">Tiệm xăm</h1>
-								<div className='flex gap-4 items-center'>
-									<Avatar size={44} src={'/images/ATL.png'} alt='studio logo' />
+								<div className="flex gap-4 items-center">
+									<Avatar size={44} src={'/images/ATL.png'} alt="studio logo" />
 									<div>
-										<div className='font-semibold'>Studio name</div>
+										<div className="font-semibold">Studio</div>
 										<div>Hồ Chí Minh, Gò Vấp</div>
 									</div>
 								</div>
 							</div>
-							<div className="py-3">
-								<h1 className="font-semibold text-base pb-2">Styles</h1>
-								<div className='flex gap-4 items-center'>
-									
+							{artist.styles && (
+								<div className="py-3">
+									<h1 className="font-semibold text-base pb-2">Styles</h1>
+									<div className="flex gap-4 items-center"></div>
 								</div>
-							</div>
+							)}
 						</div>
 					</CardBody>
 				</Card>
 			</div>
-			<TattooListNotFilter url={`${BASE_URL}/TattooArts/TattooUser?artistId=${artist.id}`} pageSize={25} />
+			<TattooListNotFilter
+				url={`${BASE_URL}/TattooArts/TattooUser?artistId=${artist.id}`}
+				pageSize={25}
+			/>
 		</div>
 	);
 };

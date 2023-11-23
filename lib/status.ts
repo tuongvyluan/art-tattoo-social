@@ -32,19 +32,19 @@ export const enum SERVICE_SIZE {
 }
 
 export const stringSize = [
-  'Size S (<8cm)',
-  'Size M (8 - 15cm)',
-  'Size L (15 - 30cm)',
-  'Size XL (>30cm)',
-]
+	'Size S (<8cm)',
+	'Size M (8 - 15cm)',
+	'Size L (15 - 30cm)',
+	'Size XL (>30cm)'
+];
 
-export const stringColor = (isColor : boolean) => {
-  return isColor ? 'Có màu' : 'Trắng đen'
-}
+export const stringColor = (isColor: boolean) => {
+	return isColor ? 'Có màu' : 'Trắng đen';
+};
 
-export const stringDifficult = (isDifficult : boolean) => {
-  return isDifficult ? 'Phức tạp' : 'Đơn giản'
-}
+export const stringDifficult = (isDifficult: boolean) => {
+	return isDifficult ? 'Phức tạp' : 'Đơn giản';
+};
 
 export const enum PACKAGE_STATUS {
 	PENDING = 0,
@@ -79,7 +79,7 @@ export const stringBookingStatuses = [
 	'Đang thực hiện',
 	'Khách hàng huỷ',
 	'Studio huỷ',
-	'Đã hoàn thành',
+	'Đã hoàn thành'
 ];
 
 export const operationNames = [
@@ -91,7 +91,7 @@ export const operationNames = [
 	'Xăm dặm lại',
 	'Đi nét viền',
 	'Tô màu'
-]
+];
 
 export const enum TATTOO_ART_STATUS {
 	AVAILABLE = 0,
@@ -125,7 +125,7 @@ export const enum PLACEMENT {
 }
 
 export const stringPlacements = [
-	'Vị trí bất kỳ',
+	'Vị trí khác',
 	'Full lưng',
 	'Nửa lưng',
 	'Full ngực',
@@ -141,4 +141,38 @@ export const stringPlacements = [
 	'Body suit',
 	'Mạn sườn',
 	'Hông'
+];
+
+export const enum SERVICE_PLACEMENT {
+	ANY = 0,
+	FULL_BACK = 1,
+	HALF_BACK = 2,
+	FULL_CHEST = 3,
+	HALF_CHEST = 4,
+	FULL_BELLY = 5,
+	HALF_BELLY = 6,
+	FULL_LEG = 7,
+	HALF_LEG = 8,
+	FULL_ARM = 9,
+	HALF_ARM = 10,
+	FULL_SHOULDER = 11,
+	HALF_SHOULDER = 12,
+	BODYSUIT = 13
+}
+
+export const stringServicePlacement = [
+	'Vị trí khác',
+	'Full lưng',
+	'Nửa lưng',
+	'Full ngực',
+	'Nửa ngực',
+	'Full bụng',
+	'Nửa bụng',
+	'Full chân',
+	'Nửa chân',
+	'Full tay',
+	'Full tay',
+	'Full vai',
+	'Nửa vai',
+	'Bodysuit'
 ];

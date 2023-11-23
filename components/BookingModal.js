@@ -13,7 +13,7 @@ const BookingModal = ({
 		Router.replace(redirectUrl);
 	};
 	return (
-		<Modal position={'center'} show={true}>
+		<Modal size={'7xl'} position={'center'} show={true}>
 			<Modal.Body>{children}</Modal.Body>
 			<Modal.Footer>
 				<Button outline onClick={handleRedirect}>
