@@ -1,5 +1,5 @@
 import { IoMdHeartEmpty, IoIosLink, IoMdSend, IoMdHeart } from 'react-icons/io';
-import { stringPlacements } from 'lib/status';
+import { stringPlacements, stringSize } from 'lib/status';
 import { FiFilter } from 'react-icons/fi';
 import { usePaginate } from 'lib/usePagination';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -27,8 +27,9 @@ import { fetcherDelete, fetcherPost } from 'lib';
 import { BASE_URL } from 'lib/env';
 
 const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
-	const [myUrl, setMyUrl] = useState(url);
-	const { items, error, size, setSize } = usePaginate(myUrl, pageSize);
+	const [baseUrl, setBaseUrl] = useState(url);
+	const [filterUrl, setFilterUrl] = useState(url);
+	const { items, error, size, setSize } = usePaginate(filterUrl, pageSize);
 
 	const { status, data } = useSession();
 	const [tattooCol, setTattooCol] = useState(2);
@@ -46,11 +47,11 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 		useState('Copy link bài viết');
 
 	const [filter, setFilter] = useState({
-		size: '-1',
-		style: -1,
+		sizeList: '-1',
+		styleId: -1,
 		image: '-1',
-		hasColor: '-1',
-		placement: 0
+		hasColor: 0,
+		positions: 0
 	});
 	const [authen, setAuthen] = useState(false);
 
@@ -139,6 +140,45 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 		console.log(searchKey);
 	};
 
+	const endMessage = () => {
+		if (items.length === 0) {
+			return (
+				<div className="absolute text-base w-full text-center -bottom-7 pb-3">
+					Không tồn tại hình xăm nào
+				</div>
+			);
+		}
+		return (
+			<div className="absolute text-base w-full text-center -bottom-7 pb-3">
+				Đã tải hết hình xăm
+			</div>
+		);
+	};
+
+	useEffect(() => {
+		setKey(Math.random());
+	}, [filterUrl]);
+
+	useEffect(() => {
+		let newUrl = baseUrl;
+		if (!newUrl.includes('?', 0)) {
+			newUrl = newUrl.concat('?');
+		}
+		if (filter.styleId !== -1) {
+			newUrl = newUrl.concat(`&styleId=${filter.styleId}`);
+		}
+		if (filter.sizeList !== '-1') {
+			newUrl = newUrl.concat(`&sizeList=${filter.sizeList}`);
+		}
+		if (filter.positions !== 0) {
+			newUrl = newUrl.concat(`&positions=${filter.positions}`);
+		}
+		if (filter.hasColor !== 0) {
+			newUrl = newUrl.concat(`&hasColor=${filter.hasColor}`);
+		}
+		setFilterUrl(newUrl);
+	}, [filter]);
+
 	useEffect(() => {
 		//add eventlistener to window
 		onResize();
@@ -161,8 +201,9 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 
 	if (status === 'authenticated') {
 		if (!authen) {
-			const newUrl = myUrl.concat(`?AccountId=${data.user.id}`);
-			setMyUrl(newUrl);
+			const newUrl = baseUrl.concat(`?AccountId=${data.user.id}`);
+			setBaseUrl(newUrl);
+			setFilterUrl(newUrl);
 			setAuthen(true);
 		}
 	}
@@ -199,7 +240,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 			</div>
 			{showFilter && (
 				<div
-					className={`w-full z-10 pb-4 bg-gray-50 ${
+					className={`w-full z-10 pb-2 mb-2 bg-gray-50 ${
 						showMoreFilter ? 'overflow-x-auto' : ''
 					} ${visible ? 'fixed top-11 pt-7' : ''}`}
 				>
@@ -276,9 +317,9 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 									<h1 className="font-semibold">Size</h1>
 									<Dropdown className={'relative'}>
 										<DropdownToggle>
-											<div className="w-32 relative">
+											<div className="w-36 relative">
 												<div className="appearance-none block w-full px-3 py-3 ring-1 bg-white ring-gray-300 dark:ring-gray-300 rounded-lg text-sm">
-													{filterSize().get(filter.size)}
+													{filterSize().get(filter.sizeList)}
 												</div>
 												<ChevronDown
 													width={20}
@@ -292,9 +333,9 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 												<ul className="h-32 overflow-y-auto">
 													{[...filterSize()].map(([key, value], sizeIndex) => (
 														<li
-															onClick={() => handleFilterChange('size', key)}
+															onClick={() => handleFilterChange('sizeList', key)}
 															className={`cursor-pointer p-2 text-center text-gray-800 ${
-																key === filter.size
+																key === filter.sizeList
 																	? 'text-black bg-gray-50'
 																	: 'hover:text-black hover:bg-gray-50'
 															}`}
@@ -319,7 +360,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 										<DropdownToggle>
 											<div className="w-32 relative">
 												<div className="appearance-none block w-full px-3 py-3 ring-1 bg-white ring-gray-300 dark:ring-gray-300 rounded-lg text-sm">
-													{stringPlacements.at(filter.placement)}
+													{stringPlacements.at(filter.positions)}
 												</div>
 												<ChevronDown
 													width={20}
@@ -334,10 +375,10 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 													{stringPlacements.map((placement, placementIndex) => (
 														<li
 															onClick={() =>
-																handleFilterChange('placement', placementIndex)
+																handleFilterChange('positions', placementIndex)
 															}
 															className={`cursor-pointer p-2 text-center text-gray-800 ${
-																placementIndex === filter.placement
+																placementIndex === filter.positions
 																	? 'text-black bg-gray-50'
 																	: 'hover:text-black hover:bg-gray-50'
 															}`}
@@ -386,11 +427,11 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 									<div className="flex gap-2 items-center">
 										{firstRowStyle.map((style, index) => (
 											<div
-												onClick={() => handleFilterChange('style', style.id)}
+												onClick={() => handleFilterChange('styleId', style.id)}
 												className="flex min-w-max items-center gap-1 py-1 cursor-pointer"
 												key={style.id}
 											>
-												<Pill selected={filter.style === style.id}>
+												<Pill selected={filter.styleId === style.id}>
 													{style.name}
 												</Pill>
 											</div>
@@ -399,11 +440,11 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 									<div className="flex gap-2 items-center">
 										{secondRowStyle.map((style, index) => (
 											<div
-												onClick={() => handleFilterChange('style', style.id)}
+												onClick={() => handleFilterChange('styleId', style.id)}
 												className="flex min-w-max items-center gap-1 py-1 cursor-pointer"
 												key={style.id}
 											>
-												<Pill selected={filter.style === style.id}>
+												<Pill selected={filter.styleId === style.id}>
 													{style.name}
 												</Pill>
 											</div>
@@ -412,11 +453,11 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 									<div className="flex gap-2 items-center">
 										{thirdRowStyle.map((style, index) => (
 											<div
-												onClick={() => handleFilterChange('style', style.id)}
+												onClick={() => handleFilterChange('styleId', style.id)}
 												className="flex min-w-max items-center gap-1 py-1 cursor-pointer"
 												key={style.id}
 											>
-												<Pill selected={filter.style === style.id}>
+												<Pill selected={filter.styleId === style.id}>
 													{style.name}
 												</Pill>
 											</div>
@@ -435,7 +476,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 							dataLength={items.length}
 							next={() => setSize(size + 1)}
 							hasMore={!isReachingEnd}
-							endMessage={<div className='absolute w-full text-center -bottom-7 pb-3'>Đã load hết data</div>}
+							endMessage={endMessage()}
 							loader={
 								<div className="absolute w-full flex justify-center -bottom-7 pb-3">
 									<Loading />
@@ -528,6 +569,12 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 																Style:{' '}
 																<span className="text-black">
 																	{tattooStyleMap.get(item.styleId).name}
+																</span>
+															</div>
+															<div className="text-gray-400">
+																Size:{' '}
+																<span className="text-black">
+																	{stringSize.at(item.size)}
 																</span>
 															</div>
 														</div>
