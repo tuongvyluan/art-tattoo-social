@@ -31,10 +31,12 @@ module.exports = {
 			},
 			height: {
 				152: '37.5rem',
-				body: 'calc(100vh - 120px)'
+				body: 'calc(100vh - 120px)',
+				noFooter: 'calc(100vh - 60px)'
 			},
 			minHeight: {
-				body: 'calc(100vh - 120px)'
+				body: 'calc(100vh - 120px)',
+				noFooter: 'calc(100vh - 60px)'
 			},
 			width: {
 				152: '37.5rem'

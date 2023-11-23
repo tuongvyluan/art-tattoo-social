@@ -1,15 +1,12 @@
 import Button from 'components/Button';
 import { ChevronDown, ChevronUp } from 'icons/outline';
-import TattooIndexPage from 'layout/TattooList';
+import TattooListNotFilter from 'layout/TattooListNotFilter';
+import { BASE_URL } from 'lib/env';
 import { usePaginate } from 'lib/usePagination';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Avatar, Card, CardBody } from 'ui';
 const ArtistPage = ({ artist }) => {
-	const { items, error, size, setSize, isReachingEnd } = usePaginate(
-		'/api/tattooArt',
-		20
-	);
 	const [showMoreInfo, setShowMoreInfo] = useState(false);
 
 	return (
@@ -90,7 +87,7 @@ const ArtistPage = ({ artist }) => {
 					</CardBody>
 				</Card>
 			</div>
-			<TattooIndexPage url="/api/tattooArt" pageSize={20} />
+			<TattooListNotFilter url={`${BASE_URL}/TattooArts/TattooUser?artistId=${artist.id}`} pageSize={25} />
 		</div>
 	);
 };

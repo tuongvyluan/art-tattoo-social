@@ -1,6 +1,7 @@
 import Button from './Button';
 import PropTypes from 'prop-types';
 import { Modal } from 'flowbite-react';
+import { useRef } from 'react';
 
 const MyModal = ({
 	title,
@@ -12,12 +13,13 @@ const MyModal = ({
 	setOpenModal,
 	onSubmit
 }) => {
+	const initialFocus = useRef(null)
 	return (
-		<Modal show={openModal} onClose={() => setOpenModal(false)}>
+		<Modal initialFocus={initialFocus} show={openModal} onClose={() => setOpenModal(false)}>
 			<Modal.Header>{title}</Modal.Header>
 			<Modal.Body>{children}</Modal.Body>
 			<Modal.Footer>
-				<Button outline onClick={() => setOpenModal(false)}>
+				<Button ref={initialFocus} outline onClick={() => setOpenModal(false)}>
 					{cancelTitle}
 				</Button>
 				<Button warn={warn} onClick={onSubmit}>

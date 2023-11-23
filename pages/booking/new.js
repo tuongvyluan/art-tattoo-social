@@ -36,29 +36,8 @@ const BookingFormPage = () => {
 		);
 	}
 
-	if (status === 'unauthenticated') {
-		return (
-			<div className="flex items-center justify-center h-full">
-				<div>
-					<div>Bạn phải đăng nhập để được đặt lịch</div>
-					<div>
-						Đi tới trang{' '}
-						<Link href="/auth/signin" target="_blank">
-							<span className="underline text-blue-700">đăng nhập</span>
-						</Link>
-						/
-						<Link href="/auth/register" target="_blank">
-							<span className="underline text-blue-700">đăng ký</span>
-						</Link>
-						?
-					</div>
-				</div>
-			</div>
-		);
-	}
-
   return (
-    <BookingForm isArtist={isArtist} artist={artist} studio={studio} />
+    <BookingForm hasLogin={status === 'authenticated'} isArtist={isArtist} artist={artist} studio={studio} />
   )
 };
 
