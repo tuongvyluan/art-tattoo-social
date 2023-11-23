@@ -7,6 +7,14 @@ export enum Role {
 // common interface for JWT and Session
 interface IUser extends DefaultUser {
   role?: Role;
+  id?: string;
+  token?: string;
+  firstName?: string;
+  lastName?: string;
+  studioId?: string;
+  customerId?: string;
+  artistId?: string;
+  accountId?: string;
 }
 declare module "next-auth" {
   interface User extends IUser {}

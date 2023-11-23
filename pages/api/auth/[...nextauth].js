@@ -51,14 +51,21 @@ const authOptions = {
 					throw new Error('You are not allowed to access');
 				}
 
-				// if everything is fine
-				return {
+				const token = {
 					id: res.accountId,
 					token: res.jwt,
 					role: role,
 					email: jwtObj['emailaddress'],
-					firstName: jwtObj['surname']
-				};
+					firstName: jwtObj['surname'],
+					lastName: jwtObj['name'],
+					studioId: res.studioId,
+					customerId: res.customerId,
+					artistId: res.artistId,
+					accountId: res.accountId
+				}
+
+				// if everything is fine
+				return token;
 			}
 		})
 	],
@@ -70,7 +77,12 @@ const authOptions = {
 					accessToken: user.token,
 					id: user.id,
 					role: user.role,
-					firstName: user.firstName
+					firstName: user.firstName,
+					lastName: user.lastName,
+					studioId: user.studioId,
+					customerId: user.customerId,
+					artistId: user.artistId,
+					accountId: user.accountId
 				};
 			}
 			return token;
@@ -81,6 +93,11 @@ const authOptions = {
 				session.user.id = token.id;
 				session.user.accessToken = token.accessToken;
 				session.user.firstName = token.firstName;
+				session.user.lastName = token.lastName;
+				session.user.studioId = token.studioId;
+				session.user.customerId = token.customerId;
+				session.user.artistId = token.artistId;
+				session.user.accountId = token.accountId;
 			}
 			return session;
 		}
