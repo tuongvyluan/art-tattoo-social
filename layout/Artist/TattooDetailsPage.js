@@ -20,7 +20,7 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { extractPublicId } from 'cloudinary-build-url';
 import MoneyInput from 'components/MoneyInput';
 import { operationNames, stringPlacements, stringSize } from 'lib/status';
-import { tattooStyleById, tattooStylesWithoutDescription } from 'lib/tattooStyle';
+import { tattooStyleById, tattooStyleList } from 'lib/tattooStyle';
 import { v4 } from 'uuid';
 
 const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
@@ -345,7 +345,7 @@ function TattooDetailsPage({ bookingId, artTattoo, artist, handleSubmit }) {
 									</DropdownToggle>
 									<DropdownMenu className={'top-2 left-2'}>
 										<div className="h-40 overflow-y-auto">
-											{tattooStylesWithoutDescription.map((style, styleIndex) => (
+											{tattooStyleList.map((style, styleIndex) => (
 												<div
 													key={style.id}
 													onClick={() => setTattooState('styleId', style.id)}

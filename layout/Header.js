@@ -9,6 +9,8 @@ import { useAppState } from 'components/AppProvider';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Calendar } from 'icons/outline';
+import { IoMdHeartEmpty } from 'react-icons/io';
+import { GiTwirlyFlower } from 'react-icons/gi';
 
 const colors = [
 	'gray',
@@ -203,19 +205,25 @@ const Header = ({ toggleOpen }) => {
 													href="/favorite"
 													className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
 												>
-													<LightningBolt width={16} height={16} />{' '}
+													<IoMdHeartEmpty size={16} />{' '}
 													<span className="ml-3">Yêu thích</span>
 												</a>
 												<Link href="/profile">
-													<div className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
+													<div className="cursor-pointer flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
 														<User width={16} height={16} />{' '}
 														<span className="ml-3">Hồ sơ</span>
 													</div>
 												</Link>
 												<Link href="/booking">
-													<div className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
+													<div className="cursor-pointer flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
 														<Calendar width={16} height={16} />{' '}
 														<span className="ml-3">Lịch hẹn</span>
+													</div>
+												</Link>
+												<Link href="/myTattoo">
+													<div className="cursor-pointer flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
+														<GiTwirlyFlower size={16} />{' '}
+														<span className="ml-3">Hình xăm</span>
 													</div>
 												</Link>
 												<a

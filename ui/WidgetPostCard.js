@@ -9,7 +9,7 @@ export const WidgetPostCard = ({ children, image, imageHeight, link = '#' }) => 
 	return (
 		<Card>
 			<Link href={link}>
-				<div className="relative w-full">
+				<div className="relative w-full cursor-pointer">
 					{imageHeight ? (
 						<BackgroundImg
 							className="relative w-full bg-center bg-cover bg-fallback"

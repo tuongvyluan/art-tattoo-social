@@ -5,7 +5,8 @@ import {
 	TATTOO_ART_STATUS,
 	stringPlacements
 } from 'lib/status';
-import { tattooStylesWithoutDescription } from 'lib/tattooStyle';
+import { randomPhoto } from 'lib/tattooPhoto';
+import { tattooStyleList } from 'lib/tattooStyle';
 import { v4 } from 'uuid';
 
 const data = Array(20)
@@ -73,7 +74,7 @@ const data = Array(20)
 							'0b8d9754-a833-467a-862a-7459fe6d8171',
 							'ae439cd0-72e3-4215-9ae9-8464bc23c09b'
 						][randomFrom0To(5)],
-						style: tattooStylesWithoutDescription[randomFrom0To(45)],
+						style: tattooStyleList[randomFrom0To(45)],
 						artist: {
 							accountId: v4(),
 							firstName: [
@@ -101,18 +102,7 @@ const data = Array(20)
 								'Hồ'
 							][randomFrom0To(3)]
 						},
-						photo: [
-							'https://res.cloudinary.com/dl9ctj0ul/image/upload/v1700213402/tattoo-7_fww1uk.webp',
-							'https://res.cloudinary.com/dl9ctj0ul/image/upload/v1700213402/tattoo-5_amyhqs.webp',
-							'https://res.cloudinary.com/dl9ctj0ul/image/upload/v1700213402/tattoo-8_vrh3pj.webp',
-							'https://res.cloudinary.com/dl9ctj0ul/image/upload/v1700213402/tattoo-6_ipmvzr.webp',
-							'https://res.cloudinary.com/dl9ctj0ul/image/upload/v1700213402/tattoo-1_cjajwn.webp',
-							'https://res.cloudinary.com/dl9ctj0ul/image/upload/v1700213401/tattoo-4_xb4cjw.webp',
-							'https://res.cloudinary.com/dl9ctj0ul/image/upload/v1700213401/tattoo-10_dwkjap.webp',
-							'https://res.cloudinary.com/dl9ctj0ul/image/upload/v1700213401/tattoo-9_hswcik.webp',
-							'https://res.cloudinary.com/dl9ctj0ul/image/upload/v1700213401/tattoo-2_digj71.webp',
-							'https://res.cloudinary.com/dl9ctj0ul/image/upload/v1700213401/tattoo-3_mznw0h.webp'
-						][randomFrom0To(10)],
+						photo: randomPhoto,
 						size: [
 							SERVICE_SIZE.EXTRA,
 							SERVICE_SIZE.LARGE,

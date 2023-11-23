@@ -1,4 +1,4 @@
-import { IoMdHeartEmpty, IoIosLink, IoMdSend } from 'react-icons/io';
+import { IoMdHeartEmpty, IoIosLink, IoMdSend, IoMdHeart } from 'react-icons/io';
 import { stringPlacements } from 'lib/status';
 import { FiFilter } from 'react-icons/fi';
 import { usePaginate } from 'lib/usePagination';
@@ -12,33 +12,33 @@ import {
 	Loading,
 	WidgetPostCard
 } from 'ui';
-import { randomFrom0To } from 'lib';
 import { filterColor, filterSize } from 'lib/filterTattoo';
 import { useCallback, useEffect, useState } from 'react';
 import Pill from 'components/Pill';
-import { tattooStylesWithoutDescription } from 'lib/tattooStyle';
+import { tattooStyleList, tattooStyleMap } from 'lib/tattooStyle';
 import { useRouter } from 'next/router';
 import debounce from 'lodash.debounce';
 import { ChevronDown } from 'icons/solid';
 import Button from 'components/Button';
 import { Tooltip } from 'flowbite-react';
 import { useSession } from 'next-auth/react';
+import { randomPhoto } from 'lib/tattooPhoto';
+import { fetcherDelete, fetcherPost } from 'lib';
+import { BASE_URL } from 'lib/env';
 
-const TattooIndexPage = ({url, pageSize = 20}) => {
-	const { items, error, size, setSize, isReachingEnd } = usePaginate(
-		url,
-		pageSize
-	);
+const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
+	const [myUrl, setMyUrl] = useState(url);
+	const { items, error, size, setSize } = usePaginate(myUrl, pageSize);
+
 	const { status, data } = useSession();
 	const [tattooCol, setTattooCol] = useState(2);
+	const [key, setKey] = useState(1);
 
 	const firstRowStyle = [{ id: -1, name: 'Tất cả' }].concat(
-		tattooStylesWithoutDescription.filter((s) => s.id < 16)
+		tattooStyleList.filter((s) => s.id < 16)
 	);
-	const secondRowStyle = tattooStylesWithoutDescription.filter(
-		(s) => s.id >= 16 && s.id < 31
-	);
-	const thirdRowStyle = tattooStylesWithoutDescription.filter((s) => s.id >= 31);
+	const secondRowStyle = tattooStyleList.filter((s) => s.id >= 16 && s.id < 31);
+	const thirdRowStyle = tattooStyleList.filter((s) => s.id >= 31);
 
 	const [visible, setVisible] = useState(false);
 	const [showVisible, setShowVisible] = useState(false);
@@ -58,6 +58,7 @@ const TattooIndexPage = ({url, pageSize = 20}) => {
 	const router = useRouter();
 	const search = router.query.search ? router.query.search : '';
 	const [searchKey, setSearchKey] = useState(search);
+	const [isReachingEnd, setIsReachingEnd] = useState(false);
 
 	const handleFilterChange = (name, value) => {
 		setFilter({
@@ -73,6 +74,29 @@ const TattooIndexPage = ({url, pageSize = 20}) => {
 	const handleCopyLink = (id) => {
 		setShareTooltipContent('Copy link thành công');
 		navigator.clipboard.writeText(`${window.location.origin}/tattoo/${id}`);
+	};
+
+	const handleSetLike = debounce((tattoo) => {
+		handleCallLikeApi(tattoo);
+	}, 200);
+
+	const handleCallLikeApi = (tattoo) => {
+		if (tattoo.isLike) {
+			fetcherDelete(
+				`${BASE_URL}/Media/DeleteLikeById?userId=${data.user.id}&artTattooId=${tattoo.id}`
+			).catch((e) => console.log(e));
+			tattoo.likeCount--;
+			tattoo.isLike = false;
+			setKey(Math.random());
+		} else {
+			fetcherPost(`${BASE_URL}/Media/CreateLike`, {
+				accountId: data.user.id,
+				tattooArtId: tattoo.id
+			}).catch((e) => console.log(e));
+			tattoo.likeCount++;
+			tattoo.isLike = true;
+			setKey(Math.random());
+		}
 	};
 
 	const onScroll = useCallback((event) => {
@@ -137,6 +161,8 @@ const TattooIndexPage = ({url, pageSize = 20}) => {
 
 	if (status === 'authenticated') {
 		if (!authen) {
+			const newUrl = myUrl.concat(`?AccountId=${data.user.id}`);
+			setMyUrl(newUrl);
 			setAuthen(true);
 		}
 	}
@@ -151,12 +177,9 @@ const TattooIndexPage = ({url, pageSize = 20}) => {
 		});
 	}
 
-	if (error)
-		return (
-			<div className="flex items-center justify-center h-full">
-				Failed to load data
-			</div>
-		);
+	if (error && !isReachingEnd) {
+		setIsReachingEnd(true);
+	}
 
 	return (
 		<div className="relative">
@@ -174,234 +197,250 @@ const TattooIndexPage = ({url, pageSize = 20}) => {
 					<FiFilter size={40} className="p-2 " />
 				</Tooltip>
 			</div>
-			<div
-				className={`w-full z-10 pb-4 bg-gray-50 ${
-					showMoreFilter ? 'overflow-x-auto' : ''
-				} ${visible ? 'fixed top-11 pt-7' : ''}`}
-			>
-				<div className="flex flex-wrap justify-between gap-3">
-					{
-						// Search tattoo
-					}
-					<div className="sm:w-96 w-full min-w-max">
-						<h1 className="font-semibold">Tìm kiếm</h1>
-						<div className="flex gap-2 items-center">
-							<input
-								value={searchKey}
-								type="text"
-								onChange={handleSearchChange}
-								onKeyDown={onKeyDown}
-								aria-label={'Search'}
-								name="search"
-								className="appearance-none relative block w-full px-3 py-3 border-2 border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
-								placeholder={'Tìm kiếm'}
-							/>
-							<button onClick={handleSearch}>
-								<IoMdSend className="hover:text-gray-600 cursor-pointer" size={20} />
-							</button>
-						</div>
-					</div>
-					<div className={`flex flex-wrap gap-3 px-1 ${visible ? 'mr-7' : ''}`}>
-						<div className="flex gap-3">
-							{
-								// Filter color
-							}
-							<div>
-								<h1 className="font-semibold">Màu sắc</h1>
-								<Dropdown className={'relative'}>
-									<DropdownToggle>
-										<div className="w-28 relative">
-											<div className="appearance-none block w-full px-3 py-3 ring-1 bg-white ring-gray-300 dark:ring-gray-300 rounded-lg text-sm">
-												{filterColor().get(filter.hasColor)}
-											</div>
-											<ChevronDown
-												width={20}
-												height={20}
-												className="absolute right-2 top-3"
-											/>
-										</div>
-									</DropdownToggle>
-									<DropdownMenu className={'top-2 -right-10 fixed z-40'}>
-										<div className="">
-											<ul className="">
-												{[...filterColor()].map(([key, value], colorIndex) => (
-													<li
-														onClick={() => handleFilterChange('hasColor', key)}
-														className={`cursor-pointer p-2 text-center text-gray-800 ${
-															key === filter.hasColor
-																? 'text-black bg-gray-50'
-																: 'hover:text-black hover:bg-gray-50'
-														}`}
-														key={key}
-													>
-														{value}
-													</li>
-												))}
-											</ul>
-										</div>
-									</DropdownMenu>
-								</Dropdown>
-							</div>
-							{
-								// Filter size
-							}
-							<div>
-								<h1 className="font-semibold">Size</h1>
-								<Dropdown className={'relative'}>
-									<DropdownToggle>
-										<div className="w-32 relative">
-											<div className="appearance-none block w-full px-3 py-3 ring-1 bg-white ring-gray-300 dark:ring-gray-300 rounded-lg text-sm">
-												{filterSize().get(filter.size)}
-											</div>
-											<ChevronDown
-												width={20}
-												height={20}
-												className="absolute right-2 top-3"
-											/>
-										</div>
-									</DropdownToggle>
-									<DropdownMenu className={'top-2 -right-6 fixed z-40'}>
-										<div className="">
-											<ul className="h-32 overflow-y-auto">
-												{[...filterSize()].map(([key, value], sizeIndex) => (
-													<li
-														onClick={() => handleFilterChange('size', key)}
-														className={`cursor-pointer p-2 text-center text-gray-800 ${
-															key === filter.size
-																? 'text-black bg-gray-50'
-																: 'hover:text-black hover:bg-gray-50'
-														}`}
-														key={key}
-													>
-														{value}
-													</li>
-												))}
-											</ul>
-										</div>
-									</DropdownMenu>
-								</Dropdown>
+			{showFilter && (
+				<div
+					className={`w-full z-10 pb-4 bg-gray-50 ${
+						showMoreFilter ? 'overflow-x-auto' : ''
+					} ${visible ? 'fixed top-11 pt-7' : ''}`}
+				>
+					<div className="flex flex-wrap justify-between gap-3">
+						{
+							// Search tattoo
+						}
+						<div className="sm:w-96 w-full min-w-max">
+							<h1 className="font-semibold">Tìm kiếm</h1>
+							<div className="flex gap-2 items-center">
+								<input
+									value={searchKey}
+									type="text"
+									onChange={handleSearchChange}
+									onKeyDown={onKeyDown}
+									aria-label={'Search'}
+									name="search"
+									className="appearance-none relative block w-full px-3 py-3 border-2 border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
+									placeholder={'Tìm kiếm'}
+								/>
+								<button onClick={handleSearch}>
+									<IoMdSend
+										className="hover:text-gray-600 cursor-pointer"
+										size={20}
+									/>
+								</button>
 							</div>
 						</div>
-						<div className="flex gap-3">
-							{
-								// Filter placement
-							}
-							<div>
-								<h1 className="font-semibold">Vị trí xăm</h1>
-								<Dropdown className={'relative'}>
-									<DropdownToggle>
-										<div className="w-32 relative">
-											<div className="appearance-none block w-full px-3 py-3 ring-1 bg-white ring-gray-300 dark:ring-gray-300 rounded-lg text-sm">
-												{stringPlacements.at(filter.placement)}
+						<div className={`flex flex-wrap gap-3 px-1 ${visible ? 'mr-7' : ''}`}>
+							<div className="flex gap-3">
+								{
+									// Filter color
+								}
+								<div>
+									<h1 className="font-semibold">Màu sắc</h1>
+									<Dropdown className={'relative'}>
+										<DropdownToggle>
+											<div className="w-28 relative">
+												<div className="appearance-none block w-full px-3 py-3 ring-1 bg-white ring-gray-300 dark:ring-gray-300 rounded-lg text-sm">
+													{filterColor().get(filter.hasColor)}
+												</div>
+												<ChevronDown
+													width={20}
+													height={20}
+													className="absolute right-2 top-3"
+												/>
 											</div>
-											<ChevronDown
-												width={20}
-												height={20}
-												className="absolute right-2 top-3"
-											/>
-										</div>
-									</DropdownToggle>
-									<DropdownMenu className={'top-2 -right-6 fixed z-40'}>
-										<div className="">
-											<ul className="h-32 overflow-y-auto">
-												{stringPlacements.map((placement, placementIndex) => (
-													<li
-														onClick={() =>
-															handleFilterChange('placement', placementIndex)
-														}
-														className={`cursor-pointer p-2 text-center text-gray-800 ${
-															placementIndex === filter.placement
-																? 'text-black bg-gray-50'
-																: 'hover:text-black hover:bg-gray-50'
-														}`}
-														key={placement}
-													>
-														{placement}
-													</li>
-												))}
-											</ul>
-										</div>
-									</DropdownMenu>
-								</Dropdown>
+										</DropdownToggle>
+										<DropdownMenu className={'top-2 -right-10 fixed z-40'}>
+											<div className="">
+												<ul className="">
+													{[...filterColor()].map(([key, value], colorIndex) => (
+														<li
+															onClick={() => handleFilterChange('hasColor', key)}
+															className={`cursor-pointer p-2 text-center text-gray-800 ${
+																key === filter.hasColor
+																	? 'text-black bg-gray-50'
+																	: 'hover:text-black hover:bg-gray-50'
+															}`}
+															key={key}
+														>
+															{value}
+														</li>
+													))}
+												</ul>
+											</div>
+										</DropdownMenu>
+									</Dropdown>
+								</div>
+								{
+									// Filter size
+								}
+								<div>
+									<h1 className="font-semibold">Size</h1>
+									<Dropdown className={'relative'}>
+										<DropdownToggle>
+											<div className="w-32 relative">
+												<div className="appearance-none block w-full px-3 py-3 ring-1 bg-white ring-gray-300 dark:ring-gray-300 rounded-lg text-sm">
+													{filterSize().get(filter.size)}
+												</div>
+												<ChevronDown
+													width={20}
+													height={20}
+													className="absolute right-2 top-3"
+												/>
+											</div>
+										</DropdownToggle>
+										<DropdownMenu className={'top-2 -right-6 fixed z-40'}>
+											<div className="">
+												<ul className="h-32 overflow-y-auto">
+													{[...filterSize()].map(([key, value], sizeIndex) => (
+														<li
+															onClick={() => handleFilterChange('size', key)}
+															className={`cursor-pointer p-2 text-center text-gray-800 ${
+																key === filter.size
+																	? 'text-black bg-gray-50'
+																	: 'hover:text-black hover:bg-gray-50'
+															}`}
+															key={key}
+														>
+															{value}
+														</li>
+													))}
+												</ul>
+											</div>
+										</DropdownMenu>
+									</Dropdown>
+								</div>
 							</div>
-							{
-								// Show more filter button
-							}
-							<div>
-								<h1 className="font-semibold">Thêm</h1>
-								<Tooltip
-									arrow={false}
-									content="Chọn theo style"
-									placement="bottom-start"
-								>
-									<Button
-										onClick={() => {
-											setShowMoreFilter(!showMoreFilter);
-										}}
-										outline
-										className="border-2 border-gray-300"
+							<div className="flex gap-3">
+								{
+									// Filter placement
+								}
+								<div>
+									<h1 className="font-semibold">Vị trí xăm</h1>
+									<Dropdown className={'relative'}>
+										<DropdownToggle>
+											<div className="w-32 relative">
+												<div className="appearance-none block w-full px-3 py-3 ring-1 bg-white ring-gray-300 dark:ring-gray-300 rounded-lg text-sm">
+													{stringPlacements.at(filter.placement)}
+												</div>
+												<ChevronDown
+													width={20}
+													height={20}
+													className="absolute right-2 top-3"
+												/>
+											</div>
+										</DropdownToggle>
+										<DropdownMenu className={'top-2 -right-6 fixed z-40'}>
+											<div className="">
+												<ul className="h-32 overflow-y-auto">
+													{stringPlacements.map((placement, placementIndex) => (
+														<li
+															onClick={() =>
+																handleFilterChange('placement', placementIndex)
+															}
+															className={`cursor-pointer p-2 text-center text-gray-800 ${
+																placementIndex === filter.placement
+																	? 'text-black bg-gray-50'
+																	: 'hover:text-black hover:bg-gray-50'
+															}`}
+															key={placement}
+														>
+															{placement}
+														</li>
+													))}
+												</ul>
+											</div>
+										</DropdownMenu>
+									</Dropdown>
+								</div>
+								{
+									// Show more filter button
+								}
+								<div>
+									<h1 className="font-semibold">Thêm</h1>
+									<Tooltip
+										arrow={false}
+										content="Chọn theo style"
+										placement="bottom-start"
 									>
-										<div className="flex gap-1 items-center py-1">
-											<FiFilter size={12} />
-											<div>Filters</div>
-										</div>
-									</Button>
-								</Tooltip>
+										<Button
+											onClick={() => {
+												setShowMoreFilter(!showMoreFilter);
+											}}
+											outline
+											className="border-2 border-gray-300"
+										>
+											<div className="flex gap-1 items-center py-1">
+												<FiFilter size={12} />
+												<div>Filters</div>
+											</div>
+										</Button>
+									</Tooltip>
+								</div>
 							</div>
 						</div>
 					</div>
+					{showMoreFilter && (
+						<div>
+							<div className="pt-2">
+								<h1 className="font-semibold">Style</h1>
+								<div className="">
+									<div className="flex gap-2 items-center">
+										{firstRowStyle.map((style, index) => (
+											<div
+												onClick={() => handleFilterChange('style', style.id)}
+												className="flex min-w-max items-center gap-1 py-1 cursor-pointer"
+												key={style.id}
+											>
+												<Pill selected={filter.style === style.id}>
+													{style.name}
+												</Pill>
+											</div>
+										))}
+									</div>
+									<div className="flex gap-2 items-center">
+										{secondRowStyle.map((style, index) => (
+											<div
+												onClick={() => handleFilterChange('style', style.id)}
+												className="flex min-w-max items-center gap-1 py-1 cursor-pointer"
+												key={style.id}
+											>
+												<Pill selected={filter.style === style.id}>
+													{style.name}
+												</Pill>
+											</div>
+										))}
+									</div>
+									<div className="flex gap-2 items-center">
+										{thirdRowStyle.map((style, index) => (
+											<div
+												onClick={() => handleFilterChange('style', style.id)}
+												className="flex min-w-max items-center gap-1 py-1 cursor-pointer"
+												key={style.id}
+											>
+												<Pill selected={filter.style === style.id}>
+													{style.name}
+												</Pill>
+											</div>
+										))}
+									</div>
+								</div>
+							</div>
+						</div>
+					)}
 				</div>
-				{showMoreFilter && (
-					<div>
-						<div className="pt-2">
-							<h1 className="font-semibold">Style</h1>
-							<div className="">
-								<div className="flex gap-2 items-center">
-									{firstRowStyle.map((style, index) => (
-										<div
-											onClick={() => handleFilterChange('style', style.id)}
-											className="flex min-w-max items-center gap-1 py-1 cursor-pointer"
-											key={style.id}
-										>
-											<Pill selected={filter.style === style.id}>{style.name}</Pill>
-										</div>
-									))}
-								</div>
-								<div className="flex gap-2 items-center">
-									{secondRowStyle.map((style, index) => (
-										<div
-											onClick={() => handleFilterChange('style', style.id)}
-											className="flex min-w-max items-center gap-1 py-1 cursor-pointer"
-											key={style.id}
-										>
-											<Pill selected={filter.style === style.id}>{style.name}</Pill>
-										</div>
-									))}
-								</div>
-								<div className="flex gap-2 items-center">
-									{thirdRowStyle.map((style, index) => (
-										<div
-											onClick={() => handleFilterChange('style', style.id)}
-											className="flex min-w-max items-center gap-1 py-1 cursor-pointer"
-											key={style.id}
-										>
-											<Pill selected={filter.style === style.id}>{style.name}</Pill>
-										</div>
-									))}
-								</div>
-							</div>
-						</div>
-					</div>
-				)}
-			</div>
+			)}
 			<div>
 				<div>
-					<div>
+					<div key={key}>
 						<InfiniteScroll
 							dataLength={items.length}
 							next={() => setSize(size + 1)}
-							hasMore={isReachingEnd}
-							loader={<Loading />}
+							hasMore={!isReachingEnd}
+							endMessage={<div className='absolute w-full text-center -bottom-7 pb-3'>Đã load hết data</div>}
+							loader={
+								<div className="absolute w-full flex justify-center -bottom-7 pb-3">
+									<Loading />
+								</div>
+							}
 							className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2"
 						>
 							{Array.from({ length: tattooCol }).map((col, colIndex) => (
@@ -410,13 +449,13 @@ const TattooIndexPage = ({url, pageSize = 20}) => {
 										<div key={index}>
 											{index % tattooCol === colIndex && (
 												<WidgetPostCard
-													image={item.thumbnail}
+													image={item.thumbnail ? item.thumbnail : randomPhoto}
 													link={`/tattoo/${item.id}`}
 												>
 													<div className="flex justify-between gap-2">
-														<Link href={`/artist/${item.artist.id}`}>
+														<Link href={`/artist/${item.artistId}`}>
 															<div className="cursor-pointer font-semibold">
-																{item.artist.name}
+																{item.firstName} {item.lastName}
 															</div>
 														</Link>
 														<div className="flex items-start gap-1">
@@ -440,14 +479,38 @@ const TattooIndexPage = ({url, pageSize = 20}) => {
 															</Tooltip>
 															<div className="flex gap-1 items-center">
 																<div>
-																	<IoMdHeartEmpty
-																		className="hover:text-gray-600 font-semibold cursor-pointer"
-																		size={20}
-																	/>
+																	{authen ? (
+																		<div onClick={() => handleSetLike(item)}>
+																			{item.isLike ? (
+																				<IoMdHeart
+																					className="text-red-500 hover:text-red-600 font-semibold cursor-pointer"
+																					size={20}
+																				/>
+																			) : (
+																				<IoMdHeartEmpty
+																					className="hover:text-gray-600 font-semibold cursor-pointer"
+																					size={20}
+																				/>
+																			)}
+																		</div>
+																	) : (
+																		<Tooltip
+																			arrow={false}
+																			content="Đăng nhập để thích bài viết"
+																			placement="bottom"
+																		>
+																			<div className="myInteraction">
+																				<IoMdHeartEmpty
+																					className="hover:text-gray-600 font-semibold cursor-pointer"
+																					size={20}
+																				/>
+																			</div>
+																		</Tooltip>
+																	)}
 																</div>
 																<div className="flex gap-1 items-end text-gray-700">
 																	<div className="text-left text-xs font-semibold w-14">
-																		{2 + randomFrom0To(30)} likes
+																		{item.likeCount} thích
 																	</div>
 																</div>
 															</div>
@@ -464,7 +527,7 @@ const TattooIndexPage = ({url, pageSize = 20}) => {
 															<div className="text-gray-400">
 																Style:{' '}
 																<span className="text-black">
-																	{item.style?.name}
+																	{tattooStyleMap.get(item.styleId).name}
 																</span>
 															</div>
 														</div>
@@ -483,13 +546,14 @@ const TattooIndexPage = ({url, pageSize = 20}) => {
 	);
 };
 
-TattooIndexPage.propTypes = {
-	url: PropTypes.string.isRequired,
-	pageSize: PropTypes.number
-};
-
-TattooIndexPage.getInitialProps = async () => ({
+TattooListPage.getInitialProps = async () => ({
 	namespacesRequired: ['header', 'footer', 'sidebar']
 });
 
-export default TattooIndexPage;
+TattooListPage.propTypes = {
+	url: PropTypes.string.isRequired,
+	pageSize: PropTypes.number,
+	showFilter: PropTypes.bool
+};
+
+export default TattooListPage;

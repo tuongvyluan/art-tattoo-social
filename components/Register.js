@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import { Link, Logo } from 'ui';
 
-import Illustration from 'public/images/illustrations/undraw_secure_data_0rwp.svg';
 import Button from './Button';
 import { ROLE } from 'lib/status';
 
