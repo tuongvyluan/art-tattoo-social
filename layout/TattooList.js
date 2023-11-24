@@ -1,8 +1,6 @@
 import { IoMdHeartEmpty, IoIosLink, IoMdSend, IoMdHeart } from 'react-icons/io';
 import { stringPlacements, stringSize } from 'lib/status';
 import { FiFilter } from 'react-icons/fi';
-import { usePaginate } from 'lib/usePagination';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import PropTypes from 'prop-types';
 import {
 	Dropdown,
@@ -12,7 +10,7 @@ import {
 	Loading,
 	WidgetPostCard
 } from 'ui';
-import { filterColor, filterSize } from 'lib/filterTattoo';
+import { filterColor, filterPlacement, filterSize } from 'lib/filterTattoo';
 import { useCallback, useEffect, useState } from 'react';
 import Pill from 'components/Pill';
 import { tattooStyleList, tattooStyleMap } from 'lib/tattooStyle';
@@ -25,15 +23,20 @@ import { useSession } from 'next-auth/react';
 import { randomPhoto } from 'lib/tattooPhoto';
 import { fetcherDelete, fetcherPost } from 'lib';
 import { BASE_URL } from 'lib/env';
+import MyInfiniteScroll from 'ui/MyInfiniteScroll';
 
 const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
+	const [loading, setLoading] = useState(true);
 	const [baseUrl, setBaseUrl] = useState(url);
 	const [filterUrl, setFilterUrl] = useState(url);
-	const { items, error, size, setSize } = usePaginate(filterUrl, pageSize);
+
+	const [items, setItems] = useState([]);
+	const [page, setPage] = useState(1);
 
 	const { status, data } = useSession();
 	const [tattooCol, setTattooCol] = useState(2);
 	const [key, setKey] = useState(1);
+	const [postKey, setPostKey] = useState(1);
 
 	const firstRowStyle = [{ id: -1, name: 'Tất cả' }].concat(
 		tattooStyleList.filter((s) => s.id < 16)
@@ -59,7 +62,6 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 	const router = useRouter();
 	const search = router.query.search ? router.query.search : '';
 	const [searchKey, setSearchKey] = useState(search);
-	const [isReachingEnd, setIsReachingEnd] = useState(false);
 
 	const handleFilterChange = (name, value) => {
 		setFilter({
@@ -88,7 +90,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 			).catch((e) => console.log(e));
 			tattoo.likeCount--;
 			tattoo.isLike = false;
-			setKey(Math.random());
+			setPostKey(Math.random());
 		} else {
 			fetcherPost(`${BASE_URL}/Media/CreateLike`, {
 				accountId: data.user.id,
@@ -96,7 +98,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 			}).catch((e) => console.log(e));
 			tattoo.likeCount++;
 			tattoo.isLike = true;
-			setKey(Math.random());
+			setPostKey(Math.random());
 		}
 	};
 
@@ -143,13 +145,13 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 	const endMessage = () => {
 		if (items.length === 0) {
 			return (
-				<div className="absolute text-base w-full text-center -bottom-7 pb-3">
+				<div className="absolute text-base w-full text-center -bottom-12 pb-3">
 					Không tồn tại hình xăm nào
 				</div>
 			);
 		}
 		return (
-			<div className="absolute text-base w-full text-center -bottom-7 pb-3">
+			<div className="absolute text-base w-full text-center -bottom-12 pb-3">
 				Đã tải hết hình xăm
 			</div>
 		);
@@ -160,6 +162,8 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 	}, [filterUrl]);
 
 	useEffect(() => {
+		setItems([]);
+		setPage(1);
 		let newUrl = baseUrl;
 		if (!newUrl.includes('?', 0)) {
 			newUrl = newUrl.concat('?');
@@ -171,7 +175,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 			newUrl = newUrl.concat(`&sizeList=${filter.sizeList}`);
 		}
 		if (filter.positions !== 0) {
-			newUrl = newUrl.concat(`&positions=${filter.positions}`);
+			newUrl = newUrl.concat(`&positions=${filter.positions - 1}`);
 		}
 		if (filter.hasColor !== 0) {
 			newUrl = newUrl.concat(`&hasColor=${filter.hasColor}`);
@@ -191,35 +195,22 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 		};
 	}, []);
 
-	if (status === 'loading' || !items) {
-		return (
-			<div className="flex items-center justify-center h-full">
-				<Loading />
-			</div>
-		);
-	}
-
-	if (status === 'authenticated') {
-		if (!authen) {
+	if (status !== 'loading' && loading) {
+		if (status === 'authenticated') {
 			const newUrl = baseUrl.concat(`?AccountId=${data.user.id}`);
 			setBaseUrl(newUrl);
 			setFilterUrl(newUrl);
 			setAuthen(true);
 		}
+		setLoading(false);
 	}
 
-	if (status === 'unauthenticated') {
-		function remindLogin() {
-			window.open('/auth/signin', 'blank');
-		}
-		const elements = document.getElementsByClassName('myInteraction');
-		Array.from(elements).forEach(function (element) {
-			element.addEventListener('click', remindLogin);
-		});
-	}
-
-	if (error && !isReachingEnd) {
-		setIsReachingEnd(true);
+	if (status === 'loading' || loading) {
+		return (
+			<div className="flex items-center justify-center h-full">
+				<Loading />
+			</div>
+		);
 	}
 
 	return (
@@ -360,7 +351,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 										<DropdownToggle>
 											<div className="w-32 relative">
 												<div className="appearance-none block w-full px-3 py-3 ring-1 bg-white ring-gray-300 dark:ring-gray-300 rounded-lg text-sm">
-													{stringPlacements.at(filter.positions)}
+													{filterPlacement.at(filter.positions)}
 												</div>
 												<ChevronDown
 													width={20}
@@ -372,7 +363,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 										<DropdownMenu className={'top-2 -right-6 fixed z-40'}>
 											<div className="">
 												<ul className="h-32 overflow-y-auto">
-													{stringPlacements.map((placement, placementIndex) => (
+													{filterPlacement.map((placement, placementIndex) => (
 														<li
 															onClick={() =>
 																handleFilterChange('positions', placementIndex)
@@ -471,121 +462,133 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 			)}
 			<div>
 				<div>
-					<div key={key}>
-						<InfiniteScroll
-							dataLength={items.length}
-							next={() => setSize(size + 1)}
-							hasMore={!isReachingEnd}
+					<div>
+						<MyInfiniteScroll
+							key={key}
+							url={filterUrl}
+							parentItems={items}
+							setParentItems={setItems}
+							parentPage={page}
+							setParentPage={setPage}
 							endMessage={endMessage()}
+							pageSize={pageSize}
 							loader={
-								<div className="absolute w-full flex justify-center -bottom-7 pb-3">
+								<div className="absolute w-full flex justify-center -bottom-12 pb-3">
 									<Loading />
 								</div>
 							}
-							className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2"
 						>
-							{Array.from({ length: tattooCol }).map((col, colIndex) => (
-								<div key={colIndex}>
-									{items.map((item, index) => (
-										<div key={index}>
-											{index % tattooCol === colIndex && (
-												<WidgetPostCard
-													image={item.thumbnail ? item.thumbnail : randomPhoto}
-													link={`/tattoo/${item.id}`}
-												>
-													<div className="flex justify-between gap-2">
-														<Link href={`/artist/${item.artistId}`}>
-															<div className="cursor-pointer font-semibold">
-																{item.firstName} {item.lastName}
-															</div>
-														</Link>
-														<div className="flex items-start gap-1">
-															<Tooltip
-																arrow={false}
-																onMouseLeave={() =>
-																	setShareTooltipContent('Copy link bài viết')
-																}
-																content={shareTooltipContent}
-																placement="bottom"
-															>
-																<div
-																	onClick={() => handleCopyLink(item.id)}
-																	className="flex gap-1 items-center cursor-pointer"
+							<div
+								key={postKey}
+								className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2"
+							>
+								{Array.from({ length: tattooCol }).map((col, colIndex) => (
+									<div key={colIndex}>
+										{items.map((item, index) => (
+											<div key={index}>
+												{index % tattooCol === colIndex && (
+													<WidgetPostCard
+														image={item.thumbnail ? item.thumbnail : randomPhoto}
+														link={`/tattoo/${item.id}`}
+													>
+														<div className="flex justify-between gap-2">
+															<Link href={`/artist/${item.artistId}`}>
+																<div className="cursor-pointer font-semibold">
+																	{item.firstName} {item.lastName}
+																</div>
+															</Link>
+															<div className="flex items-start gap-1">
+																<Tooltip
+																	arrow={false}
+																	onMouseLeave={() =>
+																		setShareTooltipContent('Copy link bài viết')
+																	}
+																	content={shareTooltipContent}
+																	placement="bottom"
 																>
-																	<IoIosLink
-																		className="hover:text-gray-600 cursor-pointer"
-																		size={20}
-																	/>
-																</div>
-															</Tooltip>
-															<div className="flex gap-1 items-center">
-																<div>
-																	{authen ? (
-																		<div onClick={() => handleSetLike(item)}>
-																			{item.isLike ? (
-																				<IoMdHeart
-																					className="text-red-500 hover:text-red-600 font-semibold cursor-pointer"
-																					size={20}
-																				/>
-																			) : (
-																				<IoMdHeartEmpty
-																					className="hover:text-gray-600 font-semibold cursor-pointer"
-																					size={20}
-																				/>
-																			)}
-																		</div>
-																	) : (
-																		<Tooltip
-																			arrow={false}
-																			content="Đăng nhập để thích bài viết"
-																			placement="bottom"
-																		>
-																			<div className="myInteraction">
-																				<IoMdHeartEmpty
-																					className="hover:text-gray-600 font-semibold cursor-pointer"
-																					size={20}
-																				/>
+																	<div
+																		onClick={() => handleCopyLink(item.id)}
+																		className="flex gap-1 items-center cursor-pointer"
+																	>
+																		<IoIosLink
+																			className="hover:text-gray-600 cursor-pointer"
+																			size={20}
+																		/>
+																	</div>
+																</Tooltip>
+																<div className="flex gap-1 items-center">
+																	<div>
+																		{authen ? (
+																			<div onClick={() => handleSetLike(item)}>
+																				{item.isLike ? (
+																					<IoMdHeart
+																						className="text-red-500 hover:text-red-600 font-semibold cursor-pointer"
+																						size={20}
+																					/>
+																				) : (
+																					<IoMdHeartEmpty
+																						className="hover:text-gray-600 font-semibold cursor-pointer"
+																						size={20}
+																					/>
+																				)}
 																			</div>
-																		</Tooltip>
-																	)}
-																</div>
-																<div className="flex gap-1 items-end text-gray-700">
-																	<div className="text-left text-xs font-semibold w-14">
-																		{item.likeCount} thích
+																		) : (
+																			<Tooltip
+																				arrow={false}
+																				content="Đăng nhập để thích bài viết"
+																				placement="bottom"
+																			>
+																				<div
+																					onClick={() => {
+																						window.open('/auth/signin', 'blank');
+																					}}
+																				>
+																					<IoMdHeartEmpty
+																						className="hover:text-gray-600 font-semibold cursor-pointer"
+																						size={20}
+																					/>
+																				</div>
+																			</Tooltip>
+																		)}
+																	</div>
+																	<div className="flex gap-1 items-end text-gray-700">
+																		<div className="text-left text-xs font-semibold w-14">
+																			{item.likeCount} thích
+																		</div>
 																	</div>
 																</div>
 															</div>
 														</div>
-													</div>
-													<Link href={`/tattoo/${item.id}`}>
-														<div className="cursor-pointer">
-															<div className="text-gray-400">
-																Vị trí xăm:{' '}
-																<span className="text-black">
-																	{stringPlacements.at(item.placement)}
-																</span>
+														<Link href={`/tattoo/${item.id}`}>
+															<div className="cursor-pointer">
+																<div className="text-gray-400">
+																	Vị trí xăm:{' '}
+																	<span className="text-black">
+																		{stringPlacements.at(item.placement)}
+																	</span>
+																</div>
+																<div className="text-gray-400">
+																	Style:{' '}
+																	<span className="text-black">
+																		{tattooStyleMap.get(item.styleId).name}
+																	</span>
+																</div>
+																<div className="text-gray-400">
+																	Size:{' '}
+																	<span className="text-black">
+																		{stringSize.at(item.size)}
+																	</span>
+																</div>
 															</div>
-															<div className="text-gray-400">
-																Style:{' '}
-																<span className="text-black">
-																	{tattooStyleMap.get(item.styleId).name}
-																</span>
-															</div>
-															<div className="text-gray-400">
-																Size:{' '}
-																<span className="text-black">
-																	{stringSize.at(item.size)}
-																</span>
-															</div>
-														</div>
-													</Link>
-												</WidgetPostCard>
-											)}
-										</div>
-									))}
-								</div>
-							))}
-						</InfiniteScroll>
+														</Link>
+													</WidgetPostCard>
+												)}
+											</div>
+										))}
+									</div>
+								))}
+							</div>
+						</MyInfiniteScroll>
 					</div>
 				</div>
 			</div>

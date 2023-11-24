@@ -1,13 +1,7 @@
 import { IoMdHeartEmpty, IoIosLink, IoMdHeart } from 'react-icons/io';
 import { stringPlacements, stringSize } from 'lib/status';
-import { usePaginate } from 'lib/usePagination';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import PropTypes from 'prop-types';
-import {
-	Link,
-	Loading,
-	WidgetPostCard
-} from 'ui';
+import { Link, Loading, WidgetPostCard } from 'ui';
 import { useCallback, useEffect, useState } from 'react';
 import { tattooStyleMap } from 'lib/tattooStyle';
 import debounce from 'lodash.debounce';
@@ -16,20 +10,22 @@ import { useSession } from 'next-auth/react';
 import { randomPhoto } from 'lib/tattooPhoto';
 import { fetcherDelete, fetcherPost } from 'lib';
 import { BASE_URL } from 'lib/env';
+import MyInfiniteScroll from 'ui/MyInfiniteScroll';
 
 const TattooListNotFilter = ({ url, pageSize = 20 }) => {
-	const { items, error, size, setSize } = usePaginate(url, pageSize);
+	const [items, setItems] = useState([]);
+	const [page, setPage] = useState(1);
 
 	const { status, data } = useSession();
 	const [tattooCol, setTattooCol] = useState(2);
 	const [key, setKey] = useState(1);
+	const [postKey, setPostKey] = useState(1);
 
 	const [shareTooltipContent, setShareTooltipContent] =
 		useState('Copy link bài viết');
 
 	const [authen, setAuthen] = useState(false);
-
-	const [isReachingEnd, setIsReachingEnd] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	const handleCopyLink = (id) => {
 		setShareTooltipContent('Copy link thành công');
@@ -47,7 +43,7 @@ const TattooListNotFilter = ({ url, pageSize = 20 }) => {
 			).catch((e) => console.log(e));
 			tattoo.likeCount--;
 			tattoo.isLike = false;
-			setKey(Math.random());
+			setPostKey(Math.random());
 		} else {
 			fetcherPost(`${BASE_URL}/Media/CreateLike`, {
 				accountId: data.user.id,
@@ -55,7 +51,7 @@ const TattooListNotFilter = ({ url, pageSize = 20 }) => {
 			}).catch((e) => console.log(e));
 			tattoo.likeCount++;
 			tattoo.isLike = true;
-			setKey(Math.random());
+			setPostKey(Math.random());
 		}
 	};
 
@@ -96,7 +92,16 @@ const TattooListNotFilter = ({ url, pageSize = 20 }) => {
 		};
 	}, []);
 
-	if (status === 'loading' || !items) {
+	if (status !== 'loading' && loading) {
+		if (status === 'authenticated') {
+			if (!authen) {
+				setAuthen(true);
+			}
+		}
+		setLoading(false);
+	}
+
+	if (status === 'loading' || loading) {
 		return (
 			<div className="flex items-center justify-center h-full">
 				<Loading />
@@ -104,145 +109,137 @@ const TattooListNotFilter = ({ url, pageSize = 20 }) => {
 		);
 	}
 
-	if (status === 'authenticated') {
-		if (!authen) {
-			setAuthen(true);
-		}
-	}
-
-	if (status === 'unauthenticated') {
-		function remindLogin() {
-			window.open('/auth/signin', 'blank');
-		}
-		const elements = document.getElementsByClassName('myInteraction');
-		Array.from(elements).forEach(function (element) {
-			element.addEventListener('click', remindLogin);
-		});
-	}
-
-	if (error && !isReachingEnd) {
-		setIsReachingEnd(true);
-	}
-
 	return (
 		<div className="relative">
 			<div>
 				<div>
 					<div key={key}>
-						<InfiniteScroll
-							dataLength={items.length}
-							next={() => setSize(size + 1)}
-							hasMore={!isReachingEnd}
+						<MyInfiniteScroll
+							key={setKey}
+							parentPage={page}
+							setParentPage={setPage}
+							parentItems={items}
+							setParentItems={setItems}
+							pageSize={pageSize}
+							url={url}
 							endMessage={endMessage()}
 							loader={
-								<div className="absolute w-full flex justify-center -bottom-7 pb-3">
+								<div className="absolute w-full flex justify-center -bottom-12 pb-3">
 									<Loading />
 								</div>
 							}
-							className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2"
 						>
-							{Array.from({ length: tattooCol }).map((col, colIndex) => (
-								<div key={colIndex}>
-									{items.map((item, index) => (
-										<div key={index}>
-											{index % tattooCol === colIndex && (
-												<WidgetPostCard
-													image={item.thumbnail ? item.thumbnail : randomPhoto}
-													link={`/tattoo/${item.id}`}
-												>
-													<div className="flex justify-between gap-2">
-														<Link href={`/artist/${item.artistId}`}>
-															<div className="cursor-pointer font-semibold">
-																{item.firstName} {item.lastName}
-															</div>
-														</Link>
-														<div className="flex items-start gap-1">
-															<Tooltip
-																arrow={false}
-																onMouseLeave={() =>
-																	setShareTooltipContent('Copy link bài viết')
-																}
-																content={shareTooltipContent}
-																placement="bottom"
-															>
-																<div
-																	onClick={() => handleCopyLink(item.id)}
-																	className="flex gap-1 items-center cursor-pointer"
+							<div
+								key={postKey}
+								className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2"
+							>
+								{Array.from({ length: tattooCol }).map((col, colIndex) => (
+									<div key={colIndex}>
+										{items.map((item, index) => (
+											<div key={index}>
+												{index % tattooCol === colIndex && (
+													<WidgetPostCard
+														image={item.thumbnail ? item.thumbnail : randomPhoto}
+														link={`/tattoo/${item.id}`}
+													>
+														<div className="flex justify-between gap-2">
+															<Link href={`/artist/${item.artistId}`}>
+																<div className="cursor-pointer font-semibold">
+																	{item.firstName} {item.lastName}
+																</div>
+															</Link>
+															<div className="flex items-start gap-1">
+																<Tooltip
+																	arrow={false}
+																	onMouseLeave={() =>
+																		setShareTooltipContent('Copy link bài viết')
+																	}
+																	content={shareTooltipContent}
+																	placement="bottom"
 																>
-																	<IoIosLink
-																		className="hover:text-gray-600 cursor-pointer"
-																		size={20}
-																	/>
-																</div>
-															</Tooltip>
-															<div className="flex gap-1 items-center">
-																<div>
-																	{authen ? (
-																		<div onClick={() => handleSetLike(item)}>
-																			{item.isLike ? (
-																				<IoMdHeart
-																					className="text-red-500 hover:text-red-600 font-semibold cursor-pointer"
-																					size={20}
-																				/>
-																			) : (
-																				<IoMdHeartEmpty
-																					className="hover:text-gray-600 font-semibold cursor-pointer"
-																					size={20}
-																				/>
-																			)}
-																		</div>
-																	) : (
-																		<Tooltip
-																			arrow={false}
-																			content="Đăng nhập để thích bài viết"
-																			placement="bottom"
-																		>
-																			<div className="myInteraction">
-																				<IoMdHeartEmpty
-																					className="hover:text-gray-600 font-semibold cursor-pointer"
-																					size={20}
-																				/>
+																	<div
+																		onClick={() => handleCopyLink(item.id)}
+																		className="flex gap-1 items-center cursor-pointer"
+																	>
+																		<IoIosLink
+																			className="hover:text-gray-600 cursor-pointer"
+																			size={20}
+																		/>
+																	</div>
+																</Tooltip>
+																<div className="flex gap-1 items-center">
+																	<div>
+																		{authen ? (
+																			<div onClick={() => handleSetLike(item)}>
+																				{item.isLike ? (
+																					<IoMdHeart
+																						className="text-red-500 hover:text-red-600 font-semibold cursor-pointer"
+																						size={20}
+																					/>
+																				) : (
+																					<IoMdHeartEmpty
+																						className="hover:text-gray-600 font-semibold cursor-pointer"
+																						size={20}
+																					/>
+																				)}
 																			</div>
-																		</Tooltip>
-																	)}
-																</div>
-																<div className="flex gap-1 items-end text-gray-700">
-																	<div className="text-left text-xs font-semibold w-14">
-																		{item.likeCount} thích
+																		) : (
+																			<Tooltip
+																				arrow={false}
+																				content="Đăng nhập để thích bài viết"
+																				placement="bottom"
+																			>
+																				<div
+																					onClick={() => {
+																						window.open('/auth/signin', 'blank');
+																					}}
+																				>
+																					<IoMdHeartEmpty
+																						className="hover:text-gray-600 font-semibold cursor-pointer"
+																						size={20}
+																					/>
+																				</div>
+																			</Tooltip>
+																		)}
+																	</div>
+																	<div className="flex gap-1 items-end text-gray-700">
+																		<div className="text-left text-xs font-semibold w-14">
+																			{item.likeCount} thích
+																		</div>
 																	</div>
 																</div>
 															</div>
 														</div>
-													</div>
-													<Link href={`/tattoo/${item.id}`}>
-														<div className="cursor-pointer">
-															<div className="text-gray-400">
-																Vị trí xăm:{' '}
-																<span className="text-black">
-																	{stringPlacements.at(item.placement)}
-																</span>
+														<Link href={`/tattoo/${item.id}`}>
+															<div className="cursor-pointer">
+																<div className="text-gray-400">
+																	Vị trí xăm:{' '}
+																	<span className="text-black">
+																		{stringPlacements.at(item.placement)}
+																	</span>
+																</div>
+																<div className="text-gray-400">
+																	Style:{' '}
+																	<span className="text-black">
+																		{tattooStyleMap.get(item.styleId).name}
+																	</span>
+																</div>
+																<div className="text-gray-400">
+																	Size:{' '}
+																	<span className="text-black">
+																		{stringSize.at(item.size)}
+																	</span>
+																</div>
 															</div>
-															<div className="text-gray-400">
-																Style:{' '}
-																<span className="text-black">
-																	{tattooStyleMap.get(item.styleId).name}
-																</span>
-															</div>
-															<div className="text-gray-400">
-																Size:{' '}
-																<span className="text-black">
-																	{stringSize.at(item.size)}
-																</span>
-															</div>
-														</div>
-													</Link>
-												</WidgetPostCard>
-											)}
-										</div>
-									))}
-								</div>
-							))}
-						</InfiniteScroll>
+														</Link>
+													</WidgetPostCard>
+												)}
+											</div>
+										))}
+									</div>
+								))}
+							</div>
+						</MyInfiniteScroll>
 					</div>
 				</div>
 			</div>
