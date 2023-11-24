@@ -3,6 +3,7 @@ import { stringPlacements, stringSize } from 'lib/status';
 import { FiFilter } from 'react-icons/fi';
 import PropTypes from 'prop-types';
 import {
+	Avatar,
 	Dropdown,
 	DropdownMenu,
 	DropdownToggle,
@@ -24,6 +25,7 @@ import { randomPhoto } from 'lib/tattooPhoto';
 import { fetcherDelete, fetcherPost } from 'lib';
 import { BASE_URL } from 'lib/env';
 import MyInfiniteScroll from 'ui/MyInfiniteScroll';
+import StylePill from 'components/StylePill';
 
 const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 	const [loading, setLoading] = useState(true);
@@ -122,8 +124,14 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 		if (innerWidth >= 640) {
 			cols = 3;
 		}
+		if (innerWidth >= 768) {
+			cols = 4;
+		}
 		if (innerWidth >= 1024) {
 			cols = 5;
+		}
+		if (innerWidth >= 1280) {
+			cols = 6;
 		}
 		setTattooCol(cols);
 	}, []);
@@ -214,7 +222,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 	}
 
 	return (
-		<div className="relative">
+		<div className="relative px-0 lg:px-6">
 			<div
 				onClick={() => setVisible(!visible)}
 				className={`fixed ${
@@ -232,8 +240,8 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 			{showFilter && (
 				<div
 					className={`w-full z-10 pb-2 mb-2 bg-gray-50 ${
-						showMoreFilter ? 'overflow-x-auto' : ''
-					} ${visible ? 'fixed top-11 pt-7' : ''}`}
+						visible ? 'fixed top-11 pt-7' : ''
+					}`}
 				>
 					<div className="flex flex-wrap justify-between gap-3">
 						{
@@ -319,7 +327,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 												/>
 											</div>
 										</DropdownToggle>
-										<DropdownMenu className={'top-2 -right-6 fixed z-40'}>
+										<DropdownMenu className={'top-2 -right-0 fixed z-40'}>
 											<div className="">
 												<ul className="h-32 overflow-y-auto">
 													{[...filterSize()].map(([key, value], sizeIndex) => (
@@ -414,7 +422,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 						<div>
 							<div className="pt-2">
 								<h1 className="font-semibold">Style</h1>
-								<div className="">
+								<div className="overflow-x-auto">
 									<div className="flex gap-2 items-center">
 										{firstRowStyle.map((style, index) => (
 											<div
@@ -480,7 +488,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 						>
 							<div
 								key={postKey}
-								className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2"
+								className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4"
 							>
 								{Array.from({ length: tattooCol }).map((col, colIndex) => (
 									<div key={colIndex}>
@@ -491,12 +499,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 														image={item.thumbnail ? item.thumbnail : randomPhoto}
 														link={`/tattoo/${item.id}`}
 													>
-														<div className="flex justify-between gap-2">
-															<Link href={`/artist/${item.artistId}`}>
-																<div className="cursor-pointer font-semibold">
-																	{item.firstName} {item.lastName}
-																</div>
-															</Link>
+														<div className="block">
 															<div className="flex items-start gap-1">
 																<Tooltip
 																	arrow={false}
@@ -558,29 +561,35 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 																	</div>
 																</div>
 															</div>
+															<Link href={`/artist/${item.artistId}`}>
+																<div className="cursor-pointer font-semibold pt-2">
+																	<div className="flex gap-2">
+																		<Avatar
+																			src={
+																				item.avatar ? item.avatar : '/images/ATL.png'
+																			}
+																			size={20}
+																		/>
+																		<div>
+																			{item.firstName} {item.lastName}
+																		</div>
+																	</div>
+																</div>
+															</Link>
 														</div>
-														<Link href={`/tattoo/${item.id}`}>
+														{/* <Link href={`/tattoo/${item.id}`}>
 															<div className="cursor-pointer">
-																<div className="text-gray-400">
-																	Vị trí xăm:{' '}
-																	<span className="text-black">
+																<div className="flex flex-wrap gap-1">
+																	<StylePill>
 																		{stringPlacements.at(item.placement)}
-																	</span>
-																</div>
-																<div className="text-gray-400">
-																	Style:{' '}
-																	<span className="text-black">
+																	</StylePill>
+																	<StylePill>
 																		{tattooStyleMap.get(item.styleId).name}
-																	</span>
-																</div>
-																<div className="text-gray-400">
-																	Size:{' '}
-																	<span className="text-black">
-																		{stringSize.at(item.size)}
-																	</span>
+																	</StylePill>
+																	<StylePill>{stringSize.at(item.size)}</StylePill>
 																</div>
 															</div>
-														</Link>
+														</Link> */}
 													</WidgetPostCard>
 												)}
 											</div>

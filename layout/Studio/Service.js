@@ -60,7 +60,7 @@ function ServicePage({ services, onChange }) {
 		<div className="relative">
 			<div className="w-full">
 				<div className="flex justify-center">
-					<div className="w-80 ring-1 ring-black ring-opacity-5 bg-white mb-3">
+					<div className="w-80 ring-1 ring-black ring-opacity-20 bg-white mb-3">
 						<div className="flex flex-row w-0 min-w-full">
 							<ul className="list-none grid col-span-4 grid-flow-col place-items-center overflow-x-auto w-0 min-w-full -mb-10 pb-10">
 								<li

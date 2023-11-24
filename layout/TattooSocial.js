@@ -16,6 +16,7 @@ import MyModal from 'components/MyModal';
 import { stringReports } from 'lib/reportType';
 import Router from 'next/router';
 import { Tooltip } from 'flowbite-react';
+import StylePill from 'components/StylePill';
 
 const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 	const { status, data } = useSession();
@@ -193,7 +194,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 						<div className="w-full lg:w-2/3">
 							<TattooArtCarousel imageHeight={600} images={images} />
 						</div>
-						<div className="w-full lg:w-1/3 pt-3 pb-3 h-152 overflow-auto">
+						<div className="w-full lg:w-1/3 pt-3 pb-3 max-h-152 overflow-auto">
 							{
 								// Artist info
 							}
@@ -216,7 +217,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 									</div>
 								</div>
 								<div>
-									<a target='_blank' href={`/booking/new?artist=${artist.id}`} >
+									<a target="_blank" href={`/booking/new?artist=${artist.id}`}>
 										<Button>Đặt hẹn</Button>
 									</a>
 								</div>
@@ -227,12 +228,8 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 							<div className="px-5 py-3 border-b-2 border-t-2 border-gray-200">
 								<div className="flex justify-between">
 									<div className="flex gap-2 pb-3">
-										<div className="px-2 bg-gray-700 text-white rounded-2xl shadow-2xl cursor-pointer">
-											{tattoo.style.name}
-										</div>
-										<div className="px-2 bg-gray-700 text-white rounded-2xl shadow-2xl cursor-pointer">
-											{stringSize.at(tattoo.size)}
-										</div>
+										<StylePill>{tattoo.style.name}</StylePill>
+										<StylePill>{stringSize.at(tattoo.size)}</StylePill>
 									</div>
 									{authen && (
 										<div className="pt-1">

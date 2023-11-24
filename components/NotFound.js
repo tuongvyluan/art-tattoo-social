@@ -9,7 +9,7 @@ const NotFound = ({ code }) => {
   const title = code === 404 ? t("404") : HTTPStatus[code] || t("unexpected");
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen w-full text-center">
+    <div className="flex flex-col justify-center items-center min-h-noFooter w-full text-center">
       <div className="w-full">
         <Illustration width={300} height={300} className="inline-block" />
         <h1

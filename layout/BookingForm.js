@@ -76,7 +76,7 @@ const BookingForm = ({
 				<strong className="font-bold mr-1">{alertContent.title}</strong>
 				<span className="block sm:inline">{alertContent.content}</span>
 			</Alert>
-			<div className="absolute top-0 left-0 -right-5 overflow-hidden h-noFooter">
+			<div className="absolute -top-3 -left-5 -right-10 overflow-hidden h-noFooter">
 				<BackgroundImg
 					image={'/images/booking-img.jpg'}
 					className="relative w-full h-full bg-center bg-cover bg-fallback"
@@ -91,7 +91,7 @@ const BookingForm = ({
 										<div className="flex justify-between items-center py-4 px-2">
 											<div className="flex items-center">
 												<div>
-													<Avatar size={50} src={artist.avatar} alt={`avatar`} />
+													<Avatar size={50} src={artist.avatar ? artist.avatar : '/images/ATL.png'} alt={`avatar`} />
 												</div>
 												<div className="flex flex-row ltr:ml-6 rtl:mr-6 ">
 													<div className="sm:inline-block text-base flex flex-row  font-medium ml-2">

@@ -1,7 +1,7 @@
 import { IoMdHeartEmpty, IoIosLink, IoMdHeart } from 'react-icons/io';
 import { stringPlacements, stringSize } from 'lib/status';
 import PropTypes from 'prop-types';
-import { Link, Loading, WidgetPostCard } from 'ui';
+import { Avatar, Link, Loading, WidgetPostCard } from 'ui';
 import { useCallback, useEffect, useState } from 'react';
 import { tattooStyleMap } from 'lib/tattooStyle';
 import debounce from 'lodash.debounce';
@@ -61,8 +61,14 @@ const TattooListNotFilter = ({ url, pageSize = 20 }) => {
 		if (innerWidth >= 640) {
 			cols = 3;
 		}
+		if (innerWidth >= 768) {
+			cols = 4;
+		}
 		if (innerWidth >= 1024) {
 			cols = 5;
+		}
+		if (innerWidth >= 1280) {
+			cols = 6;
 		}
 		setTattooCol(cols);
 	}, []);
@@ -110,7 +116,7 @@ const TattooListNotFilter = ({ url, pageSize = 20 }) => {
 	}
 
 	return (
-		<div className="relative">
+		<div className="relative px-4">
 			<div>
 				<div>
 					<div key={key}>
@@ -131,7 +137,7 @@ const TattooListNotFilter = ({ url, pageSize = 20 }) => {
 						>
 							<div
 								key={postKey}
-								className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2"
+								className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4"
 							>
 								{Array.from({ length: tattooCol }).map((col, colIndex) => (
 									<div key={colIndex}>
@@ -142,12 +148,7 @@ const TattooListNotFilter = ({ url, pageSize = 20 }) => {
 														image={item.thumbnail ? item.thumbnail : randomPhoto}
 														link={`/tattoo/${item.id}`}
 													>
-														<div className="flex justify-between gap-2">
-															<Link href={`/artist/${item.artistId}`}>
-																<div className="cursor-pointer font-semibold">
-																	{item.firstName} {item.lastName}
-																</div>
-															</Link>
+														<div className="block">
 															<div className="flex items-start gap-1">
 																<Tooltip
 																	arrow={false}
@@ -209,29 +210,22 @@ const TattooListNotFilter = ({ url, pageSize = 20 }) => {
 																	</div>
 																</div>
 															</div>
+															<Link href={`/artist/${item.artistId}`}>
+																<div className="cursor-pointer font-semibold pt-2">
+																	<div className="flex gap-2">
+																		<Avatar
+																			src={
+																				item.avatar ? item.avatar : '/images/ATL.png'
+																			}
+																			size={20}
+																		/>
+																		<div>
+																			{item.firstName} {item.lastName}
+																		</div>
+																	</div>
+																</div>
+															</Link>
 														</div>
-														<Link href={`/tattoo/${item.id}`}>
-															<div className="cursor-pointer">
-																<div className="text-gray-400">
-																	Vị trí xăm:{' '}
-																	<span className="text-black">
-																		{stringPlacements.at(item.placement)}
-																	</span>
-																</div>
-																<div className="text-gray-400">
-																	Style:{' '}
-																	<span className="text-black">
-																		{tattooStyleMap.get(item.styleId).name}
-																	</span>
-																</div>
-																<div className="text-gray-400">
-																	Size:{' '}
-																	<span className="text-black">
-																		{stringSize.at(item.size)}
-																	</span>
-																</div>
-															</div>
-														</Link>
 													</WidgetPostCard>
 												)}
 											</div>

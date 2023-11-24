@@ -33,6 +33,10 @@ const TattooDetails = () => {
 				size: data.size,
 				description: data.description
 			});
+			setArtist({
+				...artist,
+				id: data.artistId
+			})
 			setLikes(data.likes);
 			setComments(data.comments);
 			// setMedias(data.medias);
