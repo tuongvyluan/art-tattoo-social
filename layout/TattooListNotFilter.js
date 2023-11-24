@@ -116,7 +116,7 @@ const TattooListNotFilter = ({ url, pageSize = 20 }) => {
 	}
 
 	return (
-		<div className="relative px-4">
+		<div className="relative lg:mx-6">
 			<div>
 				<div>
 					<div key={key}>

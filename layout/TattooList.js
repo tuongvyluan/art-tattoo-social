@@ -1,5 +1,5 @@
-import { IoMdHeartEmpty, IoIosLink, IoMdSend, IoMdHeart } from 'react-icons/io';
-import { stringPlacements, stringSize } from 'lib/status';
+import { IoMdHeartEmpty, IoIosLink, IoMdHeart } from 'react-icons/io';
+import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 import { FiFilter } from 'react-icons/fi';
 import PropTypes from 'prop-types';
 import {
@@ -26,6 +26,7 @@ import { fetcherDelete, fetcherPost } from 'lib';
 import { BASE_URL } from 'lib/env';
 import MyInfiniteScroll from 'ui/MyInfiniteScroll';
 import StylePill from 'components/StylePill';
+import { GiMagnifyingGlass } from 'react-icons/gi';
 
 const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 	const [loading, setLoading] = useState(true);
@@ -222,7 +223,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 	}
 
 	return (
-		<div className="relative px-0 lg:px-6">
+		<div className="relative lg:mx-6">
 			<div
 				onClick={() => setVisible(!visible)}
 				className={`fixed ${
@@ -249,7 +250,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 						}
 						<div className="sm:w-96 w-full min-w-max">
 							<h1 className="font-semibold">Tìm kiếm</h1>
-							<div className="flex gap-2 items-center">
+							<div className="relative">
 								<input
 									value={searchKey}
 									type="text"
@@ -260,8 +261,8 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 									className="appearance-none relative block w-full px-3 py-3 border-2 border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
 									placeholder={'Tìm kiếm'}
 								/>
-								<button onClick={handleSearch}>
-									<IoMdSend
+								<button className='absolute right-3 text-gray-500 z-20 top-3' onClick={handleSearch}>
+									<HiMiniMagnifyingGlass
 										className="hover:text-gray-600 cursor-pointer"
 										size={20}
 									/>
