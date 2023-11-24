@@ -2,6 +2,7 @@ import TattooListPage from 'layout/TattooList';
 import TattooSocial from 'layout/TattooSocial';
 import { fetcher } from 'lib';
 import { BASE_URL } from 'lib/env';
+import { randomPhoto } from 'lib/tattooPhoto';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Loading } from 'ui';
@@ -34,7 +35,10 @@ const TattooDetails = () => {
 			});
 			setLikes(data.likes);
 			setComments(data.comments);
-			setMedias(data.medias);
+			// setMedias(data.medias);
+			setMedias([{
+				url: randomPhoto
+			}])
 			// setArtist(data.artist);
 		});
 		return (

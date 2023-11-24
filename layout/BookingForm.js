@@ -82,7 +82,7 @@ const BookingForm = ({
 					className="relative w-full h-full bg-center bg-cover bg-fallback"
 				/>
 				<div className="relative h-noFooter">
-					<BookingModal canConfirm={hasLogin} onSubmit={handleSubmit}>
+					<BookingModal redirectUrl={hasLogin ? '/booking' : '/'} canConfirm={hasLogin} onSubmit={handleSubmit}>
 						{hasLogin ? (
 							<div className="w-full h-96 overflow-auto">
 								<div>
