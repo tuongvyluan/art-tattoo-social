@@ -146,7 +146,7 @@ const ArtistPage = ({ artist }) => {
 			<div className="hidden md:block pb-5 pt-0 text-center text-3xl text-gray-700">Tác phẩm</div>
 			<TattooListNotFilter
 				url={`${BASE_URL}/TattooArts/TattooUser?artistId=${artist.id}`}
-				pageSize={20}
+				pageSize={12}
 			/>
 		</div>
 	);

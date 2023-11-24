@@ -23,7 +23,7 @@ const FavoritePage = () => {
 					<Loading />
 				</div>
 			);
-		} else return <TattooListNotFilter url={url} pageSize={20} />;
+		} else return <TattooListNotFilter url={url} pageSize={12} />;
 	} else {
 		Router.replace('/');
 	}

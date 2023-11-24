@@ -69,7 +69,7 @@ const TattooDetails = () => {
 				<div>
 					<TattooListPage
 						url={`${BASE_URL}/TattooArts/AllTattooArts`}
-						pageSize={20}
+						pageSize={12}
 					/>
 				</div>
 			</div>
