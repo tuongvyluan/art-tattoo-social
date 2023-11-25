@@ -8,7 +8,7 @@ import Image from 'next/future/image';
 export const WidgetPostCard = ({ children, image, imageHeight, link = '#' }) => {
 	return (
 		<Card>
-			<Link href={link}>
+			<Link href={link} shallow={false}>
 				<div className="relative w-full cursor-pointer">
 					{imageHeight ? (
 						<BackgroundImg

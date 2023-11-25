@@ -499,89 +499,86 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 												{index % tattooCol === colIndex && (
 													<WidgetPostCard
 														image={item.thumbnail ? item.thumbnail : randomPhoto}
+														link={`/tattoo/${item.id}`}
 													>
-														<Link href={`/tattoo/${item.id}`}>
-															<div className="block">
-																<div className="flex items-start gap-1">
-																	<Tooltip
-																		arrow={false}
-																		onMouseLeave={() =>
-																			setShareTooltipContent('Copy link bài viết')
-																		}
-																		content={shareTooltipContent}
-																		placement="bottom"
+														<div className="block">
+															<div className="flex items-start gap-1">
+																<Tooltip
+																	arrow={false}
+																	onMouseLeave={() =>
+																		setShareTooltipContent('Copy link bài viết')
+																	}
+																	content={shareTooltipContent}
+																	placement="bottom"
+																>
+																	<div
+																		onClick={() => handleCopyLink(item.id)}
+																		className="flex gap-1 items-center cursor-pointer"
 																	>
-																		<div
-																			onClick={() => handleCopyLink(item.id)}
-																			className="flex gap-1 items-center cursor-pointer"
-																		>
-																			<IoIosLink
-																				className="hover:text-gray-600 cursor-pointer"
-																				size={20}
-																			/>
-																		</div>
-																	</Tooltip>
-																	<div className="flex gap-1 items-center">
-																		<div>
-																			{authen ? (
-																				<div onClick={() => handleSetLike(item)}>
-																					{item.isLike ? (
-																						<IoMdHeart
-																							className="text-red-500 hover:text-red-600 font-semibold cursor-pointer"
-																							size={20}
-																						/>
-																					) : (
-																						<IoMdHeartEmpty
-																							className="hover:text-gray-600 font-semibold cursor-pointer"
-																							size={20}
-																						/>
-																					)}
-																				</div>
-																			) : (
-																				<Tooltip
-																					arrow={false}
-																					content="Đăng nhập để thích bài viết"
-																					placement="bottom"
-																				>
-																					<div
-																						onClick={() => {
-																							window.open('/auth/signin', 'blank');
-																						}}
-																					>
-																						<IoMdHeartEmpty
-																							className="hover:text-gray-600 font-semibold cursor-pointer"
-																							size={20}
-																						/>
-																					</div>
-																				</Tooltip>
-																			)}
-																		</div>
-																		<div className="flex gap-1 items-end text-gray-700">
-																			<div className="text-left text-xs font-semibold w-14">
-																				{item.likeCount} thích
+																		<IoIosLink
+																			className="hover:text-gray-600 cursor-pointer"
+																			size={20}
+																		/>
+																	</div>
+																</Tooltip>
+																<div className="flex gap-1 items-center">
+																	<div>
+																		{authen ? (
+																			<div onClick={() => handleSetLike(item)}>
+																				{item.isLike ? (
+																					<IoMdHeart
+																						className="text-red-500 hover:text-red-600 font-semibold cursor-pointer"
+																						size={20}
+																					/>
+																				) : (
+																					<IoMdHeartEmpty
+																						className="hover:text-gray-600 font-semibold cursor-pointer"
+																						size={20}
+																					/>
+																				)}
 																			</div>
+																		) : (
+																			<Tooltip
+																				arrow={false}
+																				content="Đăng nhập để thích bài viết"
+																				placement="bottom"
+																			>
+																				<div
+																					onClick={() => {
+																						window.open('/auth/signin', 'blank');
+																					}}
+																				>
+																					<IoMdHeartEmpty
+																						className="hover:text-gray-600 font-semibold cursor-pointer"
+																						size={20}
+																					/>
+																				</div>
+																			</Tooltip>
+																		)}
+																	</div>
+																	<div className="flex gap-1 items-end text-gray-700">
+																		<div className="text-left text-xs font-semibold w-14">
+																			{item.likeCount} thích
 																		</div>
 																	</div>
 																</div>
-																<Link href={`/artist/${item.artistId}`}>
-																	<div className="cursor-pointer font-semibold pt-2">
-																		<div className="flex gap-2">
-																			<Avatar
-																				src={
-																					item.avatar
-																						? item.avatar
-																						: '/images/ATL.png'
-																				}
-																				size={20}
-																			/>
-																			<div>
-																				{item.firstName} {item.lastName}
-																			</div>
+															</div>
+															<Link href={`/artist/${item.artistId}`}>
+																<div className="cursor-pointer font-semibold pt-2">
+																	<div className="flex gap-2">
+																		<Avatar
+																			src={
+																				item.avatar ? item.avatar : '/images/ATL.png'
+																			}
+																			size={20}
+																		/>
+																		<div>
+																			{item.firstName} {item.lastName}
 																		</div>
 																	</div>
-																</Link>
-															</div>
-														</Link>
+																</div>
+															</Link>
+														</div>
 														{/* <Link href={`/tattoo/${item.id}`}>
 															<div className="cursor-pointer">
 																<div className="flex flex-wrap gap-1">

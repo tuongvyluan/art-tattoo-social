@@ -3,13 +3,13 @@ import TattooSocial from 'layout/TattooSocial';
 import { fetcher } from 'lib';
 import { BASE_URL } from 'lib/env';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Loading } from 'ui';
 
 const TattooDetails = () => {
 	// Get tattooId
 	const router = useRouter();
-	const { id } = router.query;
+	const [id, setId] = useState(router.query.id);
 	const [artTattoo, setArtTattoo] = useState(undefined);
 	const [artist, setArtist] = useState({
 		id: [Math.floor(Math.random() * 900)],
@@ -20,9 +20,9 @@ const TattooDetails = () => {
 	const [likes, setLikes] = useState([]);
 	const [comments, setComments] = useState([]);
 
-	if (!artTattoo) {
+	useEffect(() => {
 		fetcher(
-			`${BASE_URL}/TattooArts/GetTattooArtMediaById?id=${id}&isAll=false`
+			`${BASE_URL}/TattooArts/GetTattooArtMediaById?id=${router.query.id}&isAll=false`
 		).then((data) => {
 			setArtTattoo({
 				id: data.id,
@@ -47,6 +47,9 @@ const TattooDetails = () => {
 			setMedias([{ url: data.thumbnail }].concat(data.medias));
 			// setArtist(data.artist);
 		});
+	}, [router.query.id]);
+
+	if (!artTattoo) {
 		return (
 			<div className="flex items-center justify-center h-full">
 				<Loading />
@@ -54,7 +57,7 @@ const TattooDetails = () => {
 		);
 	} else
 		return (
-			<div>
+			<div key={id}>
 				{
 					// Tattoo art carousel and post interactions
 				}
@@ -79,6 +82,10 @@ const TattooDetails = () => {
 };
 
 TattooDetails.getInitialProps = async () => ({
+	namespacesRequired: ['header', 'footer', 'sidebar']
+});
+
+TattooListPage.getInitialProps = async () => ({
 	namespacesRequired: ['header', 'footer', 'sidebar']
 });
 
