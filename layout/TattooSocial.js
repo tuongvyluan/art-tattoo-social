@@ -194,7 +194,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 						<div className="w-full lg:w-1/2">
 							<TattooArtCarousel imageHeight={600} images={images} />
 						</div>
-						<div className="w-full lg:w-1/2 pt-3 pb-3 max-h-152 overflow-auto">
+						<div className="w-full lg:w-1/2 pt-3 pb-3 h-full max-h-152 overflow-auto">
 							{
 								// Artist info
 							}

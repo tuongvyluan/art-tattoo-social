@@ -362,7 +362,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 									<Tooltip
 										arrow={false}
 										content="Chọn theo style"
-										placement="bottom-start"
+										placement="bottom-end"
 									>
 										<Button
 											onClick={() => {

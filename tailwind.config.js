@@ -38,6 +38,11 @@ module.exports = {
 				body: 'calc(100vh - 120px)',
 				noFooter: 'calc(100vh - 60px)'
 			},
+			maxHeight: {
+				152: '37.5rem',
+				body: 'calc(100vh - 120px)',
+				noFooter: 'calc(100vh - 60px)'
+			},
 			width: {
 				152: '37.5rem'
 			},
