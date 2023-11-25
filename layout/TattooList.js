@@ -11,10 +11,10 @@ import {
 	Loading,
 	WidgetPostCard
 } from 'ui';
-import { filterColor, filterPlacement, filterSize } from 'lib/filterTattoo';
+import { filterPlacement, filterSize } from 'lib/filterTattoo';
 import { useCallback, useEffect, useState } from 'react';
 import Pill from 'components/Pill';
-import { tattooStyleList, tattooStyleMap } from 'lib/tattooStyle';
+import { tattooStyleList } from 'lib/tattooStyle';
 import { useRouter } from 'next/router';
 import debounce from 'lodash.debounce';
 import { ChevronDown } from 'icons/solid';
@@ -82,7 +82,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 
 	const handleSetLike = debounce((tattoo) => {
 		handleCallLikeApi(tattoo);
-	}, 200);
+	}, 100);
 
 	const handleCallLikeApi = (tattoo) => {
 		if (tattoo.isLike) {
@@ -272,45 +272,6 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 						</div>
 						<div className={`flex flex-wrap gap-3 px-1 ${visible ? 'mr-7' : ''}`}>
 							<div className="flex gap-3">
-								{
-									// Filter color
-								}
-								<div>
-									<h1 className="font-semibold">Màu sắc</h1>
-									<Dropdown className={'relative'}>
-										<DropdownToggle>
-											<div className="w-28 relative">
-												<div className="appearance-none block w-full px-3 py-3 ring-1 bg-white ring-gray-300 dark:ring-gray-300 rounded-lg text-sm">
-													{filterColor().get(filter.hasColor)}
-												</div>
-												<ChevronDown
-													width={20}
-													height={20}
-													className="absolute right-2 top-3"
-												/>
-											</div>
-										</DropdownToggle>
-										<DropdownMenu className={'top-2 -right-10 fixed z-40'}>
-											<div className="">
-												<ul className="">
-													{[...filterColor()].map(([key, value], colorIndex) => (
-														<li
-															onClick={() => handleFilterChange('hasColor', key)}
-															className={`cursor-pointer p-2 text-center text-gray-800 ${
-																key === filter.hasColor
-																	? 'text-black bg-gray-50'
-																	: 'hover:text-black hover:bg-gray-50'
-															}`}
-															key={key}
-														>
-															{value}
-														</li>
-													))}
-												</ul>
-											</div>
-										</DropdownMenu>
-									</Dropdown>
-								</div>
 								{
 									// Filter size
 								}
