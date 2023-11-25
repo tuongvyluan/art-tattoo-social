@@ -61,6 +61,7 @@ const BookingForm = ({
 		})
 			.then((data) => {
 				handleAlert(true, 'Đặt hẹn thành công');
+				Router.replace('/booking')
 			})
 			.catch((e) => {
 				handleAlert(true, 'Đặt hẹn thất bại', '', true);

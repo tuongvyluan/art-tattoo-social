@@ -18,7 +18,7 @@ const TattooDetails = () => {
 	const [artTattoo, setArtTattoo] = useState(undefined);
 	const [artist, setArtist] = useState({
 		artistId: [Math.floor(Math.random() * 900)],
-		artistName: 'Vy'
+		firstName: 'Vy'
 	});
 
 	const handleSubmit = (newArtTattoo) => {
@@ -50,7 +50,8 @@ const TattooDetails = () => {
 				...data,
 				artist: {
 					id: data.artistId,
-					firstName: data.firstName
+					firstName: data.firstName,
+					lastName: data.lastName
 				},
 				bookingId: data.bookingId ? data.bookingId : '',
 				stages: Array.from(stageMap, ([id, value]) => value)
@@ -87,7 +88,8 @@ const TattooDetails = () => {
 		if (id === 'new' && data.user.role === ROLE.ARTIST) {
 			const artistInfo = {
 				id: data.user.id,
-				firstName: data.user.firstName
+				firstName: data.user.firstName,
+				lastName: data.user.lastName
 			};
 			return (
 				<TattooDetailsPage

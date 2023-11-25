@@ -185,7 +185,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 					className="absolute cursor-pointer left-2 top-3 z-20"
 				/>
 			</Link>
-			<div className="w-full max-w-xl lg:max-w-4xl xl:max-w-6xl mx-auto">
+			<div className="w-full max-w-xl lg:max-w-3xl xl:max-w-6xl mx-auto">
 				<div className="relative min-w-0 break-words rounded-lg overflow-hidden shadow-sm w-full bg-white dark:bg-gray-600">
 					<div className="block lg:flex md:items-start">
 						{
@@ -230,7 +230,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 							}
 							<div className="px-5 py-3 border-b-2 border-t-2 border-gray-200">
 								<div className="flex justify-between">
-									<div className="flex gap-2 pb-3">
+									<div className="flex flex-wrap gap-2 pb-3">
 										<StylePill>{tattoo.style.name}</StylePill>
 										<StylePill>{stringSize.at(tattoo.size)}</StylePill>
 									</div>

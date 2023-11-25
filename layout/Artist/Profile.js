@@ -110,7 +110,7 @@ function ArtistInfo({ account, handleSubmit }) {
 											/>
 										</div>
 									</div>
-									<div className="flex flex-wrap items-center mt-1">
+									<div className="flex flex-wrap items-center mt-3">
 										<div className="mx-auto">
 											<CldUploadButton
 												onSuccess={(result, options) =>
@@ -170,7 +170,7 @@ function ArtistInfo({ account, handleSubmit }) {
 											required
 											rows={5}
 											className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
-											placeholder={'Nhập bio cho studio'}
+											placeholder={'Nhập bio cho tài khoản'}
 										/>
 									</div>
 								)}

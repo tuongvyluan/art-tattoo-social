@@ -387,7 +387,7 @@ function TattooDetailsPage({ bookingId, artTattoo, artist, handleSubmit }) {
 								<div className="font-semibold text-lg pb-2">Thông tin hình xăm</div>
 								<div className="pb-3 flex items-center gap-1">
 									<div className="w-20">Nghệ sĩ xăm:</div>
-									<span className="font-semibold">{tattoo.artist.firstName}</span>
+									<span className="font-semibold">{artist.firstName} {artist.lastName}</span>
 								</div>
 								<div className="pb-3 flex items-center gap-1">
 									<div className="w-20">Kích thước: </div>

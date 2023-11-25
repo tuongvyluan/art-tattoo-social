@@ -2,7 +2,6 @@ import TattooListPage from 'layout/TattooList';
 import TattooSocial from 'layout/TattooSocial';
 import { fetcher } from 'lib';
 import { BASE_URL } from 'lib/env';
-import { randomPhoto } from 'lib/tattooPhoto';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Loading } from 'ui';
@@ -38,16 +37,14 @@ const TattooDetails = () => {
 			setArtist({
 				...artist,
 				id: data.artistId,
+				avatar: data.avatar,
+				firstName: data.artist.firstName,
+				lastName: data.artist.lastName,
 				isVerified: data.artist?.isVerified ? data.artist.isVerified : false
 			});
 			setLikes(data.likes);
 			setComments(data.comments);
-			// setMedias(data.medias);
-			setMedias([
-				{
-					url: randomPhoto
-				}
-			]);
+			setMedias([{ url: data.thumbnail }].concat(data.medias));
 			// setArtist(data.artist);
 		});
 		return (
@@ -80,5 +77,9 @@ const TattooDetails = () => {
 			</div>
 		);
 };
+
+TattooDetails.getInitialProps = async () => ({
+	namespacesRequired: ['header', 'footer', 'sidebar']
+});
 
 export default TattooDetails;
