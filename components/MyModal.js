@@ -2,6 +2,7 @@ import Button from './Button';
 import PropTypes from 'prop-types';
 import { Modal } from 'flowbite-react';
 import { useRef } from 'react';
+import { IoIosWarning } from "react-icons/io";
 
 const MyModal = ({
 	title,
@@ -16,7 +17,10 @@ const MyModal = ({
 	const initialFocus = useRef(null)
 	return (
 		<Modal initialFocus={initialFocus} show={openModal} onClose={() => setOpenModal(false)}>
-			<Modal.Header>{title}</Modal.Header>
+			<div className="flex flex-wrap items-center gap-2">
+					{warn && <IoIosWarning size={20} className="text-red-500" />}
+					<div className={`${warn ? 'text-red-500' : ''}`}>{title}</div>
+				</div>
 			<Modal.Body>{children}</Modal.Body>
 			<Modal.Footer>
 				<Button ref={initialFocus} outline onClick={() => setOpenModal(false)}>

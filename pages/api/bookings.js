@@ -120,9 +120,9 @@ const data = Array(20)
 						placement: randomFrom0To(stringPlacements.length)
 					};
 				}),
-			status: BOOKING_STATUS.PENDING,
+			status: BOOKING_STATUS.IN_PROGRESS,
 			// status: [
-			// 	BOOKING_STATUS.PENDING,
+			// 	BOOKING_STATUS.IN_PROGRESS,
 			// 	BOOKING_STATUS.COMPLETED,
 			// 	BOOKING_STATUS.CANCELLED
 			// ][randomFrom0To(3)],

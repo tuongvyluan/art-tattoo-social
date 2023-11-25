@@ -1,7 +1,7 @@
 import ArtistInfo from 'layout/Artist/Profile';
-import { fetcher, fetcherPost, fetcherPut } from 'lib';
+import { fetcher, fetcherPut } from 'lib';
 import { BASE_URL } from 'lib/env';
-import { ARTIST_STATUS, ROLE } from 'lib/status';
+import { ROLE } from 'lib/status';
 import { useSession } from 'next-auth/react';
 import Router from 'next/router';
 import { useState } from 'react';

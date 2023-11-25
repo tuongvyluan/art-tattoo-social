@@ -4,9 +4,9 @@ import BookingModal from 'components/BookingModal';
 import Link from 'next/link';
 import ServicePage from './Studio/Service';
 import { useState } from 'react';
-import { fetcherPost } from 'lib';
+import { fetcherPost, formatPrice } from 'lib';
 import { BASE_URL } from 'lib/env';
-import Button from 'components/Button';
+import Router from 'next/router';
 
 const estimeDate = ['Vài ngày tới', 'Tuần sau', 'Tháng này', 'Vài tháng tới'];
 
@@ -66,6 +66,10 @@ const BookingForm = ({
 				handleAlert(true, 'Đặt hẹn thất bại', '', true);
 			});
 	};
+
+	const handleRefresh = () => {
+		Router.replace(window.location.href);
+	};
 	return (
 		<div className="relative">
 			<Alert
@@ -84,14 +88,16 @@ const BookingForm = ({
 				/>
 				<div className="relative h-noFooter">
 					<BookingModal
-						redirectUrl={hasLogin ? '/booking' : '/'}
-						canConfirm={hasLogin}
-						onSubmit={handleSubmit}
+						redirectUrl={customerId ? '/booking' : '/'}
+						canConfirm={customerId}
+						onSubmit={customerId ? handleSubmit : handleRefresh}
+						confirmTitle={customerId ? 'Xác nhận' : 'Tải lại trang'}
+						size={customerId ? '7xl' : 'md'}
 					>
 						{hasLogin ? (
-							<div className="w-full h-96 overflow-auto">
+							<div>
 								{customerId ? (
-									<div>
+									<div className="w-full h-96 overflow-auto">
 										{/* <!-- Hiển thị tên studio --> */}
 										<div className="flex bg-white flex-row w-0 min-w-full">
 											<div className="flex justify-between items-center py-4 px-2">
@@ -185,7 +191,7 @@ const BookingForm = ({
 													Giá dịch vụ ước tính:{' '}
 													{maxPrice > 0 && (
 														<span className="text-lg">
-															₫{minPrice} - ₫{maxPrice}
+															{formatPrice(minPrice)} - {formatPrice(maxPrice)}
 														</span>
 													)}
 												</div>
@@ -199,19 +205,6 @@ const BookingForm = ({
 												Bạn hãy kiểm tra hộp thư và xác thực email để thực hiện đặt
 												hẹn nhé!
 											</div>
-											<div className="flex justify-center flex-wrap gap-3">
-												<Link href="/tattoo">
-													<div>
-														<Button outline={true}>Trở về trang chủ</Button>
-													</div>
-												</Link>
-
-												<a alt="booking" href={window.location.href}>
-													<div>
-														<Button>Tải lại trang</Button>
-													</div>
-												</a>
-											</div>
 										</div>
 									</div>
 								)}
@@ -222,20 +215,22 @@ const BookingForm = ({
 									<div className="text-center">
 										Bạn phải đăng nhập để được đặt lịch
 									</div>
-									<div className="text-center">
-										Đi tới trang{' '}
+									<div className="flex justify-center gap-1">
+										<span>Đi tới trang</span>
 										<Link href="/auth/signin" target="_blank">
 											<span className="underline cursor-pointer text-blue-700">
 												đăng nhập
 											</span>
 										</Link>
-										/
+										<span>hoặc</span>
 										<Link href="/auth/register" target="_blank">
-											<span className="underline cursor-pointer text-blue-700">
-												đăng ký
+											<span>
+												<span className="underline cursor-pointer text-blue-700">
+													đăng ký
+												</span>
+												?
 											</span>
 										</Link>
-										?
 									</div>
 								</div>
 							</div>
