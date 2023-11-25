@@ -182,7 +182,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 				<ChevronLeft
 					width={30}
 					height={30}
-					className="absolute cursor-pointer left-5 top-3 z-20"
+					className="absolute cursor-pointer left-2 top-3 z-20"
 				/>
 			</Link>
 			<div className="w-full max-w-xl lg:max-w-4xl xl:max-w-6xl mx-auto">
@@ -209,18 +209,21 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 											/>
 										</div>
 									</Link>
-									<div className="cursor-pointer">
-										<div className="font-semibold">
-											{artist.firstName} {artist.lastName}
+									<Link href={`/artist/${artist.id}`}>
+										<div className="cursor-pointer">
+											<div className="font-semibold">
+												{artist.firstName} {artist.lastName}
+											</div>
 										</div>
-										<div className="text-gray-700">200 người theo dõi</div>
+									</Link>
+								</div>
+								{artist.isVerified && (
+									<div>
+										<a target="_blank" href={`/booking/new?artist=${artist.id}`}>
+											<Button>Đặt hẹn</Button>
+										</a>
 									</div>
-								</div>
-								<div>
-									<a target="_blank" href={`/booking/new?artist=${artist.id}`}>
-										<Button>Đặt hẹn</Button>
-									</a>
-								</div>
+								)}
 							</div>
 							{
 								// Tattoo info
@@ -333,7 +336,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 										placement="top"
 										content="Đăng nhập để được bình luận"
 									>
-										<div className="relative flex gap-2">
+										<div className="relative flex gap-2 pb-3">
 											<textarea
 												aria-label={'Comment'}
 												name="comment"

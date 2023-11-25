@@ -16,10 +16,18 @@ const BookingModal = ({
 		<Modal size={'7xl'} position={'center'} show={true}>
 			<Modal.Body>{children}</Modal.Body>
 			<Modal.Footer>
-				<Button outline onClick={handleRedirect}>
-					Trở về
-				</Button>
-				{canConfirm && <Button onClick={onSubmit}>Xác nhận</Button>}
+				<div className="flex flex-wrap items-center justify-center gap-3 w-full">
+					<div>
+						<Button outline onClick={handleRedirect}>
+							Trở về
+						</Button>
+					</div>
+					{canConfirm && (
+						<div>
+							<Button onClick={onSubmit}>Xác nhận</Button>
+						</div>
+					)}
+				</div>
 			</Modal.Footer>
 		</Modal>
 	);

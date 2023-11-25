@@ -73,11 +73,11 @@ const BookingFormPage = () => {
 
 	return (
 		<BookingForm
-			hasLogin={typeof data.user.customerId !== 'undefined'}
+			hasLogin={status === 'authenticated'}
 			isArtist={isArtist}
 			artist={artist}
 			studio={studio}
-			customerId={data.user.customerId}
+			customerId={data?.user?.customerId}
 		/>
 	);
 };

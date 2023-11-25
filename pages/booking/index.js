@@ -24,7 +24,7 @@ const Booking = () => {
 	}
 	if (status === 'authenticated' && data.user.role === ROLE.CUSTOMER && loading) {
 		// Call api to get bookings
-		if (!data.user.customerId) {
+		if (!data.user?.customerId) {
 			setCustomerNotVerify(true);
 			setLoading(false);
 		}

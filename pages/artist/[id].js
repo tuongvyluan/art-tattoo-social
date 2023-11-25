@@ -20,7 +20,8 @@ const Artist = () => {
 				id: data.id,
 				avatar: data.avatar,
 				bioContent: data.bioContent,
-				styles: data.artistStyles
+				styles: data.artistStyles,
+				isVerified: data.isVerified
 			});
 		});
 		return (

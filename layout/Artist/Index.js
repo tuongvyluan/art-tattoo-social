@@ -5,6 +5,7 @@ import { BASE_URL } from 'lib/env';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Avatar, Card, CardBody } from 'ui';
+
 const ArtistPage = ({ artist }) => {
 	const [showMoreInfo, setShowMoreInfo] = useState(false);
 
@@ -33,11 +34,13 @@ const ArtistPage = ({ artist }) => {
 							</div>
 						</div>
 						<div className="pb-6 flex justify-center flex-wrap gap-2 w-full">
-							<div className="w-20">
-								<a target="_blank" href={`/booking/new?artist=${artist.id}`}>
-									<Button>Đặt hẹn</Button>
-								</a>
-							</div>
+							{artist.isVerified && (
+								<div className="w-20">
+									<a target="_blank" href={`/booking/new?artist=${artist.id}`}>
+										<Button>Đặt hẹn</Button>
+									</a>
+								</div>
+							)}
 							<div className="w-20">
 								<Button outline>Theo dõi</Button>
 							</div>
@@ -104,11 +107,13 @@ const ArtistPage = ({ artist }) => {
 								</div>
 							</div>
 							<div className="pb-3 flex justify-center flex-wrap gap-2 w-full min-w-max">
-								<div className="w-20">
-									<a target="_blank" href={`/booking/new?artist=${artist.id}`}>
-										<Button>Đặt hẹn</Button>
-									</a>
-								</div>
+								{artist.isVerified && (
+									<div className="w-20">
+										<a target="_blank" href={`/booking/new?artist=${artist.id}`}>
+											<Button>Đặt hẹn</Button>
+										</a>
+									</div>
+								)}
 								<div className="w-20">
 									<Button outline>Theo dõi</Button>
 								</div>
@@ -143,7 +148,9 @@ const ArtistPage = ({ artist }) => {
 					</Card>
 				</div>
 			</div>
-			<div className="hidden md:block pb-5 pt-0 text-center text-3xl text-gray-700">Tác phẩm</div>
+			<div className="hidden md:block pb-5 pt-0 text-center text-3xl text-gray-700">
+				Tác phẩm
+			</div>
 			<TattooListNotFilter
 				url={`${BASE_URL}/TattooArts/TattooUser?artistId=${artist.id}`}
 				pageSize={12}

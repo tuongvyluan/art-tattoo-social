@@ -22,7 +22,9 @@ const TattooDetails = () => {
 	const [comments, setComments] = useState([]);
 
 	if (!artTattoo) {
-		fetcher(`${BASE_URL}/TattooArts/GetTattooArtMediaById?id=${id}&isAll=false`).then((data) => {
+		fetcher(
+			`${BASE_URL}/TattooArts/GetTattooArtMediaById?id=${id}&isAll=false`
+		).then((data) => {
 			setArtTattoo({
 				id: data.id,
 				style: data.style,
@@ -35,14 +37,17 @@ const TattooDetails = () => {
 			});
 			setArtist({
 				...artist,
-				id: data.artistId
-			})
+				id: data.artistId,
+				isVerified: data.artist?.isVerified ? data.artist.isVerified : false
+			});
 			setLikes(data.likes);
 			setComments(data.comments);
 			// setMedias(data.medias);
-			setMedias([{
-				url: randomPhoto
-			}])
+			setMedias([
+				{
+					url: randomPhoto
+				}
+			]);
 			// setArtist(data.artist);
 		});
 		return (
