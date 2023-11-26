@@ -1,6 +1,6 @@
 import { Avatar, Badge, Dropdown, DropdownMenu, DropdownToggle } from 'ui';
 import { signIn, signOut, useSession } from 'next-auth/react';
-import { Bell, Cog, LightningBolt, Logout, Pencil, User } from 'icons/solid';
+import { Bell, Logout, Pencil, User } from 'icons/solid';
 import { useTranslation } from 'i18n';
 
 import Notifications from './Notifications';
@@ -43,7 +43,7 @@ const Header = ({ toggleOpen }) => {
 			<div className="w-full mx-auto h-full">
 				<div className="relative flex items-center justify-between h-full">
 					<div className="pl-4 cursor-pointer">
-						<Link href='/'>
+						<Link href="/">
 							<div>
 								<Image
 									width={39}
@@ -56,7 +56,7 @@ const Header = ({ toggleOpen }) => {
 					</div>
 					<div className="flex justify-end items-center">
 						<div className="inset-y-0 right-0 items-center px-4 sm:static sm:inset-auto flex h-full">
-							<Dropdown className="px-3 static sm:relative h-full flex items-center">
+							{/* <Dropdown className="px-3 static sm:relative h-full flex items-center">
 								<DropdownToggle className="h-full">
 									<Pencil width={18} height={18} />
 								</DropdownToggle>
@@ -187,13 +187,13 @@ const Header = ({ toggleOpen }) => {
 								<DropdownMenu className="notification-dropdown px-0 dark:text-gray-800 overflow-hidden right-0 left-0">
 									<Notifications title={'Thông báo'} />
 								</DropdownMenu>
-							</Dropdown>
+							</Dropdown> */}
 
 							<Dropdown className="px-3 relative h-full flex items-center">
 								<DropdownToggle>
 									<Avatar
 										size={28}
-										src={`/images/avatar.png`}
+										src={data?.user?.avatar ? data.user.avatar : `/images/avatar.png`}
 										alt={data ? data.user.firstName : 'Unknown'}
 									/>
 								</DropdownToggle>
@@ -201,13 +201,12 @@ const Header = ({ toggleOpen }) => {
 									<div>
 										{status === 'authenticated' ? (
 											<div>
-												<a
-													href="/favorite"
-													className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
-												>
-													<IoMdHeartEmpty size={16} />{' '}
-													<span className="ml-3">Yêu thích</span>
-												</a>
+												<Link href="/favorite">
+													<div className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
+														<IoMdHeartEmpty size={16} />{' '}
+														<span className="ml-3">Yêu thích</span>
+													</div>
+												</Link>
 												<Link href="/profile">
 													<div className="cursor-pointer flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
 														<User width={16} height={16} />{' '}

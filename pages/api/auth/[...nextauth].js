@@ -77,7 +77,6 @@ const authOptions = {
 	],
 	callbacks: {
 		async jwt({ token, user, profile }) {
-
 			// Only login with google the first time profile is not null
 			// Here we fetch BE to get user info, the following time jwt will
 			// not fall into this scope
@@ -149,10 +148,65 @@ const authOptions = {
 			}
 			return session;
 		},
-		async signIn({ account, profile, user }) {
+		async signIn({ account, profile, user, credentials }) {
 			if (account.provider === 'google') {
 				user.name = account.id_token;
 				return profile.email_verified;
+			} else {
+				console.log(credentials)
+				const { email, password } = credentials;
+
+				// perform login logic
+				// find out user from db
+				const payload = {
+					email: email,
+					password: password
+				};
+				const res = await fetcherPost(BASE_URL + '/Auth/Login', payload);
+
+				// Read token from response
+				const jwtObj = readJwt(res.jwt);
+				// Check role
+				const roleString = jwtObj['role'];
+				let role;
+				switch (roleString) {
+					case 'Customer':
+						role = ROLE.CUSTOMER;
+						break;
+					case 'Artist':
+						role = ROLE.ARTIST;
+						break;
+					case 'Admin':
+						role = ROLE.ADMIN;
+						break;
+					case 'StudioManager':
+						role = ROLE.STUDIO;
+						break;
+					default:
+						role = -1;
+						break;
+				}
+
+				if (role === -1) {
+					throw new Error('You are not allowed to access');
+				}
+
+				const token = {
+					id: res.accountId,
+					token: res.jwt,
+					role: role,
+					email: jwtObj['emailaddress'],
+					firstName: jwtObj['surname'],
+					lastName: jwtObj['name'],
+					studioId: res.studioId,
+					customerId: res.customerId,
+					artistId: res.artistId,
+					accountId: res.accountId,
+					avatar: res.avatar
+				};
+
+				// if everything is fine
+				return token;
 			}
 		}
 	},
