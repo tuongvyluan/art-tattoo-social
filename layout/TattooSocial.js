@@ -194,7 +194,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 						<div className="w-full lg:w-1/2">
 							<TattooArtCarousel imageHeight={600} images={images} />
 						</div>
-						<div className="w-full lg:w-1/2 pt-3 pb-3 h-full max-h-152 overflow-auto">
+						<div className="w-full lg:w-1/2 pt-3 pb-3 h-full max-h-152 overflow-y-auto overflow-x-hidden">
 							{
 								// Artist info
 							}
@@ -361,10 +361,18 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 											key={cmt.id}
 											className="py-2 flex justify-between gap-2 items-start"
 										>
-											<div className="flex gap-1 items-center">
-												<Avatar size={30} src={''} alt={cmt.id} />
-												<div>
-													<span className="font-semibold pr-1">Trân Nguyễn</span>
+											<div className="flex items-start overflow-hidden">
+												<div className='min-w-max'>
+													<Avatar
+														size={30}
+														src={cmt.avatar ? cmt.avatar : ''}
+														alt={cmt.firstName}
+													/>
+												</div>
+												<div className="break-words overflow-hidden ml-1">
+													<span className="font-semibold pr-1">
+														{cmt.firstName} {cmt.lastName}
+													</span>
 													{cmt.content}
 												</div>
 											</div>
