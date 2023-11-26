@@ -1,8 +1,9 @@
 import NextAuth from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { ROLE } from '../../../lib/status';
 import { fetcherPost, readJwt } from 'lib';
-import { BASE_URL } from 'lib/env';
+import { BASE_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from 'lib/env';
 
 const authOptions = {
 	session: {
@@ -61,16 +62,61 @@ const authOptions = {
 					studioId: res.studioId,
 					customerId: res.customerId,
 					artistId: res.artistId,
-					accountId: res.accountId
-				}
+					accountId: res.accountId,
+					avatar: res.avatar
+				};
 
 				// if everything is fine
 				return token;
 			}
+		}),
+		GoogleProvider({
+			clientId: GOOGLE_CLIENT_ID,
+			clientSecret: GOOGLE_CLIENT_SECRET
 		})
 	],
 	callbacks: {
-		async jwt({ token, user }) {
+		async jwt({ token, user, profile }) {
+
+			// Only login with google the first time profile is not null
+			// Here we fetch BE to get user info, the following time jwt will
+			// not fall into this scope
+			if (profile) {
+				const data = await fetcherPost(`${BASE_URL}/Auth/GoogleAuth`, {
+					token: user.name
+				});
+				const jwtObj = readJwt(data.jwt);
+				// Check role
+				const roleString = jwtObj['role'];
+				let role;
+				switch (roleString) {
+					case 'Customer':
+						role = ROLE.CUSTOMER;
+						break;
+					case 'Artist':
+						role = ROLE.ARTIST;
+						break;
+					case 'Admin':
+						role = ROLE.ADMIN;
+						break;
+					case 'StudioManager':
+						role = ROLE.STUDIO;
+						break;
+					default:
+						role = -1;
+						break;
+				}
+				return {
+					firstName: profile.family_name,
+					lastName: profile.given_name,
+					avatar: profile.picture,
+					id: data.accountId,
+					customerId: data.customerId,
+					studioId: data.studioId,
+					artistId: data.artistId,
+					role: role
+				};
+			}
 			if (user) {
 				return {
 					...token,
@@ -82,7 +128,8 @@ const authOptions = {
 					studioId: user.studioId,
 					customerId: user.customerId,
 					artistId: user.artistId,
-					accountId: user.accountId
+					accountId: user.accountId,
+					avatar: user.avatar
 				};
 			}
 			return token;
@@ -98,8 +145,15 @@ const authOptions = {
 				session.user.customerId = token.customerId;
 				session.user.artistId = token.artistId;
 				session.user.accountId = token.accountId;
+				session.user.avatar = token.avatar;
 			}
 			return session;
+		},
+		async signIn({ account, profile, user }) {
+			if (account.provider === 'google') {
+				user.name = account.id_token;
+				return profile.email_verified;
+			}
 		}
 	},
 	pages: {
