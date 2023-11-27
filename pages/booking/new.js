@@ -82,4 +82,8 @@ const BookingFormPage = () => {
 	);
 };
 
+NotFound.getInitialProps = async () => ({
+	namespacesRequired: ['header']
+});
+
 export default BookingFormPage;

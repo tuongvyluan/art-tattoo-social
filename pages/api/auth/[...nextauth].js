@@ -148,12 +148,12 @@ const authOptions = {
 			}
 			return session;
 		},
-		async signIn({ account, profile, user, credentials }) {
+		async signIn({ account, profile, user, credentials }, options, param) {
+			console.log('param: ', param)
 			if (account.provider === 'google') {
 				user.name = account.id_token;
 				return profile.email_verified;
 			} else {
-				console.log(credentials)
 				const { email, password } = credentials;
 
 				// perform login logic

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Button from './Button';
 import { signIn } from 'next-auth/react';
 import GoogleLogo from '/public/svg/google.svg';
+import { ROLE } from 'lib/status';
 
 const Login = ({ handleSubmit, user, setUser }) => {
 	const handleFormChange = (e) => {
@@ -64,9 +65,12 @@ const Login = ({ handleSubmit, user, setUser }) => {
 							</form>
 
 							<div className="flex justify-center pt-3">
-								<Button outline onClick={() => signIn('google')}>
+								<Button
+									outline
+									onClick={() => signIn('google')}
+								>
 									<div className="flex flex-wrap gap-2 items-center justify-center">
-										<GoogleLogo className='w-4 h-4' />
+										<GoogleLogo className="w-4 h-4" />
 										<div>Đăng nhập với Google</div>
 									</div>
 								</Button>

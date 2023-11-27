@@ -1,9 +1,7 @@
-import { Avatar, Badge, Dropdown, DropdownMenu, DropdownToggle } from 'ui';
+import { Avatar, Dropdown, DropdownMenu, DropdownToggle } from 'ui';
 import { signIn, signOut, useSession } from 'next-auth/react';
-import { Bell, Logout, Pencil, User } from 'icons/solid';
-import { useTranslation } from 'i18n';
+import { Logout, User } from 'icons/solid';
 
-import Notifications from './Notifications';
 import PropTypes from 'prop-types';
 import { useAppState } from 'components/AppProvider';
 import Image from 'next/image';
@@ -26,7 +24,6 @@ const Header = ({ toggleOpen }) => {
 	const { status, data } = useSession();
 
 	const [state, dispatch] = useAppState();
-	const { t } = useTranslation('header');
 
 	const handleChange = (e) => {
 		dispatch({
@@ -188,18 +185,19 @@ const Header = ({ toggleOpen }) => {
 									<Notifications title={'Thông báo'} />
 								</DropdownMenu>
 							</Dropdown> */}
-
-							<Dropdown className="px-3 relative h-full flex items-center">
-								<DropdownToggle>
-									<Avatar
-										size={28}
-										src={data?.user?.avatar ? data.user.avatar : `/images/avatar.png`}
-										alt={data ? data.user.firstName : 'Unknown'}
-									/>
-								</DropdownToggle>
-								<DropdownMenu>
-									<div>
-										{status === 'authenticated' ? (
+							{status === 'authenticated' ? (
+								<Dropdown className="px-3 relative h-full flex items-center">
+									<DropdownToggle>
+										<Avatar
+											size={28}
+											src={
+												data?.user?.avatar ? data.user.avatar : `/images/avatar.png`
+											}
+											alt={data ? data.user.firstName : 'Unknown'}
+										/>
+									</DropdownToggle>
+									<DropdownMenu>
+										<div>
 											<div>
 												<Link href="/favorite">
 													<div className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
@@ -234,19 +232,18 @@ const Header = ({ toggleOpen }) => {
 													<div className="ml-3">Đăng xuất</div>
 												</a>
 											</div>
-										) : (
-											<a
-												href="#"
-												onClick={() => signIn()}
-												className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out border-t border-1 border-gray-100"
-											>
-												<Logout width={16} height={16} />{' '}
-												<div className="ml-3">Đăng nhập</div>
-											</a>
-										)}
-									</div>
-								</DropdownMenu>
-							</Dropdown>
+										</div>
+									</DropdownMenu>
+								</Dropdown>
+							) : (
+								<a
+									href="#"
+									onClick={() => signIn()}
+									className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out border-t border-1 border-gray-100"
+								>
+									<div className="ml-3">Đăng nhập</div>
+								</a>
+							)}
 						</div>
 					</div>
 				</div>

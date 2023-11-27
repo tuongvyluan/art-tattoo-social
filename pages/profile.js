@@ -15,6 +15,7 @@ const ProfilePage = () => {
 
 	const handleSubmit = (account, artistStyles, artistStudios) => {
 		fetcherPut(`${BASE_URL}/artist-profile`, account)
+		fetcherPut(`${BASE_URL}/artists/${account.id}/artist-style`, artistStyles)
 	};
 
 	if (status === 'loading') {

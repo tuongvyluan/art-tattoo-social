@@ -4,7 +4,6 @@ import App from 'next/app';
 import AppProvider from 'components/AppProvider';
 import Head from 'next/head';
 import Page from 'layout/Page';
-import { appWithTranslation } from 'i18n';
 import { SessionProvider } from 'next-auth/react';
 
 class MyApp extends App {
@@ -60,4 +59,4 @@ MyApp.getInitialProps = async (appContext) => ({
 	...(await App.getInitialProps(appContext))
 });
 
-export default appWithTranslation(MyApp);
+export default MyApp;
