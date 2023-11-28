@@ -14,20 +14,24 @@ const TattooDetails = () => {
 	const router = useRouter();
 	const booking =
 		typeof router.query['booking'] !== 'undefined' ? router.query['booking'] : '';
-	const { id } = router.query;
+	const [id, setId] = useState(router.query.id);
 	const [artTattoo, setArtTattoo] = useState(undefined);
 	const [artist, setArtist] = useState({
 		artistId: [Math.floor(Math.random() * 900)],
 		firstName: 'Vy'
 	});
 
-	const handleSubmit = (newArtTattoo) => {
-		setArtTattoo(newArtTattoo);
+	const handleSubmit = (newId) => {
+		setArtTattoo(undefined)
+		if (newId !== id) {
+			setId(newId)
+			router.replace(`/tattoo/update/${newId}`)
+		}
 	};
 
 	// Nếu đang xem hình xăm cũ và chưa load hình xăm
 	if (id !== 'new' && !artTattoo) {
-		fetcher(`${BASE_URL}/TattooArts/Details?id=${id}`).then((data) => {
+		fetcher(`${BASE_URL}/TattooArts/GetTattooArtMediaById?id=${id}&isAll=true`).then((data) => {
 			const stageMap = new Map(
 				data.medias.map((obj) => {
 					return [
@@ -50,8 +54,8 @@ const TattooDetails = () => {
 				...data,
 				artist: {
 					id: data.artistId,
-					firstName: data.firstName,
-					lastName: data.lastName
+					firstName: data.artist.firstName,
+					lastName: data.artist.lastName
 				},
 				bookingId: data.bookingId ? data.bookingId : '',
 				stages: Array.from(stageMap, ([id, value]) => value)
@@ -85,17 +89,42 @@ const TattooDetails = () => {
 				</div>
 			);
 		}
-		if (id === 'new' && data.user.role === ROLE.ARTIST) {
-			const artistInfo = {
-				id: data.user.id,
-				firstName: data.user.firstName,
-				lastName: data.user.lastName
+		if (id === 'new' && data.user.role === ROLE.ARTIST && !artTattoo) {
+
+			const tattoo = {
+				id: '',
+				bookingId: booking,
+				artist: {
+					id: data.user.id,
+					firstName: data.user.firstName,
+					lastName: data.user.lastName
+				},
+				styleId: 14,
+				stages: [
+					{
+						id: 1,
+						stageStyle: 0,
+						description: '',
+						medias: [
+							// {
+							// id: '',
+							// url: '',
+							// description: '',
+							// isPublicized: false
+							// }
+						]
+					}
+				],
+				thumbnail: '',
+				isPublicized: false,
+				size: 0,
+				placement: 0
 			};
+			setArtTattoo(tattoo)
 			return (
 				<TattooDetailsPage
 					bookingId={booking}
-					artTattoo={artTattoo}
-					artist={artistInfo}
+					artTattoo={tattoo}
 					handleSubmit={handleSubmit}
 				/>
 			);

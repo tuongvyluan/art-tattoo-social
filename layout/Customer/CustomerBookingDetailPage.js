@@ -6,7 +6,7 @@ import {
 	formatDate,
 	formatDateForInput,
 	formatPrice,
-	formatTime
+	formatDateTime
 } from 'lib';
 import {
 	BOOKING_STATUS,
@@ -179,8 +179,8 @@ function CustomerBookingDetailPage({ data, customerId, setLoading }) {
 											<div className="text-base">{renderData.studio.studioName}</div>
 											<div>{renderData.studio.address}</div>
 											<div>
-												{formatTime(renderData.studio.openTime)} -{' '}
-												{formatTime(renderData.studio.closeTime)}
+												{formatDateTime(renderData.studio.openTime)} -{' '}
+												{formatDateTime(renderData.studio.closeTime)}
 											</div>
 											<div>{renderData.studio.owner.phoneNumber}</div>
 										</div>
@@ -417,13 +417,13 @@ function CustomerBookingDetailPage({ data, customerId, setLoading }) {
 											<td className="py-3 text-right text-sm">
 												<div>
 													<span className="text-gray-600">
-														{formatTime(new Date())} - Tiền mặt -{' '}
+														{formatDateTime(new Date())} - Tiền mặt -{' '}
 													</span>
 													<span className="text-base">{formatPrice(1000000)}</span>
 												</div>
 												<div>
 													<span className="text-gray-600">
-														{formatTime(new Date())} - Ví điện tử -{' '}
+														{formatDateTime(new Date())} - Ví điện tử -{' '}
 													</span>
 													<span className="text-base">{formatPrice(500000)}</span>
 												</div>

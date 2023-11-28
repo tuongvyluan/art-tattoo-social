@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { fetcher, formatPrice, formatTime } from 'lib';
+import { fetcher, formatPrice, formatDateTime } from 'lib';
 import { useEffect, useState } from 'react';
 import { Card, CardBody, Loading, Ripple } from 'ui';
 import { Search } from 'icons/outline';
@@ -408,14 +408,14 @@ function CustomerBookingPage({ customerId }) {
 													<div>
 														Ngày tạo đơn:{' '}
 														<span className="text-base">
-															{formatTime(booking.createdAt)}
+															{formatDateTime(booking.createdAt)}
 														</span>
 													</div>
 													{booking.date && (
 														<div>
 															Ngày hẹn:{' '}
 															<span className="text-base">
-																{formatTime(booking.date)}
+																{formatDateTime(booking.date)}
 															</span>
 														</div>
 													)}

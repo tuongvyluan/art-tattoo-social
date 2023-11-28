@@ -1,4 +1,4 @@
-import { formatPrice, formatTime } from 'lib';
+import { formatPrice, formatDateTime } from 'lib';
 import { useState } from 'react';
 import { Card, CardBody, Link, Ripple } from 'ui';
 import { Search } from 'icons/outline';
@@ -306,13 +306,13 @@ function BookingPage({ data }) {
 										<div>
 											Ngày tạo đơn:{' '}
 											<span className="text-base">
-												{formatTime(booking.createdAt)}
+												{formatDateTime(booking.createdAt)}
 											</span>
 										</div>
 										<div>
 											Ngày hoàn tất:{' '}
 											<span className="text-base">
-												{formatTime(booking.meetingDate)}
+												{formatDateTime(booking.meetingDate)}
 											</span>
 										</div>
 										<div>
