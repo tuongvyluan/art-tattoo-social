@@ -32,7 +32,12 @@ const TattooDetails = () => {
 					name: data.placementName
 				},
 				size: data.size,
-				description: data.description
+				description: data.description,
+				doneAt: {
+					id: data.studio.id,
+					avatar: data.studio.avatar,
+					name: data.studio.studioName
+				}
 			});
 			setArtist({
 				...artist,
@@ -40,7 +45,11 @@ const TattooDetails = () => {
 				avatar: data.avatar,
 				firstName: data.artist.firstName,
 				lastName: data.artist.lastName,
-				isVerified: data.artist?.isVerified ? data.artist.isVerified : false
+				isVerified: data.artist?.isVerified ? data.artist.isVerified : false,
+				workAt: {
+					id: data.studioWorkedAtId,
+					name: data.nameStudioWorkedAtId
+				}
 			});
 			setLikes(data.likes);
 			setComments(data.comments);

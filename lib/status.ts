@@ -5,6 +5,13 @@ export const enum ROLE {
 	ADMIN = 3
 }
 
+export const roleString = [
+	'Khách hàng',
+	'Nghệ sĩ xăm',
+	'Quản lý tiệm xăm',
+	'Admin'
+]
+
 export const enum ACCOUNT_STATUS {
 	NOT_VERIFIED = 0,
 	VERIFIED = 1,

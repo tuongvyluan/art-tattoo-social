@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { Calendar } from 'icons/outline';
 import { IoMdHeartEmpty } from 'react-icons/io';
 import { GiTwirlyFlower } from 'react-icons/gi';
+import { ROLE, roleString } from 'lib/status';
 
 const colors = [
 	'gray',
@@ -188,13 +189,20 @@ const Header = ({ toggleOpen }) => {
 							{status === 'authenticated' ? (
 								<Dropdown className="px-3 relative h-full flex items-center">
 									<DropdownToggle>
-										<Avatar
-											size={28}
-											src={
-												data?.user?.avatar ? data.user.avatar : `/images/avatar.png`
-											}
-											alt={data ? data.user.firstName : 'Unknown'}
-										/>
+										<div className="mx-auto">
+											<div className="flex justify-center">
+												<Avatar
+													size={28}
+													src={
+														data?.user?.avatar
+															? data.user.avatar
+															: `/images/avatar.png`
+													}
+													alt={data ? data.user.firstName : 'Unknown'}
+												/>
+											</div>
+											{data?.user.role != -1 && roleString.at(data.user.role)}
+										</div>
 									</DropdownToggle>
 									<DropdownMenu>
 										<div>

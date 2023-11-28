@@ -10,12 +10,12 @@ import { Loading } from 'ui';
 const ProfilePage = () => {
 	const { status, data } = useSession();
 	const [profile, setProfile] = useState(undefined);
-	const [studios, setStudios] = useState([]);
-	const [styles, setStyles] = useState([]);
 
 	const handleSubmit = (account, artistStyles, artistStudios) => {
-		fetcherPut(`${BASE_URL}/artist-profile`, account)
-		fetcherPut(`${BASE_URL}/artists/${account.id}/artist-style`, artistStyles)
+		fetcherPut(`${BASE_URL}/artist-profile`, account);
+		if (JSON.stringify(profile.styles) !== JSON.stringify(artistStyles)) {
+			fetcherPut(`${BASE_URL}/artists/${account.id}/artist-style`, artistStyles);
+		}
 	};
 
 	if (status === 'loading') {

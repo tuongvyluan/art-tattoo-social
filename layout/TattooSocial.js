@@ -198,7 +198,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 							{
 								// Artist info
 							}
-							<div className="flex justify-between px-5">
+							<div className="flex justify-between flex-wrap px-5">
 								<div className="flex gap-3 items-center pb-2">
 									<Link href={`/artist/${artist.id}`}>
 										<div className="cursor-pointer">
@@ -209,16 +209,28 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 											/>
 										</div>
 									</Link>
-									<Link href={`/artist/${artist.id}`}>
-										<div className="cursor-pointer">
-											<div className="font-semibold">
-												{artist.firstName} {artist.lastName}
+									<div>
+										<Link href={`/artist/${artist.id}`}>
+											<div className="cursor-pointer">
+												<div className="font-semibold">
+													{artist.firstName} {artist.lastName}
+												</div>
 											</div>
-										</div>
-									</Link>
+										</Link>
+										{artist.workAt.id && (
+											<div className="flex flex-wrap gap-1">
+												<span>Làm việc tại: </span>
+												<Link href={`/studio/${artist.workAt.id}`}>
+													<div className="font-semibold cursor-pointer">
+														{artist.workAt.name}
+													</div>
+												</Link>
+											</div>
+										)}
+									</div>
 								</div>
 								{artist.isVerified && (
-									<div>
+									<div className='pb-3'>
 										<a target="_blank" href={`/booking/new?artist=${artist.id}`}>
 											<Button>Đặt hẹn</Button>
 										</a>
@@ -264,6 +276,23 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 									)}
 								</div>
 								<div className="pb-3">{tattoo.description}</div>
+								{tattoo.doneAt.id && (
+									<div className="pb-3">
+										<div className="font-semibold text-gray-500 pb-1">Thực hiện ở:</div>
+										<div className="p-3 hover:bg-gray-100 cursor-pointer flex flex-wrap items-center w-max gap-2">
+											<div>
+												<Avatar
+													src={
+														tattoo.doneAt.avatar
+															? tattoo.doneAt.avatar
+															: '/images/ATL.png'
+													}
+												/>
+											</div>
+											<div>{tattoo.doneAt.name}</div>
+										</div>
+									</div>
+								)}
 								<div className="flex items-start gap-1">
 									<div className="flex gap-1 items-center">
 										{authen ? (
@@ -362,7 +391,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 											className="py-2 flex justify-between gap-2 items-start"
 										>
 											<div className="flex items-start overflow-hidden">
-												<div className='min-w-max'>
+												<div className="min-w-max">
 													<Avatar
 														size={30}
 														src={cmt.avatar ? cmt.avatar : ''}
