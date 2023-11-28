@@ -183,3 +183,13 @@ export const stringServicePlacement = [
 	'Nửa vai',
 	'Bodysuit'
 ];
+
+export const stringTattooStages = [
+	'Thiết kế',
+	'Đi nét',
+	'Đánh bóng',
+	'Tô màu',
+	'Sau xăm',
+	'Bảo hành',
+	'Khác'
+]

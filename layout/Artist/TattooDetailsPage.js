@@ -24,7 +24,8 @@ import {
 	operationNames,
 	stringColor,
 	stringPlacements,
-	stringSize
+	stringSize,
+	stringTattooStages
 } from 'lib/status';
 import { tattooStyleById, tattooStyleList } from 'lib/tattooStyle';
 import { v4 } from 'uuid';
@@ -50,7 +51,7 @@ function TattooDetailsPage({ bookingId, artTattoo, artist, handleSubmit }) {
 					stages: [
 						{
 							id: 1,
-							name: 'Sau khi xăm',
+							stageStyle: 0,
 							description: '',
 							medias: [
 								// {
@@ -395,8 +396,14 @@ function TattooDetailsPage({ bookingId, artTattoo, artist, handleSubmit }) {
 									<div className="w-20">Kích thước: </div>
 									<Dropdown className="relative h-full flex items-center">
 										<DropdownToggle>
-											<div className="w-28 rounded-lg p-1 border border-gray-300">
-												{stringSize.at(tattoo.size)}
+											<div className="relative">
+												<div className="w-32 rounded-lg p-1 border border-gray-300">
+													{stringSize.at(tattoo.size)}
+												</div>
+
+												<div className="absolute top-1.5 right-2 text-gray-700">
+													<ChevronDown width={17} height={17} />
+												</div>
 											</div>
 										</DropdownToggle>
 										<DropdownMenu>
@@ -418,8 +425,14 @@ function TattooDetailsPage({ bookingId, artTattoo, artist, handleSubmit }) {
 									<div className="w-20">Vị trí xăm:</div>
 									<Dropdown className="relative h-full flex items-center">
 										<DropdownToggle>
-											<div className="w-28 rounded-lg p-1 border border-gray-300">
-												{stringPlacements.at(tattoo.placement)}
+											<div>
+												<div className="w-32 rounded-lg p-1 border border-gray-300">
+													{stringPlacements.at(tattoo.placement)}
+												</div>
+
+												<div className="absolute top-1.5 right-2 text-gray-700">
+													<ChevronDown width={17} height={17} />
+												</div>
 											</div>
 										</DropdownToggle>
 										<DropdownMenu className={'top-2 left-2'}>
@@ -447,11 +460,17 @@ function TattooDetailsPage({ bookingId, artTattoo, artist, handleSubmit }) {
 									<div className="w-20">Style:</div>
 									<Dropdown className="relative h-full flex items-center">
 										<DropdownToggle>
-											<div className="w-28 md:w-48 rounded-lg p-1 border border-gray-300">
-												{tattooStyleById(tattoo.styleId)?.name}
+											<div className="relative">
+												<div className="w-32 md:w-48 rounded-lg p-1 border border-gray-300">
+													{tattooStyleById(tattoo.styleId)?.name}
+												</div>
+
+												<div className="absolute top-1.5 right-2 text-gray-700">
+													<ChevronDown width={17} height={17} />
+												</div>
 											</div>
 										</DropdownToggle>
-										<DropdownMenu className={'top-2 left-2'}>
+										<DropdownMenu closeOnClick={true} className={'top-2 left-2'}>
 											<div className="h-40 overflow-y-auto">
 												{tattooStyleList.map((style, styleIndex) => (
 													<div
@@ -596,15 +615,33 @@ function TattooDetailsPage({ bookingId, artTattoo, artist, handleSubmit }) {
 													//Stage body
 												}
 												<div key={stage.id}>
-													<input
-														className="w-full rounded-lg p-2 text-base border border-gray-300"
-														type="text"
-														name="name"
-														required
-														value={stage.name}
-														onChange={(e) => handleStageChange(e, stageIndex)}
-														placeholder="Giai đoạn xăm"
-													/>
+													<div className="flex gap-2 flex-wrap items-center">
+														<label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+															Chọn giai đoạn
+														</label>
+														<Dropdown className={'relative'}>
+															<DropdownToggle>
+																<div className="relative">
+																	<div className="w-40 rounded-lg p-2 text-base border border-gray-300">
+																		{stringTattooStages.at(stage.stageStyle)}
+																	</div>
+																	<div className="absolute top-3.5 right-2 text-gray-700">
+																		<ChevronDown width={17} height={17} />
+																	</div>
+																</div>
+															</DropdownToggle>
+															<DropdownMenu>
+																{stringTattooStages.map((stage, stageIndex) => (
+																	<div
+																		key={stageIndex}
+																		className={`px-2 py-1 w-40 cursor-pointer hover:bg-gray-100`}
+																	>
+																		{stage}
+																	</div>
+																))}
+															</DropdownMenu>
+														</Dropdown>
+													</div>
 													<div>
 														<label className="pt-2 block mb-2 text-sm font-medium text-gray-900 dark:text-white">
 															Thêm mô tả

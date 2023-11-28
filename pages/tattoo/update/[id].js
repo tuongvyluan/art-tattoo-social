@@ -59,7 +59,7 @@ const TattooDetails = () => {
 			if (renderData.stages.length === 0) {
 				renderData.stages.push({
 					id: 1,
-					name: 'Sau khi xăm',
+					stageStyle: 0,
 					description: '',
 					medias: []
 				});

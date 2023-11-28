@@ -65,8 +65,14 @@ DropdownToggle.propTypes = {
 	className: PropTypes.string
 };
 
-export const DropdownMenu = ({ children, className, style, ...props }) => {
-	const [state] = useDropdownState();
+export const DropdownMenu = ({
+	children,
+	className,
+	style,
+	closeOnClick = true,
+	...props
+}) => {
+	const [state, dispatch] = useDropdownState();
 
 	return (
 		<Transition
@@ -83,6 +89,11 @@ export const DropdownMenu = ({ children, className, style, ...props }) => {
 				className
 			)}
 			style={{ minWidth: '150px', top: '100%', ...style }}
+			onClick={() => {
+				if (closeOnClick) {
+					dispatch({ type: 'toggle' });
+				}
+			}}
 		>
 			{children}
 		</Transition>
@@ -92,5 +103,6 @@ export const DropdownMenu = ({ children, className, style, ...props }) => {
 DropdownMenu.propTypes = {
 	children: PropTypes.node.isRequired,
 	className: PropTypes.string,
-	style: PropTypes.object
+	style: PropTypes.object,
+	closeOnClick: PropTypes.bool
 };

@@ -213,24 +213,29 @@ const Header = ({ toggleOpen }) => {
 														<span className="ml-3">Yêu thích</span>
 													</div>
 												</Link>
-												<Link href="/profile">
-													<div className="cursor-pointer flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
-														<User width={16} height={16} />{' '}
-														<span className="ml-3">Hồ sơ</span>
-													</div>
-												</Link>
-												<Link href="/booking">
-													<div className="cursor-pointer flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
-														<Calendar width={16} height={16} />{' '}
-														<span className="ml-3">Lịch hẹn</span>
-													</div>
-												</Link>
-												<Link href="/myTattoo">
-													<div className="cursor-pointer flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
-														<GiTwirlyFlower size={16} />{' '}
-														<span className="ml-3">Hình xăm</span>
-													</div>
-												</Link>
+												{data.user.role != ROLE.ADMIN &&
+													data.user.role != ROLE.STUDIO && (
+														<div>
+															<Link href="/profile">
+																<div className="cursor-pointer flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
+																	<User width={16} height={16} />{' '}
+																	<span className="ml-3">Hồ sơ</span>
+																</div>
+															</Link>
+															<Link href="/booking">
+																<div className="cursor-pointer flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
+																	<Calendar width={16} height={16} />{' '}
+																	<span className="ml-3">Lịch hẹn</span>
+																</div>
+															</Link>
+															<Link href="/myTattoo">
+																<div className="cursor-pointer flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
+																	<GiTwirlyFlower size={16} />{' '}
+																	<span className="ml-3">Hình xăm</span>
+																</div>
+															</Link>
+														</div>
+													)}
 												<a
 													href="#"
 													onClick={() => signOut()}
