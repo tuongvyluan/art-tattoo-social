@@ -14,6 +14,7 @@ import {
 } from 'lib/status';
 import Image from 'next/image';
 import MyPagination from 'ui/MyPagination';
+import { BASE_URL } from 'lib/env';
 
 const ALL_TAB = '1';
 const PENDING_TAB = '2';
@@ -59,7 +60,7 @@ function CustomerBookingPage({ customerId }) {
 		setError(false);
 
 		fetcher(
-			`https://arttattoolover-web-sea-dev-001.azurewebsites.net/bookings-user?customerId=${customerId}&page=${page}&pageSize=${pageSize}${
+			`${BASE_URL}/bookings/bookings-customer?customerId=${customerId}&page=${page}&pageSize=${pageSize}${
 				filter >= 0 ? `&status=${filter}` : ''
 			}`
 		)
@@ -256,7 +257,7 @@ function CustomerBookingPage({ customerId }) {
 											<div className="flex justify-between mx-auto border-b border-gray-300 pb-3">
 												<div className="flex gap-3 items-start">
 													<div className="font-semibold">
-														{booking.customer.firstName} {booking.customer.lastName}
+														{booking.studio.studioName}
 													</div>
 												</div>
 												<div>

@@ -183,7 +183,7 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 			defaultTattoo.styleId !== tattoo.styleId ||
 			defaultTattoo.size !== tattoo.size ||
 			defaultTattoo.placement !== tattoo.placement ||
-			defaultTattoo.thumbnail !== tattoo.thumbnail ||
+			defaultTattoo.thumbnail !== thumbnail ||
 			defaultTattoo.isPublicized !== tattoo.isPublicized
 		);
 	};
@@ -224,9 +224,6 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 				handleAlert(true, 'Tạo hình xăm thất bại', '', true);
 			})
 			.finally(() => {
-				setTimeout(() => {
-					handleAlert(false, '', '');
-				}, 2000);
 				handleSubmit(tattoo.id);
 			});
 	};
@@ -238,25 +235,19 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 				styleId: tattoo.styleId,
 				size: tattoo.size,
 				placement: tattoo.placement,
-				thumbnail: tattoo.thumbnail,
+				thumbnail: thumbnail,
 				isPublicized: tattoo.isPublicized
 			};
 			fetcherPut(`${BASE_URL}/TattooArts/UpdateTattoo`, newTattoo)
 				.then((data) => {
-					setDefaultTattoo(JSON.parse(JSON.stringify(tattoo)));
 					handleSubmit(newTattoo.id);
-					handleAlert(true, 'Cập nhật hình xăm thành công');
 				})
 				.catch((e) => {
 					handleAlert(true, 'Cập nhật hình xăm thất bại', '', true);
 				})
 				.finally(() => {
-					setTimeout(() => {
-						handleAlert(false, '', '');
-					}, 2000);
+					handleSubmit(newTattoo.id);
 				});
-		} else {
-			handleAlert(false, '', '');
 		}
 	};
 

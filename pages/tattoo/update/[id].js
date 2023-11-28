@@ -22,11 +22,11 @@ const TattooDetails = () => {
 	});
 
 	const handleSubmit = (newId) => {
-		setArtTattoo(undefined)
 		if (newId !== id) {
 			setId(newId)
 			router.replace(`/tattoo/update/${newId}`)
 		}
+		setArtTattoo(undefined)
 	};
 
 	// Nếu đang xem hình xăm cũ và chưa load hình xăm
@@ -38,7 +38,7 @@ const TattooDetails = () => {
 						obj.tattooArtStageId,
 						{
 							id: obj.tattooArtStageId,
-							name: obj.stageName,
+							stageStyle: obj.stageStyle,
 							description: obj.description ? obj.description : '',
 							medias: []
 						}

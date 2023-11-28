@@ -98,7 +98,7 @@ const BookingForm = ({
 						{hasLogin ? (
 							<div>
 								{customerId ? (
-									<div className="w-full h-96 overflow-auto">
+									<div className="h-96 w-full overflow-auto">
 										{/* <!-- Hiển thị tên studio --> */}
 										<div className="flex bg-white flex-row w-0 min-w-full">
 											<div className="flex justify-between items-center py-4 px-2">

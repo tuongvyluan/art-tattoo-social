@@ -152,7 +152,9 @@ function ServicePage({ services, onChange }) {
 												{[...sizeMap].map(([key, value], index) => (
 													<tr
 														key={key}
-														className="border-b border-gray-200 dark:border-gray-700"
+														className={`border-b border-gray-200 dark:border-gray-700 ${
+															getColor(key) ? 'bg-blue-50' : ''
+														}`}
 													>
 														{key % 10 === 0 && (
 															<th
@@ -170,14 +172,14 @@ function ServicePage({ services, onChange }) {
 														)}
 														<td
 															className={`px-3 py-2 text-base ${
-																getColor(key) ? 'bg-blue-50' : ''
+																getColor(key) ? 'bg-blue-50 h-full' : ''
 															}`}
 														>
 															{getColor(key) ? 'Màu sắc' : 'Trắng đen'}
 														</td>
 														<td
 															className={`px-3 py-2 flex justify-center ${
-																getColor(key) ? 'bg-blue-50' : ''
+																getColor(key) ? 'bg-blue-50 h-full' : ''
 															}`}
 														>
 															<div className="flex gap-2 items-center">
@@ -199,7 +201,7 @@ function ServicePage({ services, onChange }) {
 														</td>
 														<td
 															className={`${
-																getColor(key) ? 'bg-blue-50' : ''
+																getColor(key) ? 'bg-blue-50 h-full' : ''
 															}`}
 														>
 															<div className="w-min mx-auto">
@@ -266,7 +268,9 @@ function ServicePage({ services, onChange }) {
 												{[...placementMap].map(([key, value], index) => (
 													<tr
 														key={key}
-														className="border-b border-gray-200 dark:border-gray-700"
+														className={`border-b border-gray-200 dark:border-gray-700 ${
+															getColor(key) ? 'bg-blue-50' : ''
+														}`}
 													>
 														{key % 10 === 0 && Math.round(key / 100) > 0 && (
 															<th
@@ -283,16 +287,12 @@ function ServicePage({ services, onChange }) {
 															</td>
 														)}
 														<td
-															className={`px-3 py-2 text-base ${
-																getColor(key) ? 'bg-blue-50' : ''
-															}`}
+															className={`px-3 py-2 text-base `}
 														>
 															{getColor(key) ? 'Màu sắc' : 'Trắng đen'}
 														</td>
 														<td
-															className={`px-3 py-2 flex justify-center ${
-																getColor(key) ? 'bg-blue-50' : ''
-															}`}
+															className={`px-3 py-2 flex justify-center`}
 														>
 															<div className="flex gap-2 items-center">
 																<span className="text-base">Từ</span>
@@ -313,7 +313,7 @@ function ServicePage({ services, onChange }) {
 														</td>
 														<td
 															className={`${
-																getColor(key) ? 'bg-blue-50' : ''
+																getColor(key) ? 'bg-blue-50 h-full' : ''
 															}`}
 														>
 															<div className="w-min mx-auto">
