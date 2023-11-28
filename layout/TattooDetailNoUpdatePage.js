@@ -1,20 +1,16 @@
 import { ChevronLeft } from 'icons/solid';
-import {
-	Avatar,
-	BackgroundImg,
-	Card,
-	CardBody,
-	Link
-} from 'ui';
+import { Avatar, BackgroundImg, Card, CardBody, Link } from 'ui';
 import PropTypes from 'prop-types';
 import MoneyInput from 'components/MoneyInput';
 import {
 	operationNames,
 	stringColor,
 	stringPlacements,
-	stringSize
+	stringSize,
+	stringTattooStages
 } from 'lib/status';
 import { tattooStyleById } from 'lib/tattooStyle';
+import { useState } from 'react';
 
 function TattooDetailNoUpdatePage({ bookingId, artTattoo, artist }) {
 	const [tattoo, setTattoo] = useState(JSON.parse(JSON.stringify(artTattoo)));
@@ -50,7 +46,7 @@ function TattooDetailNoUpdatePage({ bookingId, artTattoo, artist }) {
 					<div className="py-3 border-b border-gray-300 flex gap-5 flex-wrap">
 						<div className="w-full min-w-min sm:w-1/2 md:w-1/3 lg:w-1/4">
 							<div className="flex justify-center">
-								<div key={thumbnailKey}>
+								<div>
 									<Avatar
 										circular={false}
 										src={
@@ -109,41 +105,6 @@ function TattooDetailNoUpdatePage({ bookingId, artTattoo, artist }) {
 					}
 					<div>
 						{
-							// Add booking details
-						}
-						{tattoo.id !== '' ? (
-							<div className="border-b border-gray-300">
-								{
-									// Booking details list
-								}
-								{tattoo.bookingDetails.map((detail, detailIndex) => (
-									<div
-										className={
-											'relative min-w-0 break-words rounded-lg mb-4 w-full bg-white dark:bg-gray-600'
-										}
-										key={detail.bookingDetailsId}
-									>
-										<div
-											className={'bg-gray-50 py-4 px-6 flex flex-row items-center'}
-										>
-											<div className="relative flex flex-wrap justify-between items-center w-full">
-												<div className="text-base w-40 flex flex-row items-center rounded-lg p-2 border border-gray-300 relative">
-													<div className="h-6">{operationNames.at(detail.operationId)}</div>
-												</div>
-
-												<div className="text-base relative">
-													<MoneyInput value={detail.totalRevenue} disabled={true} />
-												</div>
-											</div>
-										</div>
-									</div>
-								))}
-							</div>
-						) : (
-							<></>
-						)}
-
-						{
 							// Add tattoo stage, including tattoo medias
 						}
 						<div>
@@ -155,27 +116,9 @@ function TattooDetailNoUpdatePage({ bookingId, artTattoo, artist }) {
 												//Stage body
 											}
 											<div key={stage.id}>
-												<input
-													className="w-full rounded-lg p-2 text-base border border-gray-300"
-													type="text"
-													name="name"
-													readOnly
-													value={stage.name}
-													placeholder="Giai đoạn xăm"
-												/>
+												<div className='text-base'>Giai đoạn: {stringTattooStages.at(stage.stageStyle)}</div>
 												<div>
-													<label className="pt-2 block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-														Thêm mô tả
-													</label>
-													<textarea
-														className="w-full rounded-lg p-2 text-base border border-gray-300"
-														type="text"
-														rows={5}
-														value={stage.description}
-														name="description"
-														readOnly
-														placeholder="Mô tả cho hình xăm"
-													/>
+													<div>{stage.description}</div>
 												</div>
 												{
 													//Show media section

@@ -1,12 +1,11 @@
 import { ChevronLeft } from 'icons/solid';
 import {
 	extractBookingStatusTimeline,
-	fetcher,
 	fetcherPut,
 	formatDate,
-	formatDateForInput,
 	formatPrice,
-	formatDateTime
+	formatDateTime,
+	formatPhoneNumber
 } from 'lib';
 import {
 	BOOKING_STATUS,
@@ -25,15 +24,30 @@ import Button from 'components/Button';
 import { BASE_URL } from 'lib/env';
 import MyModal from 'components/MyModal';
 import cancelReasons from 'lib/cancelReasons';
-import SelectServicePage from './SelectService';
-import { Modal } from 'flowbite-react';
 
-function CustomerBookingDetailPage({ data, customerId, setLoading }) {
-	const [services, setServices] = useState([]);
+function CustomerBookingDetailPage({ data, studioId, setLoading }) {
 	const [renderData, setRenderData] = useState(data);
 
 	const timeline = extractBookingStatusTimeline(renderData);
 	const [bookingStatus, setBookingStatus] = useState(renderData.status);
+
+	// Alert vars
+	const [showAlert, setShowAlert] = useState(false);
+
+	const [alertContent, setAlertContent] = useState({
+		title: '',
+		content: '',
+		isWarn: false
+	});
+
+	const handleAlert = (state, title, content, isWarn = false) => {
+		setShowAlert((prev) => state);
+		setAlertContent({
+			title: title,
+			content: content,
+			isWarn: isWarn
+		});
+	};
 
 	// Cancel related vars
 	const [cancelStatus, setCancelStatus] = useState(BOOKING_STATUS.CUSTOMER_CANCEL);
@@ -57,7 +71,7 @@ function CustomerBookingDetailPage({ data, customerId, setLoading }) {
 		if (status === BOOKING_STATUS.STUDIO_CANCEL) {
 			body.studioCancelReason = cancelReason.concat(` ${cancelReasonMore}`);
 		}
-		fetcherPut(`${BASE_URL}/studios/${customerId}/bookings/${renderData.id}`, body)
+		fetcherPut(`${BASE_URL}/studios/${studioId}/bookings/${renderData.id}`, body)
 			.then((data) => {
 				setBookingStatus(status);
 				handleAlert(true, 'Cập nhật trạng thái đơn hàng thành công');
@@ -177,12 +191,14 @@ function CustomerBookingDetailPage({ data, customerId, setLoading }) {
 												Thông tin tiệm xăm
 											</div>
 											<div className="text-base">{renderData.studio.studioName}</div>
-											<div>{renderData.studio.address}</div>
-											<div>
-												{formatDateTime(renderData.studio.openTime)} -{' '}
-												{formatDateTime(renderData.studio.closeTime)}
+											<div>Địa chỉ: {renderData.studio.address}</div>
+											<div>Giờ mở cửa:{' '}
+												{renderData.studio.openTime.split(':')[0]}:
+												{renderData.studio.openTime.split(':')[1]} -{' '}
+												{renderData.studio.closeTime.split(':')[0]}:
+												{renderData.studio.closeTime.split(':')[1]}
 											</div>
-											<div>{renderData.studio.owner.phoneNumber}</div>
+											<div>Số điện thoại: {formatPhoneNumber(renderData.studio.owner.phoneNumber)}</div>
 										</div>
 										{
 											// Confirm ngày hẹn
@@ -277,9 +293,6 @@ function CustomerBookingDetailPage({ data, customerId, setLoading }) {
 														{formatPrice(service.minPrice)} -{' '}
 														{formatPrice(service.maxPrice)}
 													</div>
-												</div>
-												<div className="pb-1 flex flex-wrap gap-2 items-center text-base">
-													<div>Số lượng: 1</div>
 												</div>
 											</div>
 											<div>
@@ -397,19 +410,6 @@ function CustomerBookingDetailPage({ data, customerId, setLoading }) {
 												</td>
 											</tr>
 										)}
-										{
-											// Button thêm hình xăm cho đơn hàng
-											// renderData.status === BOOKING_STATUS.COMPLETED ? (
-											// 	<tr className="border-t border-gray-300">
-											// 		<th className="py-3 text-gray-500 w-fit sm:w-1/2 md:w-2/3 border-r pr-3 border-gray-300 text-right text-sm font-normal">
-											// 			Phương thức thanh toán
-											// 		</th>
-											// 		<td className="py-3 text-right text-base">Tiền mặt</td>
-											// 	</tr>
-											// ) : (
-											// 	<></>
-											// )
-										}
 										<tr className="border-t border-gray-300">
 											<th className="py-3 text-gray-500 w-fit sm:w-1/2 md:w-2/3 border-r pr-3 border-gray-300 text-right text-sm font-normal">
 												Thanh toán
@@ -449,7 +449,7 @@ function CustomerBookingDetailPage({ data, customerId, setLoading }) {
 }
 CustomerBookingDetailPage.propTypes = {
 	data: PropTypes.object,
-	customerId: PropTypes.string,
+	studioId: PropTypes.string,
 	setLoading: PropTypes.func
 };
 export default CustomerBookingDetailPage;

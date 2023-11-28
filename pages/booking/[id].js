@@ -1,5 +1,4 @@
 import CustomerBookingDetailPage from 'layout/Customer/CustomerBookingDetailPage';
-import BookingDetailsPage from 'layout/Studio/BookingDetails';
 import { fetcher } from 'lib';
 import { BASE_URL } from 'lib/env';
 import { ROLE } from 'lib/status';
@@ -18,7 +17,7 @@ const BookingDetails = () => {
 	const router = useRouter();
 	const bookingId = router.query.id;
 
-	if (status === 'authenticated' && data.user.role === ROLE.STUDIO && loading) {
+	if (status === 'authenticated' && (data.user.role === ROLE.CUSTOMER || data.user.role === ROLE.ARTIST) && loading) {
 		// Call api to get bookings
 
 		fetcher(`${BASE_URL}/bookings/${bookingId}/details-studio`)
@@ -50,7 +49,7 @@ const BookingDetails = () => {
 	if (status === 'unauthenticated') {
 		Router.replace('/');
 	} else {
-		return <CustomerBookingDetailPage setLoading={setLoading} data={bookingData} customerId={data.user.customerId} />;
+		return <CustomerBookingDetailPage setLoading={setLoading} data={bookingData} studioId={bookingData.studioId} />;
 	}
 };
 

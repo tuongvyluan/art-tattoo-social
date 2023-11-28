@@ -144,7 +144,7 @@ const TattooListUpdate = ({ url, pageSize = 20 }) => {
 												{index % tattooCol === colIndex && (
 													<WidgetPostCard
 														image={item.thumbnail ? item.thumbnail : randomPhoto}
-														link={`/tattoo/update/${item.id}`}
+														link={`/tattoo/${item.id}`}
 													>
 														<div className="block">
 															<div className="flex items-start gap-1">

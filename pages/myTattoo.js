@@ -24,7 +24,7 @@ const MyTattooPage = () => {
 	} else if (!url) {
 		switch (data.user.role) {
 			case ROLE.CUSTOMER:
-				setUrl(`${BASE_URL}/TattooArts/TattooUser?customerId=${data.user.id}`);
+				setUrl(`${BASE_URL}/TattooArts/TattooUser?customerId=${data.user.customerId}`);
 				break;
 			case ROLE.ARTIST:
 				setUrl(`${BASE_URL}/TattooArts/TattooUser?artistId=${data.user.id}`);
