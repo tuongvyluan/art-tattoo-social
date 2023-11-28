@@ -87,6 +87,7 @@ const TattooListUpdate = ({ url, pageSize = 20 }) => {
 			</div>
 		);
 	};
+	
 
 	useEffect(() => {
 		//add eventlistener to window
