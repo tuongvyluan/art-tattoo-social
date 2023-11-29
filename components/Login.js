@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import Button from './Button';
 import { signIn } from 'next-auth/react';
 import GoogleLogo from '/public/svg/google.svg';
-import { ROLE } from 'lib/status';
 
 const Login = ({ handleSubmit, user, setUser }) => {
 	const handleFormChange = (e) => {
