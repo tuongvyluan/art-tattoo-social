@@ -251,6 +251,21 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 		}
 	};
 
+	const handleCreateUpdateStage = () => {
+		const stages = JSON.parse(JSON.stringify(tattoo.stages))
+		stages.forEach((stage) => {
+			stage.medias = mediaMap.get(stage.id).map((media) => {
+				return {
+					id: media.id,
+					url: media.url,
+					isPublicized: media.isPublicized
+				}
+			})
+			stage.id = v4()
+		})
+		fetcherPut(`${BASE_URL}/TattooArts/UpdateCreateTattooStage?artId=${tattoo.id}`, stages)
+	}
+
 	const handleSaveChange = () => {
 		if (tattoo.id === '') {
 			handleAlert(true, 'Đang tạo hình xăm...');
@@ -259,6 +274,7 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 			handleAlert(true, 'Đang cập nhật hình xăm...');
 			handleUpdateTattoo();
 		}
+		handleCreateUpdateStage()
 	};
 
 	return (
