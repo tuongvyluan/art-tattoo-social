@@ -27,9 +27,15 @@ const BookingForm = ({
 		setDescription(e.target.value);
 	};
 	const handleSelectChange = (service) => {
-		selectedServices.set(service.id, service);
-		setMinPrice((prev) => prev + service.minPrice);
-		setMaxPrice((prev) => prev + service.maxPrice);
+		if (selectedServices.has(service.id)) {
+			selectedServices.delete(service.id);
+			setMinPrice((prev) => prev - service.minPrice);
+			setMaxPrice((prev) => prev - service.maxPrice);
+		} else {
+			selectedServices.set(service.id, service);
+			setMinPrice((prev) => prev + service.minPrice);
+			setMaxPrice((prev) => prev + service.maxPrice);
+		}
 	};
 
 	const [showAlert, setShowAlert] = useState(false);
@@ -61,7 +67,7 @@ const BookingForm = ({
 		})
 			.then((data) => {
 				handleAlert(true, 'Đặt hẹn thành công');
-				Router.replace('/booking')
+				Router.replace('/booking');
 			})
 			.catch((e) => {
 				handleAlert(true, 'Đặt hẹn thất bại', '', true);
@@ -93,7 +99,7 @@ const BookingForm = ({
 						canConfirm={customerId}
 						onSubmit={customerId ? handleSubmit : handleRefresh}
 						confirmTitle={customerId ? 'Xác nhận' : 'Tải lại trang'}
-						size={customerId ? '7xl' : 'md'}
+						size={customerId ? '5xl' : 'md'}
 					>
 						{hasLogin ? (
 							<div>
@@ -106,7 +112,7 @@ const BookingForm = ({
 													<div>
 														<Avatar
 															size={50}
-															src={artist.avatar ? artist.avatar : '/images/ATL.png'}
+															src={studio.avatar ? studio.avatar : '/images/ATL.png'}
 															alt={`avatar`}
 														/>
 													</div>
@@ -115,9 +121,11 @@ const BookingForm = ({
 															<p className="ltr:mr-2 rtl:ml-2 font-bold">
 																{studio.name}
 															</p>
-															<span className="ltr:mr-2 rtl:ml-2 text-sm ">
-																{artist.firstName} {artist.lastName}
-															</span>
+															{artist && (
+																<span className="ltr:mr-2 rtl:ml-2 text-sm ">
+																	{artist.firstName} {artist.lastName}
+																</span>
+															)}
 														</div>
 														<p className="mt-2 font-hairline text-sm">
 															{/* 123,456 {t("followers")} */}
