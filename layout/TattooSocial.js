@@ -229,7 +229,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 										)}
 									</div>
 								</div>
-								{artist.isVerified && (
+								{artist.isVerified && artist.workAt.id && (
 									<div className='pb-3'>
 										<a target="_blank" href={`/booking/new?artist=${artist.id}`}>
 											<Button>Đặt hẹn</Button>

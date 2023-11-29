@@ -34,7 +34,7 @@ const ArtistPage = ({ artist }) => {
 							</div>
 						</div>
 						<div className="pb-6 flex justify-center flex-wrap gap-2 w-full">
-							{artist.isVerified && (
+							{artist.isVerified && artist.workAt && (
 								<div className="w-20">
 									<a target="_blank" href={`/booking/new?artist=${artist.id}`}>
 										<Button>Đặt hẹn</Button>
@@ -107,7 +107,7 @@ const ArtistPage = ({ artist }) => {
 								</div>
 							</div>
 							<div className="pb-3 flex justify-center flex-wrap gap-2 w-full min-w-max">
-								{artist.isVerified && (
+								{artist.isVerified && artist.workAt && (
 									<div className="w-20">
 										<a target="_blank" href={`/booking/new?artist=${artist.id}`}>
 											<Button>Đặt hẹn</Button>

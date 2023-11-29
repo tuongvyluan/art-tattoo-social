@@ -21,7 +21,8 @@ const Artist = () => {
 				avatar: data.avatar,
 				bioContent: data.bioContent,
 				styles: data.artistStyles,
-				isVerified: data.isVerified
+				isVerified: data.isVerified,
+				workAt: data.studioArtists?.at(0)?.id
 			});
 		});
 		return (
