@@ -156,7 +156,7 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 		const stages = tattoo.stages;
 		newMap.set(stages.at(stageLength - 1).id + 1, []);
 		stages.push({
-			id: stages.at(stageLength - 1).id + 1,
+			id: v4(),
 			stageStyle: 0,
 			description: '',
 			medias: []
