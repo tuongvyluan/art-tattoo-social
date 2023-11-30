@@ -1,13 +1,9 @@
 import { ChevronLeft } from 'icons/solid';
 import {
 	extractBookingStatusTimeline,
-	fetcherDelete,
-	fetcherPost,
 	fetcherPut,
 	formatDate,
-	formatDateForInput,
 	formatPrice,
-	formatTime,
 	isFuture
 } from 'lib';
 import { BOOKING_STATUS, operationNames, stringBookingStatuses } from 'lib/status';

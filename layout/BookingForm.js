@@ -8,7 +8,7 @@ import { fetcherPost, formatPrice } from 'lib';
 import { BASE_URL } from 'lib/env';
 import Router from 'next/router';
 
-const estimeDate = ['Vài ngày tới', 'Tuần sau', 'Tháng này', 'Vài tháng tới'];
+const estimeDate = ['Trong vòng 7 ngày tới', 'Trong 2 tuần kế tiếp', 'Trong tháng này', 'Trong tháng sau', 'Lúc nào cũng được'];
 
 const BookingForm = ({
 	isArtist = true,

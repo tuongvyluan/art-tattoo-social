@@ -1,4 +1,5 @@
 import MoneyInput from 'components/MoneyInput';
+import { formatPrice } from 'lib';
 import { stringServicePlacement } from 'lib/status';
 import {
 	getColor,
@@ -152,7 +153,7 @@ function ServicePage({ services, onChange }) {
 												{[...sizeMap].map(([key, value], index) => (
 													<tr
 														key={key}
-														className={`border-b border-gray-200 dark:border-gray-700 ${
+														className={`border-b border-gray-200 text-black dark:border-gray-700 ${
 															getColor(key) ? 'bg-blue-50' : ''
 														}`}
 													>
@@ -182,20 +183,14 @@ function ServicePage({ services, onChange }) {
 																getColor(key) ? 'bg-blue-50 h-full' : ''
 															}`}
 														>
-															<div className="flex gap-2 items-center">
+															<div className="flex gap-2 items-center text-base text-black">
 																<span className="text-base">Từ</span>
-																<div className="w-32">
-																	<MoneyInput
-																		disabled={true}
-																		value={value.minPrice}
-																	/>
+																<div className="w-32 font-semibold">
+																	{formatPrice(value.minPrice)}
 																</div>
 																<span className="text-base">tới</span>
-																<div className="w-32">
-																	<MoneyInput
-																		disabled={true}
-																		value={value.maxPrice}
-																	/>
+																<div className="w-32 font-semibold">
+																	{formatPrice(value.maxPrice)}
 																</div>
 															</div>
 														</td>
@@ -268,7 +263,7 @@ function ServicePage({ services, onChange }) {
 												{[...placementMap].map(([key, value], index) => (
 													<tr
 														key={key}
-														className={`border-b border-gray-200 dark:border-gray-700 ${
+														className={`border-b border-gray-200 text-black dark:border-gray-700 ${
 															getColor(key) ? 'bg-blue-50' : ''
 														}`}
 													>
@@ -286,28 +281,18 @@ function ServicePage({ services, onChange }) {
 																{getDifficult(key) ? 'Phức tạp' : 'Đơn giản'}
 															</td>
 														)}
-														<td
-															className={`px-3 py-2 text-base `}
-														>
+														<td className={`px-3 py-2 text-base `}>
 															{getColor(key) ? 'Màu sắc' : 'Trắng đen'}
 														</td>
-														<td
-															className={`px-3 py-2 flex justify-center`}
-														>
-															<div className="flex gap-2 items-center">
+														<td className={`px-3 py-2 flex justify-center`}>
+															<div className="flex gap-2 items-center text-base text-black">
 																<span className="text-base">Từ</span>
-																<div className="w-32">
-																	<MoneyInput
-																		disabled={true}
-																		value={value.minPrice}
-																	/>
+																<div className="w-32 font-semibold">
+																	{formatPrice(value.minPrice)}
 																</div>
 																<span className="text-base">tới</span>
-																<div className="w-32">
-																	<MoneyInput
-																		disabled={true}
-																		value={value.maxPrice}
-																	/>
+																<div className="w-32 font-semibold">
+																	{formatPrice(value.maxPrice)}
 																</div>
 															</div>
 														</td>

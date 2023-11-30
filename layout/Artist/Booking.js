@@ -5,6 +5,7 @@ import { Search } from 'icons/outline';
 import debounce from 'lodash.debounce';
 import {
 	BOOKING_STATUS,
+	operationNames,
 	stringBookingStatuses,
 	stringColor,
 	stringDifficult,
@@ -224,7 +225,7 @@ function BookingPage({ data }) {
 								</div>
 								{booking.services && Object.keys(booking.services).length > 0 ? (
 									<div className="mx-auto border-b border-gray-300 py-3">
-										<div className="text-gray-500 pb-2">Dịch vụ tham khảo</div>
+										<div className="text-gray-500 pb-2">Nhu cầu của khách hàng</div>
 										{booking.services.map((service, serviceIndex) => (
 											// Booking service
 											<div
@@ -265,44 +266,51 @@ function BookingPage({ data }) {
 									<></>
 								)}
 								<div className="text-gray-500 pt-2">Hình xăm</div>
-								{booking.artTattoos?.map((tattoo, tattooIndex) => (
-									<div
-										key={tattoo.id}
-										className="py-2 flex flex-row justify-start gap-3 flex-wrap"
-									>
-										<div className="relative w-24 h-24">
-											<Image
-												layout="fill"
-												src={tattoo.photo}
-												alt={tattoo.id}
-												className="object-contain"
-											/>
-										</div>
-										<div className="flex-grow">
-											<div>
-												<span>Nghệ sĩ xăm: </span>
-												<span className="font-semibold">
-													{tattoo.artist?.firstName}
-												</span>
-											</div>
-											{tattoo.bookingDetails.map(
-												(bookingDetail, bookingDetailIndex) => (
-													<div
-														key={bookingDetail.id}
-														className="flex justify-between items-center"
-													>
-														<div className="text-base">
-															{bookingDetail.operationName}
-														</div>
-														<div className="text-lg">
-															{formatPrice(bookingDetail.price)}
-														</div>
+								{booking.tattooArts && booking.tattooArts.length > 0 && (
+									<div className=" pb-3 border-b border-gray-300">
+										<div className="text-gray-500 pt-2">Hình xăm</div>
+										{booking.tattooArts?.map((tattoo, tattooIndex) => (
+											<div
+												key={tattoo.id}
+												className="py-2 flex flex-row justify-start gap-3 flex-wrap"
+											>
+												<div className="relative w-24 h-24">
+													<Image
+														layout="fill"
+														src={
+															tattoo.thumbnail ? tattoo.thumbnail : '/images/ATL.png'
+														}
+														alt={tattoo.id}
+														className="object-contain"
+													/>
+												</div>
+												<div className="flex-grow">
+													<div>
+														<span>Nghệ sĩ xăm: </span>
+														<span className="font-semibold">
+															{tattoo.artist?.firstName} {tattoo.artist?.lastName}
+														</span>
 													</div>
-												)
-											)}
-										</div>
+													{tattoo.bookingDetails.map(
+														(bookingDetail, bookingDetailIndex) => (
+															<div
+																key={bookingDetail.id}
+																className="flex justify-between items-center"
+															>
+																<div className="text-base">
+																	{operationNames.at(bookingDetail.operationId)}
+																</div>
+																<div className="text-lg">
+																	{formatPrice(bookingDetail.price)}
+																</div>
+															</div>
+														)
+													)}
+												</div>
+											</div>
+										))}
 									</div>
-								))}
+								)}
 								<div className="flex justify-end pt-3 items-start">
 									<div className="text-right">
 										<div className="text-right">
