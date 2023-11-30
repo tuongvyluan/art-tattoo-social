@@ -63,7 +63,7 @@ function BookingDetailsPage({ booking }) {
 						}
 						{booking.artTattoos?.map((tattoo, tattooIndex) => (
 							<div key={tattoo.id}>
-								<Link href={`/tattoo/${tattoo.id}?booking=${booking.id}`}>
+								<Link href={`/tattoo/update/${tattoo.id}`}>
 									<div className="cursor-pointer py-2 flex justify-start gap-3 flex-wrap">
 										<div className="relative w-32 h-32">
 											<Image

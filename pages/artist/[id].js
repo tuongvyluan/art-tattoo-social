@@ -22,7 +22,7 @@ const Artist = () => {
 				bioContent: data.bioContent,
 				styles: data.artistStyles,
 				isVerified: data.isVerified,
-				workAt: data.studioArtists?.at(0)?.id
+				workAt: data.studioArtists?.at(0)
 			});
 		});
 		return (

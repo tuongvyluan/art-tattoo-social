@@ -1,4 +1,5 @@
 import Button from 'components/Button';
+import Pill from 'components/Pill';
 import { ChevronDown, ChevronUp } from 'icons/outline';
 import TattooListNotFilter from 'layout/TattooListNotFilter';
 import { BASE_URL } from 'lib/env';
@@ -48,36 +49,50 @@ const ArtistPage = ({ artist }) => {
 						{
 							// Show more info
 						}
-						<div
-							onClick={() => setShowMoreInfo(!showMoreInfo)}
-							className="block text-center"
-						>
-							<div className="mx-auto text-base cursor-pointer text-gray-700">
-								{showMoreInfo ? 'Ẩn bớt' : 'Xem thêm'}
+						{(artist.bio || artist.workAt || artist.styles.at(0)) && (
+							<div
+								onClick={() => setShowMoreInfo(!showMoreInfo)}
+								className="block text-center"
+							>
+								<div className="mx-auto text-base cursor-pointer text-gray-700">
+									{showMoreInfo ? 'Ẩn bớt' : 'Xem thêm'}
+								</div>
+								<div className="mx-auto w-max text-center cursor-pointer text-gray-700 pb-3">
+									{showMoreInfo ? (
+										<ChevronUp width={20} height={20} />
+									) : (
+										<ChevronDown width={20} height={20} />
+									)}
+								</div>
 							</div>
-							<div className="mx-auto w-max text-center cursor-pointer text-gray-700 pb-3">
-								{showMoreInfo ? (
-									<ChevronUp width={20} height={20} />
-								) : (
-									<ChevronDown width={20} height={20} />
-								)}
-							</div>
-						</div>
+						)}
+
 						<div className={`${showMoreInfo ? 'block' : 'hidden'}`}>
 							<div className="pb-5 border-b border-gray-300">
 								<h1 className="font-semibold text-base pb-2">Bio</h1>
 								<div>{artist.bioContent}</div>
 							</div>
-							<div className="pb-5 border-b border-gray-300 pt-3">
-								<h1 className="font-semibold text-base pb-2">Tiệm xăm</h1>
-								<div className="flex gap-4 items-center">
-									<Avatar size={44} src={'/images/ATL.png'} alt="studio logo" />
-									<div>
-										<div className="font-semibold">Studio</div>
-										<div>Hồ Chí Minh, Gò Vấp</div>
+							{artist.workAt && (
+								<div className="pb-5 border-b border-gray-300 pt-3">
+									<h1 className="font-semibold text-base pb-2">Tiệm xăm</h1>
+									<div className="flex gap-4 items-center">
+										<Avatar
+											size={44}
+											src={
+												artist.workAt?.avatar
+													? artist.workAt?.avatar
+													: '/images/ATL.png'
+											}
+											alt="studio logo"
+										/>
+										<div>
+											<div className="font-semibold">
+												{artist.workAt?.studioName}
+											</div>
+										</div>
 									</div>
 								</div>
-							</div>
+							)}
 							{artist.styles && (
 								<div className="py-3">
 									<h1 className="font-semibold text-base pb-2">Styles</h1>
@@ -87,7 +102,13 @@ const ArtistPage = ({ artist }) => {
 						</div>
 					</CardBody>
 				</Card>
-				<div className="hidden md:flex gap-3">
+				<div
+					className={`hidden md:flex gap-3 ${
+						artist.bio || artist.workAt || artist.styles.at(0)
+							? ''
+							: 'justify-center'
+					}`}
+				>
 					<Card className={'max-w-min'}>
 						<CardBody className={'px-4 lg:px-10 xl:px-20'}>
 							<div className="mx-auto text-center pb-4">
@@ -120,32 +141,51 @@ const ArtistPage = ({ artist }) => {
 							</div>
 						</CardBody>
 					</Card>
-					<Card>
-						<CardBody>
-							<div className={`block`}>
-								<div className="pb-5 border-b border-gray-300">
-									<h1 className="font-semibold text-base pb-2">Bio</h1>
-									<div>{artist.bioContent}</div>
-								</div>
-								<div className="pb-5 border-b border-gray-300 pt-3">
-									<h1 className="font-semibold text-base pb-2">Tiệm xăm</h1>
-									<div className="flex gap-4 items-center">
-										<Avatar size={44} src={'/images/ATL.png'} alt="studio logo" />
-										<div>
-											<div className="font-semibold">Studio</div>
-											<div>Hồ Chí Minh, Gò Vấp</div>
+					{(artist.bio || artist.workAt || artist.styles.at(0)) && (
+						<Card>
+							<CardBody>
+								<div className={`block`}>
+									<div className="pb-5 border-b border-gray-300">
+										<h1 className="font-semibold text-base pb-2">Bio</h1>
+										<div>{artist.bioContent}</div>
+									</div>
+									{artist.workAt && (
+										<div className="pb-5 border-b border-gray-300 pt-3">
+											<h1 className="font-semibold text-base pb-2">Tiệm xăm</h1>
+											<div className="flex gap-4 items-center">
+												<Avatar
+													size={44}
+													src={
+														artist.workAt?.avatar
+															? artist.workAt?.avatar
+															: '/images/ATL.png'
+													}
+													alt="studio logo"
+												/>
+												<div>
+													<div className="font-semibold">
+														{artist.workAt?.studioName}
+													</div>
+												</div>
+											</div>
 										</div>
-									</div>
+									)}
+									{artist.styles.at(0) && (
+										<div className="py-3">
+											<h1 className="font-semibold text-base pb-2">Styles</h1>
+											<div className="flex gap-4 items-center">
+												{artist.styles.map((style, index) => (
+													<div className="" key={style.id}>
+														<Pill>{style.name}</Pill>
+													</div>
+												))}
+											</div>
+										</div>
+									)}
 								</div>
-								{artist.styles && (
-									<div className="py-3">
-										<h1 className="font-semibold text-base pb-2">Styles</h1>
-										<div className="flex gap-4 items-center"></div>
-									</div>
-								)}
-							</div>
-						</CardBody>
-					</Card>
+							</CardBody>
+						</Card>
+					)}
 				</div>
 			</div>
 			<div className="hidden md:block pb-5 pt-0 text-center text-3xl text-gray-700">
