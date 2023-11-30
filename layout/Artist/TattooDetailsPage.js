@@ -154,13 +154,14 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 		}
 		const newMap = deepCopyMap(mediaMap);
 		const stages = tattoo.stages;
-		newMap.set(stages.at(stageLength - 1).id + 1, []);
+		const newId = v4();
 		stages.push({
-			id: v4(),
+			id: newId,
 			stageStyle: 0,
 			description: '',
 			medias: []
 		});
+		newMap.set(newId, []);
 		setTattoo({ ...tattoo, stages: stages });
 		setMediaMap(newMap);
 	};
