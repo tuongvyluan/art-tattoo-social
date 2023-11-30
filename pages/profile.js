@@ -26,6 +26,15 @@ const ProfilePage = () => {
 		);
 	}
 
+	if (status === 'unauthenticated') {
+		Router.replace('/')
+		return (
+			<div className="flex items-center justify-center h-full">
+				<Loading />
+			</div>
+		);
+	}
+
 	if (status === 'authenticated') {
 		if (!profile) {
 			let myProfile = {
@@ -72,8 +81,6 @@ const ProfilePage = () => {
 		} else {
 			return <ArtistInfo handleSubmit={handleSubmit} account={profile} />;
 		}
-	} else {
-		Router.replace('/');
 	}
 };
 

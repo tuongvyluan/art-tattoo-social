@@ -16,6 +16,14 @@ const Booking = () => {
 			</div>
 		);
 	}
+	if (status === 'unauthenticated') {
+		Router.replace('/')
+		return (
+			<div className="flex items-center justify-center h-full">
+				<Loading />
+			</div>
+		);
+	}
 	if (status === 'authenticated') {
 		if (data.user.role === ROLE.CUSTOMER) {
 			if (!data.user?.customerId) {
@@ -39,8 +47,6 @@ const Booking = () => {
 			return <BookingPage artistId={data.user?.artistId} />;
 		}
 	}
-
-	Router.replace('/');
 };
 
 Booking.getInitialProps = async () => ({

@@ -29,6 +29,15 @@ const TattooDetails = () => {
 		setArtTattoo(undefined)
 	};
 
+	if (status === 'unauthenticated') {
+		Router.replace('/')
+		return (
+			<div className="flex items-center justify-center h-full">
+				<Loading />
+			</div>
+		);
+	}
+
 	// Nếu đang xem hình xăm cũ và chưa load hình xăm
 	if (id !== 'new' && !artTattoo) {
 		fetcher(`${BASE_URL}/TattooArts/GetTattooArtMediaById?id=${id}&isAll=true`).then((data) => {
@@ -146,8 +155,6 @@ const TattooDetails = () => {
 				handleSubmit={handleSubmit}
 			/>
 		);
-	} else {
-		Router.replace('/');
 	}
 };
 

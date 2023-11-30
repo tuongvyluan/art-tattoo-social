@@ -15,6 +15,16 @@ const FavoritePage = () => {
 			</div>
 		);
 	}
+	
+	if (status === 'unauthenticated') {
+		Router.replace('/')
+		return (
+			<div className="flex items-center justify-center h-full">
+				<Loading />
+			</div>
+		);
+	}
+
 	if (status === 'authenticated') {
 		if (!url) {
 			setUrl(`${BASE_URL}/Media/GetLikeList?accountId=${data.user.id}`);
@@ -24,8 +34,6 @@ const FavoritePage = () => {
 				</div>
 			);
 		} else return <TattooListNotFilter url={url} pageSize={12} />;
-	} else {
-		Router.replace('/');
 	}
 };
 

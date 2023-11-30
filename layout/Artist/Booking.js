@@ -1,6 +1,7 @@
-import { formatPrice, formatDateTime } from 'lib';
-import { useState } from 'react';
-import { Card, CardBody, Link, Ripple } from 'ui';
+import PropTypes from 'prop-types';
+import { fetcher, formatPrice, formatDateTime } from 'lib';
+import { useEffect, useState } from 'react';
+import { Card, CardBody, Loading, Ripple } from 'ui';
 import { Search } from 'icons/outline';
 import debounce from 'lodash.debounce';
 import {
@@ -13,6 +14,8 @@ import {
 	stringSize
 } from 'lib/status';
 import Image from 'next/image';
+import MyPagination from 'ui/MyPagination';
+import { BASE_URL } from 'lib/env';
 
 const ALL_TAB = '1';
 const PENDING_TAB = '2';
@@ -21,41 +24,16 @@ const IN_PROGRESS_TAB = '4';
 const COMPLETE_TAB = '5';
 const CANCELLED_TAB = '6';
 
-function BookingPage({ data }) {
+function CustomerBookingPage({ artistId }) {
+	const [data, setData] = useState([]);
 	const [activeTab, setActiveTab] = useState('1');
 	const [searchKey, setSearchKey] = useState('');
-
-	let renderData = data;
-
-	switch (activeTab) {
-		case PENDING_TAB:
-			renderData = data.filter(
-				(booking) => booking.status === BOOKING_STATUS.PENDING
-			);
-			break;
-		case CONFIRMED_TAB:
-			renderData = data.filter(
-				(booking) => booking.status === BOOKING_STATUS.CONFIRMED
-			);
-			break;
-		case IN_PROGRESS_TAB:
-			renderData = data.filter(
-				(booking) => booking.status === BOOKING_STATUS.IN_PROGRESS
-			);
-			break;
-		case COMPLETE_TAB:
-			renderData = data.filter(
-				(booking) => booking.status === BOOKING_STATUS.COMPLETED
-			);
-			break;
-		case CANCELLED_TAB:
-			renderData = data.filter(
-				(booking) =>
-					booking.status === BOOKING_STATUS.CUSTOMER_CANCEL ||
-					booking.status === BOOKING_STATUS.STUDIO_CANCEL
-			);
-			break;
-	}
+	const [page, setPage] = useState(1);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
+	const [filter, setFilter] = useState(undefined);
+	const [total, setTotal] = useState(0);
+	const pageSize = 10;
 
 	const onSearch = (e) => {
 		setSearchKey(e.target.value);
@@ -78,8 +56,59 @@ function BookingPage({ data }) {
 		}
 	};
 
+	useEffect(() => {
+		setLoading(true);
+		setError(false);
+
+		fetcher(
+			`${BASE_URL}/bookings/bookings-artist?artistId=${artistId}&page=${page}&pageSize=${pageSize}${
+				filter >= 0 ? `&status=${filter}` : ''
+			}`
+		)
+			.then((data) => {
+				setData(data.data);
+				setTotal(Math.ceil(data.total / pageSize));
+				setLoading(false);
+			})
+			.catch((e) => {
+				setData([]);
+				setTotal(0);
+				setError(true);
+				setLoading(false);
+			});
+	}, [filter, page]);
+
+	useEffect(() => {
+		switch (activeTab) {
+			case PENDING_TAB:
+				setPage(1);
+				setFilter(BOOKING_STATUS.PENDING);
+				break;
+			case CONFIRMED_TAB:
+				setPage(1);
+				setFilter(BOOKING_STATUS.CONFIRMED);
+				break;
+			case IN_PROGRESS_TAB:
+				setPage(1);
+				setFilter(BOOKING_STATUS.IN_PROGRESS);
+				break;
+			case COMPLETE_TAB:
+				setPage(1);
+				setFilter(BOOKING_STATUS.COMPLETED);
+				break;
+			case CANCELLED_TAB:
+				setPage(1);
+				setFilter(BOOKING_STATUS.CUSTOMER_CANCEL);
+				break;
+			default:
+				setPage(1);
+				setFilter(undefined);
+				break;
+		}
+	}, [activeTab]);
+
 	return (
-		<div className="sm:px-8 md:px-10 lg:px-32 xl:px-56">
+		<div className="sm:px-8 md:px-1 lg:px-6 xl:px-56">
 			<div className="mx-auto ring-1 ring-black ring-opacity-5 bg-white">
 				<div className="flex flex-row w-0 min-w-full">
 					<ul className="list-none grid col-span-4 grid-flow-col place-items-center overflow-x-auto w-0 min-w-full -mb-10 pb-10">
@@ -95,7 +124,7 @@ function BookingPage({ data }) {
 									toggle(ALL_TAB);
 								}}
 								href="#"
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-4 md:px-6 lg:px-8 block"
+								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
 							>
 								Tất cả
 								<Ripple color="black" />
@@ -113,7 +142,7 @@ function BookingPage({ data }) {
 									toggle(PENDING_TAB);
 								}}
 								href="#"
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-4 md:px-6 lg:px-8 block"
+								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
 							>
 								Chờ xác nhận
 								<Ripple color="black" />
@@ -131,7 +160,7 @@ function BookingPage({ data }) {
 									toggle(CONFIRMED_TAB);
 								}}
 								href="#"
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-4 md:px-6 lg:px-8 block"
+								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
 							>
 								Đã xác nhận
 								<Ripple color="black" />
@@ -149,7 +178,7 @@ function BookingPage({ data }) {
 									toggle(IN_PROGRESS_TAB);
 								}}
 								href="#"
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-4 md:px-6 lg:px-8 block"
+								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
 							>
 								Đang thực hiện
 								<Ripple color="black" />
@@ -167,7 +196,7 @@ function BookingPage({ data }) {
 								onClick={() => {
 									toggle(COMPLETE_TAB);
 								}}
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-4 md:px-6 lg:px-8 block"
+								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
 							>
 								Hoàn thành
 								<Ripple color="black" />
@@ -185,7 +214,7 @@ function BookingPage({ data }) {
 								onClick={() => {
 									toggle(CANCELLED_TAB);
 								}}
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-4 md:px-6 lg:px-8 block"
+								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
 							>
 								Đã huỷ
 								<Ripple color="black" />
@@ -208,144 +237,177 @@ function BookingPage({ data }) {
 					/>
 				</div>
 			</div>
-			{renderData.map((booking, index) => (
-				<Card key={booking.id}>
-					<CardBody>
-						<Link href={`/booking/${booking.id}`}>
-							<div className="cursor-pointer ">
-								<div className="flex justify-between mx-auto border-b border-gray-300 pb-3">
-									<div className="flex gap-3 items-start">
-										<div className="font-semibold">{booking.customer.firstName}</div>
-									</div>
-									<div>
-										<div className="text-red-500">
-											{stringBookingStatuses.at(booking.status)}
-										</div>
-									</div>
-								</div>
-								{booking.services && Object.keys(booking.services).length > 0 ? (
-									<div className="mx-auto border-b border-gray-300 py-3">
-										<div className="text-gray-500 pb-2">Nhu cầu của khách hàng</div>
-										{booking.services.map((service, serviceIndex) => (
-											// Booking service
-											<div
-												key={`${booking.id}-${service.id}`}
-												className="pb-1 flex flex-wrap text-base"
-											>
-												<div>{serviceIndex + 1}</div>
-												<div className="pr-1">. {stringSize.at(service.size)},</div>
-
-												{service.placement ? (
-													<div className="pr-1">
-														Vị trí xăm: {stringPlacements.at(service.placement)},
+			{error && (
+				<div className="flex items-center justify-center h-full">
+					Không tồn tại đơn hẹn xăm
+				</div>
+			)}
+			{loading && (
+				<div className="flex items-center justify-center h-full">
+					<Loading />
+				</div>
+			)}
+			{!loading && (
+				<div className="relative">
+					<div className="relative">
+						{data.map((booking, index) => (
+							<Card key={booking.id}>
+								<CardBody>
+									<a className="text-black" href={`/booking/${booking.id}`}>
+										<div className="cursor-pointer ">
+											<div className="flex justify-between mx-auto border-b border-gray-300 pb-3">
+												<div className="flex gap-3 items-start">
+													<div className="font-semibold">
+														{booking.studio.studioName}
 													</div>
-												) : (
-													<></>
-												)}
-
-												<div className="pr-1">{stringColor(service.hasColor)},</div>
-
-												<div className="pr-1">
-													{stringDifficult(service.isDifficult)},
 												</div>
-
-												{service.ink && service.ink.length > 0 ? (
-													<div className="pr-1">{service.ink},</div>
-												) : (
-													<></>
-												)}
-
 												<div>
-													{formatPrice(service.minPrice)} -{' '}
-													{formatPrice(service.maxPrice)}
+													<div className="text-red-500">
+														{stringBookingStatuses.at(booking.status)}
+													</div>
 												</div>
 											</div>
-										))}
-									</div>
-								) : (
-									<></>
-								)}
-								<div className="text-gray-500 pt-2">Hình xăm</div>
-								{booking.tattooArts && booking.tattooArts.length > 0 && (
-									<div className=" pb-3 border-b border-gray-300">
-										<div className="text-gray-500 pt-2">Hình xăm</div>
-										{booking.tattooArts?.map((tattoo, tattooIndex) => (
-											<div
-												key={tattoo.id}
-												className="py-2 flex flex-row justify-start gap-3 flex-wrap"
-											>
-												<div className="relative w-24 h-24">
-													<Image
-														layout="fill"
-														src={
-															tattoo.thumbnail ? tattoo.thumbnail : '/images/ATL.png'
-														}
-														alt={tattoo.id}
-														className="object-contain"
-													/>
-												</div>
-												<div className="flex-grow">
-													<div>
-														<span>Nghệ sĩ xăm: </span>
-														<span className="font-semibold">
-															{tattoo.artist?.firstName} {tattoo.artist?.lastName}
-														</span>
-													</div>
-													{tattoo.bookingDetails.map(
-														(bookingDetail, bookingDetailIndex) => (
-															<div
-																key={bookingDetail.id}
-																className="flex justify-between items-center"
-															>
-																<div className="text-base">
-																	{operationNames.at(bookingDetail.operationId)}
+											{booking.services &&
+											Object.keys(booking.services).length > 0 ? (
+												<div className="mx-auto border-b border-gray-300 py-3">
+													<div className="text-gray-500 pb-2">Nhu cầu của khách hàng</div>
+													{booking.services.map((service, serviceIndex) => (
+														// Booking service
+														<div key={`${booking.id}-${service.id}`}>
+															<div className="pb-1 flex flex-wrap text-base">
+																<div>{serviceIndex + 1}</div>
+																<div className="pr-1">
+																	. {stringSize.at(service.size)},
 																</div>
-																<div className="text-lg">
-																	{formatPrice(bookingDetail.price)}
+																{service.placement ? (
+																	<div className="pr-1">
+																		Vị trí xăm:{' '}
+																		{stringPlacements.at(service.placement)},
+																	</div>
+																) : (
+																	<></>
+																)}
+																<div className="pr-1">
+																	{stringColor(service.hasColor)},
+																</div>
+																<div className="pr-1">
+																	{stringDifficult(service.isDifficult)},
+																</div>
+																<div>
+																	{formatPrice(service.minPrice)} -{' '}
+																	{formatPrice(service.maxPrice)}
 																</div>
 															</div>
-														)
+														</div>
+													))}
+												</div>
+											) : (
+												<></>
+											)}
+											{booking.tattooArts && booking.tattooArts.length > 0 && (
+												<div className=" pb-3 border-b border-gray-300">
+													<div className="text-gray-500 pt-2">Hình xăm</div>
+													{booking.tattooArts?.map((tattoo, tattooIndex) => (
+														<div
+															key={tattoo.id}
+															className="py-2 flex flex-row justify-start gap-3 flex-wrap"
+														>
+															<div className="relative w-24 h-24">
+																<Image
+																	layout="fill"
+																	src={
+																		tattoo.thumbnail
+																			? tattoo.thumbnail
+																			: '/images/ATL.png'
+																	}
+																	alt={tattoo.id}
+																	className="object-contain"
+																/>
+															</div>
+															<div className="flex-grow">
+																<div>
+																	<span>Nghệ sĩ xăm: </span>
+																	<span className="font-semibold">
+																		{tattoo.artist?.firstName}{' '}
+																		{tattoo.artist?.lastName}
+																	</span>
+																</div>
+																{tattoo.bookingDetails.map(
+																	(bookingDetail, bookingDetailIndex) => (
+																		<div
+																			key={bookingDetail.id}
+																			className="flex justify-between items-center"
+																		>
+																			<div className="text-base">
+																				{operationNames.at(
+																					bookingDetail.operationId
+																				)}
+																			</div>
+																			<div className="text-lg">
+																				{formatPrice(bookingDetail.price)}
+																			</div>
+																		</div>
+																	)
+																)}
+															</div>
+														</div>
+													))}
+												</div>
+											)}
+											<div className="flex justify-end pt-3 items-start">
+												<div className="text-right">
+													<div>
+														Ngày tạo đơn:{' '}
+														<span className="text-base">
+															{formatDateTime(booking.createdAt)}
+														</span>
+													</div>
+													{booking.cancelAt && (
+														<div>
+															<div>
+																Ngày huỷ:{' '}
+																<span className="text-base">
+																	{formatDateTime(booking.cancelAt)}
+																</span>
+															</div>
+														</div>
+													)}
+													{booking.date && (
+														<div>
+															Ngày hẹn:{' '}
+															<span className="text-base">
+																{formatDateTime(booking.date)}
+															</span>
+														</div>
+													)}
+													{booking.total && (
+														<div>
+															Thành tiền:{' '}
+															<span className="text-lg text-red-500">
+																{formatPrice(booking.total)}
+															</span>
+														</div>
 													)}
 												</div>
 											</div>
-										))}
-									</div>
-								)}
-								<div className="flex justify-end pt-3 items-start">
-									<div className="text-right">
-										<div className="text-right">
-											<div>
-												Ngày tạo đơn:{' '}
-												<span className="text-base">
-													{formatDateTime(booking.createdAt)}
-												</span>
-											</div>
-											{booking.date && (
-												<div>
-													Ngày hẹn:{' '}
-													<span className="text-base">
-														{formatDateTime(booking.date)}
-													</span>
-												</div>
-											)}
-											{booking.total && (
-												<div>
-													Thành tiền:{' '}
-													<span className="text-lg text-red-500">
-														{formatPrice(booking.total)}
-													</span>
-												</div>
-											)}
 										</div>
-									</div>
-								</div>
-							</div>
-						</Link>
-					</CardBody>
-				</Card>
-			))}
+									</a>
+								</CardBody>
+							</Card>
+						))}
+					</div>
+
+					{total > 0 && (
+						<MyPagination current={page} setCurrent={setPage} totalPage={total} />
+					)}
+				</div>
+			)}
 		</div>
 	);
 }
 
-export default BookingPage;
+CustomerBookingPage.propTypes = {
+	artistId: PropTypes.string
+};
+
+export default CustomerBookingPage;

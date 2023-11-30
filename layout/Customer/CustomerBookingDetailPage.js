@@ -16,7 +16,7 @@ import Button from 'components/Button';
 import { BASE_URL } from 'lib/env';
 import MyModal from 'components/MyModal';
 import customerCancelReasons from 'lib/cancelReasons';
-import CustomerServices from './CustomerServices';
+import CustomerServices from '../CustomerServices';
 
 const hasBookingMeeting = (bookingMeetings) => {
 	let result;

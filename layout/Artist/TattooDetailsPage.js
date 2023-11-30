@@ -41,6 +41,7 @@ const deepCopyMap = (map) => {
 }
 
 function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
+	console.log(bookingId)
 	const [defaultTattoo, setDefaultTattoo] = useState(
 		JSON.parse(JSON.stringify(artTattoo))
 	);
@@ -223,9 +224,6 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 			.catch((e) => {
 				handleAlert(true, 'Tạo hình xăm thất bại', '', true);
 			})
-			.finally(() => {
-				handleSubmit(tattoo.id);
-			});
 	};
 
 	const handleUpdateTattoo = () => {
@@ -239,15 +237,9 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 				isPublicized: tattoo.isPublicized
 			};
 			fetcherPut(`${BASE_URL}/TattooArts/UpdateTattoo`, newTattoo)
-				.then((data) => {
-					handleSubmit(newTattoo.id);
-				})
 				.catch((e) => {
 					handleAlert(true, 'Cập nhật hình xăm thất bại', '', true);
 				})
-				.finally(() => {
-					handleSubmit(newTattoo.id);
-				});
 		}
 	};
 
@@ -264,6 +256,9 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 			stage.id = v4()
 		})
 		fetcherPut(`${BASE_URL}/TattooArts/UpdateCreateTattooStage?artId=${tattoo.id}`, stages)
+		.then(() => {
+			handleSubmit(tattoo.id)
+		})
 	}
 
 	const handleSaveChange = () => {

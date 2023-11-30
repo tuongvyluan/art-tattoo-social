@@ -1,3 +1,4 @@
+import BookingDetailsPage from 'layout/Artist/BookingDetails';
 import CustomerBookingDetailPage from 'layout/Customer/CustomerBookingDetailPage';
 import { fetcher } from 'lib';
 import { BASE_URL } from 'lib/env';
@@ -17,26 +18,49 @@ const BookingDetails = () => {
 	const router = useRouter();
 	const bookingId = router.query.id;
 
-	if (status === 'authenticated' && (data.user.role === ROLE.CUSTOMER || data.user.role === ROLE.ARTIST) && loading) {
+	if (status === 'authenticated') {
 		// Call api to get bookings
 
-		fetcher(`${BASE_URL}/bookings/${bookingId}/details-studio`)
-			.then((data) => {
-				setBookingData(data);
-				setLoading(false);
-			})
-			.catch((e) => {
+		if (
+			(data.user.role === ROLE.CUSTOMER || data.user.role === ROLE.ARTIST) &&
+			loading
+		) {
+			fetcher(`${BASE_URL}/bookings/${bookingId}/details-studio`)
+				.then((data) => {
+					setBookingData(data);
+					setLoading(false);
+				})
+				.catch((e) => {
+					return (
+						<div className="flex items-center justify-center h-full">
+							Failed to load data
+						</div>
+					);
+				});
+			return (
+				<div className="flex items-center justify-center h-full">
+					<Loading />
+				</div>
+			);
+		} else {
+			if (data.user.role === ROLE.CUSTOMER) {
 				return (
-					<div className="flex items-center justify-center h-full">
-						Failed to load data
-					</div>
+					<CustomerBookingDetailPage
+						setLoading={setLoading}
+						data={bookingData}
+						studioId={bookingData.studioId}
+					/>
 				);
-			});
-		return (
-			<div className="flex items-center justify-center h-full">
-				<Loading />
-			</div>
-		);
+			}
+			return (
+				<BookingDetailsPage
+					setLoading={setLoading}
+					data={bookingData}
+					studioId={bookingData.studioId}
+					artistId={data.user.artistId}
+				/>
+			);
+		}
 	}
 
 	if (status === 'loading' || loading) {
@@ -48,8 +72,11 @@ const BookingDetails = () => {
 	}
 	if (status === 'unauthenticated') {
 		Router.replace('/');
-	} else {
-		return <CustomerBookingDetailPage setLoading={setLoading} data={bookingData} studioId={bookingData.studioId} />;
+		return (
+			<div className="flex items-center justify-center h-full">
+				<Loading />
+			</div>
+		);
 	}
 };
 
