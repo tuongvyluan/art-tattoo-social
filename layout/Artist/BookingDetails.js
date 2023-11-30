@@ -214,11 +214,7 @@ function BookingDetailsPage({ data, studioId, setLoading, artistId }) {
 										{data.tattooArts?.map((tattoo, tattooIndex) => (
 											<div key={tattoo.id}>
 												<Link
-													href={
-														artistId === tattoo.artist.id
-															? `/tattoo/update/${tattoo.id}?booking=${renderData.id}`
-															: `/tattoo/${tattoo.id}`
-													}
+													href={`/tattoo/update/${tattoo.id}?booking=${renderData.id}`}
 												>
 													<div className="cursor-pointer py-2 flex justify-start gap-3 flex-wrap">
 														<div className="relative w-24 h-24">

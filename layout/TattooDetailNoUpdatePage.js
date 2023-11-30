@@ -1,18 +1,12 @@
 import { ChevronLeft } from 'icons/solid';
 import { Avatar, BackgroundImg, Card, CardBody, Link } from 'ui';
 import PropTypes from 'prop-types';
-import MoneyInput from 'components/MoneyInput';
-import {
-	operationNames,
-	stringColor,
-	stringPlacements,
-	stringSize,
-	stringTattooStages
-} from 'lib/status';
+import { operationNames, stringPlacements, stringSize, stringTattooStages } from 'lib/status';
 import { tattooStyleById } from 'lib/tattooStyle';
 import { useState } from 'react';
+import { formatPrice } from 'lib';
 
-function TattooDetailNoUpdatePage({ bookingId, artTattoo, artist }) {
+function TattooDetailNoUpdatePage({ bookingId, artTattoo }) {
 	const [tattoo, setTattoo] = useState(JSON.parse(JSON.stringify(artTattoo)));
 
 	return (
@@ -62,44 +56,59 @@ function TattooDetailNoUpdatePage({ bookingId, artTattoo, artist }) {
 							<div className="font-semibold text-lg pb-2">Thông tin hình xăm</div>
 							<div className="pb-3 flex items-center gap-1">
 								<div className="w-20">Nghệ sĩ xăm:</div>
-								<span className="font-semibold">{tattoo.artist.firstName}</span>
+								<span className="font-semibold">
+									{tattoo.artist.firstName} {tattoo.artist.lastName}
+								</span>
 							</div>
 							<div className="pb-3 flex items-center gap-1">
 								<div className="w-20">Kích thước: </div>
-								<div className="w-28 rounded-lg p-1 border border-gray-300">
+								<div className="w-28 rounded-lg p-1">
 									{stringSize.at(tattoo.size)}
 								</div>
 							</div>
 							<div className="pb-3 flex gap-1 items-center">
 								<div className="w-20">Vị trí xăm:</div>
-								<div className="w-28 rounded-lg p-1 border border-gray-300">
+								<div className="w-28 rounded-lg p-1">
 									{stringPlacements.at(tattoo.placement)}
 								</div>
 							</div>
 							<div className="pb-3 flex gap-1 items-center">
-								<div className="w-20">Màu xăm:</div>
-								<div className="w-28 rounded-lg p-1 border border-gray-300">
-									{stringColor(tattoo.hasColor)}
-								</div>
-							</div>
-							<div className="pb-3 flex gap-1 items-center">
 								<div className="w-20">Style:</div>
-								<div className="w-28 md:w-48 rounded-lg p-1 border border-gray-300">
+								<div className="w-28 md:w-48 rounded-lg p-1">
 									{tattooStyleById(tattoo.styleId)?.name}
 								</div>
 							</div>
-							{/* <div className="pb-3 flex gap-1 items-center">
-								<div className="w-20">Giá:</div>
-								<div className="w-48">
-									<MoneyInput
-										value={tattoo.price}
-										disabled={bookingId !== ''}
-										onAccept={(value, mask) => setTattooState('price', value)}
-									/>
-								</div>
-							</div> */}
 						</div>
 					</div>
+					{tattoo.bookingId !== '' && (
+						<div className="mt-3 border-gray-300">
+							{
+								// Booking details list
+							}
+							<div className="font-semibold text-lg pb-2">
+								Ghi nhận chi phí dịch vụ
+							</div>
+
+							{tattoo.bookingDetails.map((detail, detailIndex) => (
+								<div
+									className={
+										'relative min-w-0 break-words rounded-lg mb-4 w-full bg-white dark:bg-gray-600'
+									}
+									key={detail.bookingDetailsId}
+								>
+									<div className={'py-1 px-6 flex flex-row items-center'}>
+										<div className="relative flex flex-wrap justify-between items-center w-full">
+											<div>{operationNames.at(detail.operationId)}</div>
+
+											<div className="text-base relative">
+												{formatPrice(detail.price)}
+											</div>
+										</div>
+									</div>
+								</div>
+							))}
+						</div>
+					)}
 					{
 						// Update tattoo stages and booking details
 					}
@@ -108,6 +117,9 @@ function TattooDetailNoUpdatePage({ bookingId, artTattoo, artist }) {
 							// Add tattoo stage, including tattoo medias
 						}
 						<div>
+							<div className="font-semibold text-lg pb-2">
+								Các giai đoạn xăm
+							</div>
 							{tattoo.stages.map((stage, stageIndex) => (
 								<Card className={'pt-3'} key={stage.id}>
 									<CardBody className={'shadow-md bg-gray-50 relative'}>
@@ -116,7 +128,9 @@ function TattooDetailNoUpdatePage({ bookingId, artTattoo, artist }) {
 												//Stage body
 											}
 											<div key={stage.id}>
-												<div className='text-base'>Giai đoạn: {stringTattooStages.at(stage.stageStyle)}</div>
+												<div className="text-base">
+													Giai đoạn: {stringTattooStages.at(stage.stageStyle)}
+												</div>
 												<div>
 													<div>{stage.description}</div>
 												</div>
@@ -134,7 +148,7 @@ function TattooDetailNoUpdatePage({ bookingId, artTattoo, artist }) {
 																		type="checkbox"
 																		readOnly
 																		className="hidden"
-																		disabled={false}
+																		disabled={true}
 																	/>
 																	<div className="toggle__bar h-4 bg-gray-400 rounded-full shadow-inner"></div>
 																	<div className="toggle__handle absolute bg-white rounded-full shadow-sm transform transition duration-150 ease-in-out"></div>

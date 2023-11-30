@@ -16,10 +16,6 @@ const TattooDetails = () => {
 		typeof router.query['booking'] !== 'undefined' ? router.query['booking'] : '';
 	const [id, setId] = useState(router.query.id);
 	const [artTattoo, setArtTattoo] = useState(undefined);
-	const [artist, setArtist] = useState({
-		artistId: [Math.floor(Math.random() * 900)],
-		firstName: 'Vy'
-	});
 
 	const handleSubmit = (newId) => {
 		if (newId !== id) {
@@ -40,7 +36,7 @@ const TattooDetails = () => {
 
 	// Nếu đang xem hình xăm cũ và chưa load hình xăm
 	if (id !== 'new' && !artTattoo) {
-		fetcher(`${BASE_URL}/TattooArts/GetTattooArtMediaById?id=${id}&isAll=true`).then((data) => {
+		fetcher(`${BASE_URL}/TattooArts/Details?id=${id}`).then((data) => {
 			const stageMap = new Map(
 				data.medias.map((obj) => {
 					return [
@@ -63,22 +59,13 @@ const TattooDetails = () => {
 				...data,
 				artist: {
 					id: data.artistId,
-					firstName: data.artist.firstName,
-					lastName: data.artist.lastName
+					firstName: data.firstName,
+					lastName: data.lastName
 				},
 				bookingId: data.bookingId ? data.bookingId : '',
 				stages: Array.from(stageMap, ([id, value]) => value)
 			};
-			if (renderData.stages.length === 0) {
-				renderData.stages.push({
-					id: 1,
-					stageStyle: 0,
-					description: '',
-					medias: []
-				});
-			}
 			setArtTattoo(renderData);
-			setArtist(renderData.artist);
 		});
 	}
 
@@ -91,7 +78,7 @@ const TattooDetails = () => {
 	}
 
 	if (status === 'authenticated') {
-		if (id !== 'new' && (!artTattoo || !artist)) {
+		if (id !== 'new' && !artTattoo) {
 			return (
 				<div className="flex items-center justify-center h-full">
 					<Loading />
@@ -110,19 +97,19 @@ const TattooDetails = () => {
 				},
 				styleId: 14,
 				stages: [
-					{
-						id: 1,
-						stageStyle: 0,
-						description: '',
-						medias: [
+					// {
+					// 	id: 1,
+					// 	stageStyle: 0,
+					// 	description: '',
+					// 	medias: [
 							// {
 							// id: '',
 							// url: '',
 							// description: '',
 							// isPublicized: false
 							// }
-						]
-					}
+					// 	]
+					// }
 				],
 				thumbnail: '',
 				isPublicized: false,
@@ -138,12 +125,11 @@ const TattooDetails = () => {
 				/>
 			);
 		}
-		if (data.user.role !== ROLE.ARTIST) {
+		if (data.user.role !== ROLE.ARTIST || data.user.id !== artTattoo.artist.id) {
 			return (
 				<TattooDetailNoUpdatePage
 					bookingId={booking}
 					artTattoo={artTattoo}
-					artist={artist}
 				/>
 			);
 		}
@@ -151,10 +137,9 @@ const TattooDetails = () => {
 			<TattooDetailsPage
 				bookingId={booking}
 				artTattoo={artTattoo}
-				artist={artist}
 				handleSubmit={handleSubmit}
 			/>
-		);
+		)
 	}
 };
 
