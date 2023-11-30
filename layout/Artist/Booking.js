@@ -49,7 +49,9 @@ function BookingPage({ data }) {
 			break;
 		case CANCELLED_TAB:
 			renderData = data.filter(
-				(booking) => booking.status === BOOKING_STATUS.CUSTOMER_CANCEL || booking.status === BOOKING_STATUS.STUDIO_CANCEL
+				(booking) =>
+					booking.status === BOOKING_STATUS.CUSTOMER_CANCEL ||
+					booking.status === BOOKING_STATUS.STUDIO_CANCEL
 			);
 			break;
 	}
@@ -303,23 +305,29 @@ function BookingPage({ data }) {
 								))}
 								<div className="flex justify-end pt-3 items-start">
 									<div className="text-right">
-										<div>
-											Ngày tạo đơn:{' '}
-											<span className="text-base">
-												{formatDateTime(booking.createdAt)}
-											</span>
-										</div>
-										<div>
-											Ngày hoàn tất:{' '}
-											<span className="text-base">
-												{formatDateTime(booking.meetingDate)}
-											</span>
-										</div>
-										<div>
-											Thành tiền:{' '}
-											<span className="text-lg text-red-500">
-												{formatPrice(booking.total)}
-											</span>
+										<div className="text-right">
+											<div>
+												Ngày tạo đơn:{' '}
+												<span className="text-base">
+													{formatDateTime(booking.createdAt)}
+												</span>
+											</div>
+											{booking.date && (
+												<div>
+													Ngày hẹn:{' '}
+													<span className="text-base">
+														{formatDateTime(booking.date)}
+													</span>
+												</div>
+											)}
+											{booking.total && (
+												<div>
+													Thành tiền:{' '}
+													<span className="text-lg text-red-500">
+														{formatPrice(booking.total)}
+													</span>
+												</div>
+											)}
 										</div>
 									</div>
 								</div>

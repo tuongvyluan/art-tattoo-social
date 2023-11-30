@@ -6,6 +6,7 @@ import { Search } from 'icons/outline';
 import debounce from 'lodash.debounce';
 import {
 	BOOKING_STATUS,
+	operationNames,
 	stringBookingStatuses,
 	stringColor,
 	stringDifficult,
@@ -32,7 +33,7 @@ function CustomerBookingPage({ customerId }) {
 	const [error, setError] = useState(false);
 	const [filter, setFilter] = useState(undefined);
 	const [total, setTotal] = useState(0);
-	const pageSize = 4;
+	const pageSize = 10;
 
 	const onSearch = (e) => {
 		setSearchKey(e.target.value);
@@ -232,7 +233,7 @@ function CustomerBookingPage({ customerId }) {
 						onChange={onSearch}
 						onKeyDown={onKeyDown}
 						className="my-2 appearance-none relative block w-full pl-3 pr-3 border-0 border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 leading-none h-5 bg-transparent"
-						placeholder="Bạn có thể tìm theo tên hình xăm, tên khách hàng, hoặc ID lịch hẹn"
+						placeholder="Bạn có thể tìm theo tên hình xăm, tên khách hàng, hoặc ID đơn hàng"
 					/>
 				</div>
 			</div>
@@ -252,7 +253,7 @@ function CustomerBookingPage({ customerId }) {
 						{data.map((booking, index) => (
 							<Card key={booking.id}>
 								<CardBody>
-									<a className='text-black' href={`/booking/${booking.id}`}>
+									<a className="text-black" href={`/booking/${booking.id}`}>
 										<div className="cursor-pointer ">
 											<div className="flex justify-between mx-auto border-b border-gray-300 pb-3">
 												<div className="flex gap-3 items-start">
@@ -297,66 +298,13 @@ function CustomerBookingPage({ customerId }) {
 																	{formatPrice(service.maxPrice)}
 																</div>
 															</div>
-															{booking.tattooArts?.at(serviceIndex) && (
-																<div
-																	key={booking.tattooArts?.at(serviceIndex).id}
-																	className="py-2 flex flex-row justify-start gap-3 flex-wrap"
-																>
-																	<div className="relative w-24 h-24">
-																		<Image
-																			layout="fill"
-																			src={
-																				booking.tattooArts?.at(serviceIndex)
-																					.thumbnail
-																					? booking.tattooArts?.at(serviceIndex)
-																							.thumbnail
-																					: '/images/ATL.png'
-																			}
-																			alt={booking.tattooArts?.at(serviceIndex).id}
-																			className="object-contain"
-																		/>
-																	</div>
-																	<div className="flex-grow">
-																		<div>
-																			<span>Nghệ sĩ xăm: </span>
-																			<span className="font-semibold">
-																				{
-																					booking.tattooArts?.at(serviceIndex).artist
-																						?.firstName
-																				}{' '}
-																				{
-																					booking.tattooArts?.at(serviceIndex).artist
-																						?.lastName
-																				}
-																			</span>
-																		</div>
-																		{booking.tattooArts
-																			?.at(serviceIndex)
-																			.bookingDetails.map(
-																				(bookingDetail, bookingDetailIndex) => (
-																					<div
-																						key={bookingDetail.id}
-																						className="flex justify-between items-center"
-																					>
-																						<div className="text-base">
-																							{bookingDetail.operationName}
-																						</div>
-																						<div className="text-lg">
-																							{formatPrice(bookingDetail.price)}
-																						</div>
-																					</div>
-																				)
-																			)}
-																	</div>
-																</div>
-															)}
 														</div>
 													))}
 												</div>
 											) : (
 												<></>
 											)}
-											{/* {booking.tattooArts && booking.tattooArts.length > 0 && (
+											{booking.tattooArts && booking.tattooArts.length > 0 && (
 												<div className=" pb-3 border-b border-gray-300">
 													<div className="text-gray-500 pt-2">Hình xăm</div>
 													{booking.tattooArts?.map((tattoo, tattooIndex) => (
@@ -391,7 +339,9 @@ function CustomerBookingPage({ customerId }) {
 																			className="flex justify-between items-center"
 																		>
 																			<div className="text-base">
-																				{bookingDetail.operationName}
+																				{operationNames.at(
+																					bookingDetail.operationId
+																				)}
 																			</div>
 																			<div className="text-lg">
 																				{formatPrice(bookingDetail.price)}
@@ -403,7 +353,7 @@ function CustomerBookingPage({ customerId }) {
 														</div>
 													))}
 												</div>
-											)} */}
+											)}
 											<div className="flex justify-end pt-3 items-start">
 												<div className="text-right">
 													<div>
@@ -412,6 +362,16 @@ function CustomerBookingPage({ customerId }) {
 															{formatDateTime(booking.createdAt)}
 														</span>
 													</div>
+													{booking.cancelAt && (
+														<div>
+															<div>
+																Ngày huỷ:{' '}
+																<span className="text-base">
+																	{formatDateTime(booking.cancelAt)}
+																</span>
+															</div>
+														</div>
+													)}
 													{booking.date && (
 														<div>
 															Ngày hẹn:{' '}

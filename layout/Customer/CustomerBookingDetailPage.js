@@ -1,37 +1,69 @@
 import { ChevronLeft } from 'icons/solid';
 import {
 	extractBookingStatusTimeline,
+	fetcherDelete,
+	fetcherPost,
 	fetcherPut,
 	formatDate,
+	formatDateForInput,
 	formatPrice,
-	formatDateTime,
-	formatPhoneNumber
+	formatTime,
+	isFuture
 } from 'lib';
-import {
-	BOOKING_STATUS,
-	stringBookingStatuses,
-	stringColor,
-	stringDifficult,
-	stringPlacements,
-	stringSize
-} from 'lib/status';
+import { BOOKING_STATUS, operationNames, stringBookingStatuses } from 'lib/status';
 import PropTypes from 'prop-types';
 import Image from 'next/image';
 import { Alert, Card, CardBody, Link } from 'ui';
 import { WidgetOrderStatus } from 'ui/WidgetOrderStatus';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Button from 'components/Button';
 import { BASE_URL } from 'lib/env';
 import MyModal from 'components/MyModal';
-import cancelReasons from 'lib/cancelReasons';
+import customerCancelReasons from 'lib/cancelReasons';
+import CustomerServices from './CustomerServices';
 
-function CustomerBookingDetailPage({ data, studioId, setLoading }) {
+const hasBookingMeeting = (bookingMeetings) => {
+	let result;
+	if (
+		bookingMeetings?.at(0)?.meetingDate &&
+		isFuture(bookingMeetings?.at(0)?.meetingDate)
+	) {
+		result = new Date(bookingMeetings?.at(0)?.meetingDate);
+	}
+	return result;
+};
+
+const calculateTotal = (tattooArts) => {
+	if (!tattooArts) {
+		return 0;
+	}
+	let total = 0;
+	tattooArts.forEach((a) => {
+		a.bookingDetails.forEach((b) => {
+			total += b.price;
+		});
+	});
+	return total;
+};
+
+function BookingDetailsPage({ data, studioId, setLoading }) {
 	const [renderData, setRenderData] = useState(data);
 
 	const timeline = extractBookingStatusTimeline(renderData);
 	const [bookingStatus, setBookingStatus] = useState(renderData.status);
 
-	// Alert vars
+	// Cancel related vars
+	const [cancelStatus, setCancelStatus] = useState(BOOKING_STATUS.CUSTOMER_CANCEL);
+	const [confirmCancelBookingModal, setConfirmCancelBookingModal] = useState(false);
+	const [cancelReason, setCancelReason] = useState(customerCancelReasons.at(0).reason);
+	const [cancelReasonMore, setCancelReasonMore] = useState('');
+
+	const handleCancelReason = ({ status, reason }) => {
+		setCancelReason(reason);
+		setCancelStatus(status);
+	};
+
+	// Alert related vars
 	const [showAlert, setShowAlert] = useState(false);
 
 	const [alertContent, setAlertContent] = useState({
@@ -49,67 +81,23 @@ function CustomerBookingDetailPage({ data, studioId, setLoading }) {
 		});
 	};
 
-	// Cancel related vars
-	const [cancelStatus, setCancelStatus] = useState(BOOKING_STATUS.CUSTOMER_CANCEL);
-	const [confirmCancelBookingModal, setConfirmCancelBookingModal] = useState(false);
-	const [cancelReason, setCancelReason] = useState(cancelReasons.at(0).reason);
-	const [cancelReasonMore, setCancelReasonMore] = useState('');
-
-	const handleCancelReason = ({ status, reason }) => {
-		setCancelReason(reason);
-		setCancelStatus(status);
-	};
-
-	const handleAfterConfirmed = (status) => {
-		handleAlert(true, 'Đang cập nhật trạng thái');
+	const handleAfterConfirmed = () => {
+		handleAlert(true, 'Đang huỷ đơn hàng');
 		const body = {
-			status: status
+			status: BOOKING_STATUS.CUSTOMER_CANCEL,
+			customerCancelReason: cancelReason.concat(` ${cancelReasonMore}`)
 		};
-		if (status === BOOKING_STATUS.CUSTOMER_CANCEL) {
-			body.customerCancelReason = cancelReason.concat(` ${cancelReasonMore}`);
-		}
-		if (status === BOOKING_STATUS.STUDIO_CANCEL) {
-			body.studioCancelReason = cancelReason.concat(` ${cancelReasonMore}`);
-		}
-		fetcherPut(`${BASE_URL}/studios/${studioId}/bookings/${renderData.id}`, body)
+		fetcherPut(`${BASE_URL}/customers/bookings/${renderData.id}`, body)
 			.then((data) => {
-				setBookingStatus(status);
-				handleAlert(true, 'Cập nhật trạng thái đơn hàng thành công');
+				setBookingStatus(BOOKING_STATUS.CUSTOMER_CANCEL);
+				handleAlert(true, 'Huỷ đơn hàng thành công');
 				setLoading(true);
 			})
 			.catch((e) => {
-				handleAlert(true, 'Cập nhật trạng thái đơn hàng thành công');
+				handleAlert(true, 'Huỷ đơn hàng thành công');
 			});
 		setConfirmCancelBookingModal(false);
 	};
-
-	useEffect(() => {
-		if (renderData.status !== BOOKING_STATUS.PENDING) {
-			renderData.bookingMeetings = [
-				{
-					date: new Date(new Date(data.createdAt).valueOf() + Math.random() * 1e10),
-					status: 'Pending',
-					createdAt: new Date(
-						new Date(data.createdAt).valueOf() + Math.random() * 1e10
-					)
-				},
-				{
-					date: new Date(new Date(data.createdAt).valueOf() + Math.random() * 1e10),
-					status: 'Completed',
-					createdAt: new Date(
-						new Date(data.createdAt).valueOf() + Math.random() * 1e10
-					)
-				},
-				{
-					date: new Date(new Date(data.createdAt).valueOf() + Math.random() * 1e10),
-					status: 'Completed',
-					createdAt: new Date(
-						new Date(data.createdAt).valueOf() + Math.random() * 1e10
-					)
-				}
-			];
-		}
-	}, []);
 
 	return (
 		<div className="relative">
@@ -122,17 +110,16 @@ function CustomerBookingDetailPage({ data, studioId, setLoading }) {
 				<strong className="font-bold mr-1">{alertContent.title}</strong>
 				<span className="block sm:inline">{alertContent.content}</span>
 			</Alert>
-
 			<MyModal
 				title="Xác nhận huỷ đơn"
 				warn={true}
 				openModal={confirmCancelBookingModal}
 				setOpenModal={setConfirmCancelBookingModal}
-				onSubmit={() => handleAfterConfirmed(cancelStatus)}
+				onSubmit={handleAfterConfirmed}
 			>
 				<div>
-					<ul className="h-36 pb-6 overflow-y-auto">
-						{cancelReasons.map((reason, index) => (
+					<ul className="h-44 pb-6 overflow-y-auto">
+						{customerCancelReasons.map((reason, index) => (
 							<li
 								className="my-1 full px-3 py-1 gap-2 flex items-center cursor-pointer"
 								onClick={() => handleCancelReason(reason)}
@@ -173,7 +160,7 @@ function CustomerBookingDetailPage({ data, studioId, setLoading }) {
 								</Link>
 								<div>
 									<span>
-										Mã đơn hàng: {renderData.id.split('-').reverse().at(0)} |{' '}
+										Mã đơn hàng: {renderData.id.split('-').at(0)} |{' '}
 									</span>
 									<span className="text-red-500">
 										{stringBookingStatuses[bookingStatus]}
@@ -192,43 +179,55 @@ function CustomerBookingDetailPage({ data, studioId, setLoading }) {
 											</div>
 											<div className="text-base">{renderData.studio.studioName}</div>
 											<div>Địa chỉ: {renderData.studio.address}</div>
-											<div>Giờ mở cửa:{' '}
-												{renderData.studio.openTime.split(':')[0]}:
+											<div>
+												Giờ mở cửa: {renderData.studio.openTime.split(':')[0]}:
 												{renderData.studio.openTime.split(':')[1]} -{' '}
 												{renderData.studio.closeTime.split(':')[0]}:
 												{renderData.studio.closeTime.split(':')[1]}
 											</div>
-											<div>Số điện thoại: {formatPhoneNumber(renderData.studio.owner.phoneNumber)}</div>
 										</div>
 										{
 											// Confirm ngày hẹn
 										}
-										<div className="pt-3 mt-3 border-t border-gray-300">
-											<div className="font-semibold text-xl pb-2">
-												Thông tin ngày hẹn
-											</div>
-											<div className="">
-												<div>
-													{renderData.bookingMeetings &&
-													renderData.bookingMeetings.at(0)?.status === 'Pending' ? (
-														<div>
-															<div className="text-base">
-																<div className="pb-2">
-																	Buổi hẹn kế tiếp vào ngày:
-																</div>
-																<div className="font-bold text-lg text-green-500">
-																	{formatDate(bookingStatus.meetingDate)}
+										{(bookingStatus === BOOKING_STATUS.CONFIRMED ||
+											bookingStatus === BOOKING_STATUS.IN_PROGRESS) && (
+											<div className="pt-3 mt-3 border-t border-gray-300">
+												<div className="font-semibold text-xl pb-2">
+													Thông tin buổi hẹn
+												</div>
+												<div className="">
+													<div>
+														{hasBookingMeeting(renderData.bookingMeetings) ? (
+															<div>
+																<div className="text-base">
+																	<div className="pb-2">
+																		Buổi hẹn kế tiếp vào ngày:
+																	</div>
+																	<div className="font-bold text-lg text-green-500">
+																		{formatDate(
+																			hasBookingMeeting(renderData.bookingMeetings)
+																		)}
+																	</div>
 																</div>
 															</div>
-														</div>
-													) : (
-														<div className="text-base">
-															<div className="pb-2">Chưa có buổi hẹn kế tiếp</div>
-														</div>
-													)}
+														) : (
+															<div>
+																{(renderData.status === BOOKING_STATUS.CONFIRMED ||
+																	renderData.status === BOOKING_STATUS.PENDING ||
+																	renderData.status ===
+																		BOOKING_STATUS.IN_PROGRESS) && (
+																	<div className="text-base">
+																		<div className="pb-2">
+																			Chưa có buổi hẹn kế tiếp
+																		</div>
+																	</div>
+																)}
+															</div>
+														)}
+													</div>
 												</div>
 											</div>
-										</div>
+										)}
 									</div>
 									<div className="flex flex-col justify-start flex-grow pt-3 md:pt-0">
 										{timeline.length > 0 ? (
@@ -257,114 +256,73 @@ function CustomerBookingDetailPage({ data, studioId, setLoading }) {
 								// Customer services
 							}
 							<div className="pt-3">
-								<div className="flex justify-between w-full pb-1">
-									<div className="font-semibold text-xl pb-2">Chi tiết đơn hàng</div>
-								</div>
-								<div className="block">
-									{renderData.services.map((service, serviceIndex) => (
-										<div key={service.id}>
-											<div className="flex justify-between items-center w-full">
-												<div
-													key={service.id}
-													className="pb-1 flex flex-wrap text-base"
-												>
-													<div>{serviceIndex + 1}</div>
-													<div className="pr-1">
-														. {stringSize.at(service.size)},
-													</div>
-
-													{service.placement ? (
-														<div className="pr-1">
-															Vị trí xăm: {stringPlacements.at(service.placement)},
-														</div>
-													) : (
-														<></>
-													)}
-
-													<div className="pr-1">
-														{stringColor(service.hasColor)},
-													</div>
-
-													<div className="pr-1">
-														{stringDifficult(service.isDifficult)},
-													</div>
-
-													<div className="pr-1">
-														{formatPrice(service.minPrice)} -{' '}
-														{formatPrice(service.maxPrice)}
-													</div>
-												</div>
-											</div>
-											<div>
-												{renderData.tattooArts?.at(serviceIndex) && (
-													<div
-														key={renderData.tattooArts?.at(serviceIndex).id}
-														className="py-2 flex flex-row justify-start gap-3 flex-wrap"
-													>
-														<Link
-															href={`/tattoo/${
-																renderData.tattooArts?.at(serviceIndex).id
-															}?booking=${data.id}`}
-														>
-															<div className="cursor-pointer py-2 flex justify-start gap-3 flex-wrap">
-																<div className="relative w-24 h-24">
-																	<Image
-																		layout="fill"
-																		src={
-																			renderData.tattooArts?.at(serviceIndex)
-																				.thumbnail
-																				? renderData.tattooArts?.at(serviceIndex)
-																						.thumbnail
-																				: '/images/ATL.png'
-																		}
-																		alt={renderData.tattooArts?.at(serviceIndex).id}
-																		className="object-contain"
-																	/>
-																</div>
-																<div className="flex-grow">
-																	<div>
-																		<span>Nghệ sĩ xăm: </span>
-																		<span className="font-semibold">
-																			{
-																				renderData.tattooArts?.at(serviceIndex)
-																					.artist?.firstName
-																			}{' '}
-																			{
-																				renderData.tattooArts?.at(serviceIndex)
-																					.artist?.lastName
-																			}
-																		</span>
-																	</div>
-																	{renderData.tattooArts
-																		?.at(serviceIndex)
-																		.bookingDetails.map(
-																			(bookingDetail, bookingDetailIndex) => (
-																				<div
-																					key={bookingDetail.id}
-																					className="flex justify-between items-center"
-																				>
-																					<div className="text-base">
-																						{bookingDetail.operationName}
-																					</div>
-																					<div className="text-lg">
-																						{formatPrice(bookingDetail.price)}
-																					</div>
-																				</div>
-																			)
-																		)}
-																</div>
-															</div>
-														</Link>
-													</div>
-												)}
-											</div>
-										</div>
-									))}
-								</div>
+								<CustomerServices services={renderData.services} />
 							</div>
 
 							{
 								// Booking detail list
+							}
+							{
+								// Đơn hàng đã huỷ nhưng đã có tattoo art
+								(((data.status === BOOKING_STATUS.CUSTOMER_CANCEL ||
+									data.status === BOOKING_STATUS.STUDIO_CANCEL) &&
+									data.tattooArts.length > 0) ||
+									// Đơn hàng còn chưa bắt đầu
+									data.status === BOOKING_STATUS.IN_PROGRESS ||
+									data.status === BOOKING_STATUS.COMPLETED) && (
+									<div className="mt-6 pt-3 border-t border-gray-300 pb-3">
+										<div className="flex justify-between items-center font-semibold text-xl pb-2">
+											<div>Chi tiết đơn hàng</div>
+										</div>
+
+										{
+											// List hình xăm
+										}
+										{data.tattooArts?.map((tattoo, tattooIndex) => (
+											<div key={tattoo.id}>
+												<Link href={`/tattoo/${tattoo.id}?booking=${data.id}`}>
+													<div className="cursor-pointer py-2 flex justify-start gap-3 flex-wrap">
+														<div className="relative w-24 h-24">
+															<Image
+																layout="fill"
+																src={
+																	tattoo.thumbnail
+																		? tattoo.thumbnail
+																		: '/images/ATL.png'
+																}
+																alt={'a'}
+																className="object-contain rounded-2xl"
+															/>
+														</div>
+														<div className="flex-grow text-base">
+															<div>
+																<span>Nghệ sĩ xăm: </span>
+																<span className="font-semibold">
+																	{tattoo.artist.firstName} {tattoo.artist.lastName}
+																</span>
+															</div>
+															{tattoo.bookingDetails.map(
+																(bookingDetail, bookingDetailIndex) => (
+																	<div
+																		key={bookingDetail.id}
+																		className="flex justify-between items-center"
+																	>
+																		<div className="text-base">
+																			{operationNames.at(bookingDetail.operationId)}
+																		</div>
+																		<div className="text-lg">
+																			{formatPrice(bookingDetail.price)}
+																		</div>
+																	</div>
+																)
+															)}
+														</div>
+													</div>
+												</Link>
+											</div>
+										))}
+									</div>
+								)
 							}
 
 							<div
@@ -395,51 +353,51 @@ function CustomerBookingDetailPage({ data, studioId, setLoading }) {
 							{
 								// Final sum
 							}
-							<div className="pt-3">
-								<table className="w-full">
-									<tbody>
-										{(renderData.status === BOOKING_STATUS.IN_PROGRESS ||
-											renderData.status === BOOKING_STATUS.COMPLETED) && (
+							{(renderData.status === BOOKING_STATUS.IN_PROGRESS ||
+								renderData.status === BOOKING_STATUS.COMPLETED) && (
+								<div>
+									<table className="w-full mb-3">
+										<tbody>
 											<tr className="border-t border-gray-300">
 												<th className="py-3 text-gray-500 w-fit sm:w-1/2 md:w-2/3 border-r pr-3 border-gray-300 text-right text-sm font-normal">
 													Tổng tiền
 												</th>
 												<td className="py-3 text-right text-xl text-red-500">
 													{/* {formatPrice(renderData.total)} */}
-													{formatPrice(2000000)}
+													{formatPrice(calculateTotal(renderData.tattooArts))}
 												</td>
 											</tr>
-										)}
-										<tr className="border-t border-gray-300">
-											<th className="py-3 text-gray-500 w-fit sm:w-1/2 md:w-2/3 border-r pr-3 border-gray-300 text-right text-sm font-normal">
-												Thanh toán
-											</th>
-											<td className="py-3 text-right text-sm">
-												<div>
-													<span className="text-gray-600">
-														{formatDateTime(new Date())} - Tiền mặt -{' '}
-													</span>
-													<span className="text-base">{formatPrice(1000000)}</span>
-												</div>
-												<div>
-													<span className="text-gray-600">
-														{formatDateTime(new Date())} - Ví điện tử -{' '}
-													</span>
-													<span className="text-base">{formatPrice(500000)}</span>
-												</div>
-											</td>
-										</tr>
-										<tr className="border-t border-gray-300">
-											<th className="py-3 text-gray-500 w-fit sm:w-1/2 md:w-2/3 border-r pr-3 border-gray-300 text-right text-sm font-normal">
-												Còn lại
-											</th>
-											<td className="py-3 text-right text-xl text-red-500">
-												<div>{formatPrice(500000)}</div>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
+											{/* <tr className="border-t border-gray-300">
+												<th className="py-3 text-gray-500 w-fit sm:w-1/2 md:w-2/3 border-r pr-3 border-gray-300 text-right text-sm font-normal">
+													Thanh toán
+												</th>
+												<td className="py-3 text-right text-sm">
+													<div>
+														<span className="text-gray-600">
+															{formatTime(new Date())} - Tiền mặt -{' '}
+														</span>
+														<span className="text-base">{formatPrice(1000000)}</span>
+													</div>
+													<div>
+														<span className="text-gray-600">
+															{formatTime(new Date())} - Ví điện tử -{' '}
+														</span>
+														<span className="text-base">{formatPrice(500000)}</span>
+													</div>
+												</td>
+											</tr>
+											<tr className="border-t border-gray-300">
+												<th className="py-3 text-gray-500 w-fit sm:w-1/2 md:w-2/3 border-r pr-3 border-gray-300 text-right text-sm font-normal">
+													Còn lại
+												</th>
+												<td className="py-3 text-right text-xl text-red-500">
+													<div>{formatPrice(500000)}</div>
+												</td>
+											</tr> */}
+										</tbody>
+									</table>
+								</div>
+							)}
 						</div>
 					</CardBody>
 				</Card>
@@ -447,9 +405,9 @@ function CustomerBookingDetailPage({ data, studioId, setLoading }) {
 		</div>
 	);
 }
-CustomerBookingDetailPage.propTypes = {
+BookingDetailsPage.propTypes = {
 	data: PropTypes.object,
 	studioId: PropTypes.string,
 	setLoading: PropTypes.func
 };
-export default CustomerBookingDetailPage;
+export default BookingDetailsPage;
