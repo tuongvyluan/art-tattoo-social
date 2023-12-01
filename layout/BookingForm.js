@@ -8,7 +8,13 @@ import { fetcherPost, formatPrice } from 'lib';
 import { BASE_URL } from 'lib/env';
 import Router from 'next/router';
 
-const estimeDate = ['Trong vòng 7 ngày tới', 'Trong 2 tuần kế tiếp', 'Trong tháng này', 'Trong tháng sau', 'Lúc nào cũng được'];
+const estimeDate = [
+	'Trong vòng 7 ngày tới',
+	'Trong 2 tuần kế tiếp',
+	'Trong tháng này',
+	'Trong tháng sau',
+	'Lúc nào cũng được'
+];
 
 const BookingForm = ({
 	isArtist = true,
@@ -17,25 +23,26 @@ const BookingForm = ({
 	hasLogin = true,
 	customerId
 }) => {
-	const [selectedServices, setSelectedServices] = useState(new Map());
 	const [description, setDescription] = useState('');
 	const [time, setTime] = useState(0);
 	const [minPrice, setMinPrice] = useState(0);
 	const [maxPrice, setMaxPrice] = useState(0);
+	const [selectedServices, setSelectedServices] = useState(new Map())
 
 	const handleDescription = (e) => {
 		setDescription(e.target.value);
 	};
-	const handleSelectChange = (service) => {
-		if (selectedServices.has(service.id)) {
-			selectedServices.delete(service.id);
-			setMinPrice((prev) => prev - service.minPrice);
-			setMaxPrice((prev) => prev - service.maxPrice);
-		} else {
-			selectedServices.set(service.id, service);
+	const handleSelectChange = (isIncrease, service) => {
+		if (
+			isIncrease
+		) {
 			setMinPrice((prev) => prev + service.minPrice);
 			setMaxPrice((prev) => prev + service.maxPrice);
+		} else {
+			setMinPrice((prev) => prev - service.minPrice);
+			setMaxPrice((prev) => prev - service.maxPrice);
 		}
+		selectedServices.set(service.id, service.quantity)
 	};
 
 	const [showAlert, setShowAlert] = useState(false);
@@ -57,12 +64,14 @@ const BookingForm = ({
 	const handleSubmit = () => {
 		handleAlert(true, 'Đang đặt hẹn');
 		let newDescription = `Ngày hẹn dự tính: ${estimeDate.at(time)}. ${description}`;
+		const bookingServices = Array.from(selectedServices, ([key, value]) => ({
+			id: key,
+			quantity: value.quantity
+		})).filter((service) => service.quantity > 0)
 		fetcherPost(`${BASE_URL}/customers/bookings`, {
 			studioId: studio.id,
 			customerId: customerId,
-			serviceIds: Array.from(selectedServices, ([key, value]) => {
-				return value.id;
-			}),
+			services: bookingServices,
 			description: newDescription
 		})
 			.then((data) => {
@@ -96,7 +105,7 @@ const BookingForm = ({
 				<div className="relative h-noFooter">
 					<BookingModal
 						redirectUrl={customerId ? '/booking' : '/'}
-						canConfirm={customerId}
+						canConfirm={typeof customerId !== 'undefined'}
 						onSubmit={customerId ? handleSubmit : handleRefresh}
 						confirmTitle={customerId ? 'Xác nhận' : 'Tải lại trang'}
 						size={customerId ? '5xl' : 'md'}
@@ -161,21 +170,7 @@ const BookingForm = ({
 														/>
 													</div>
 												</div>
-												{/* <h2 className="text-lg mb-4">Hình tham khảo:</h2> */}
-												{/* thêm hình ảnh */}
-												{/* <div className="flex">
-											<div className="pb-4">
-												<Button
-													onSuccess={(result, options) =>
-														handleUploadImage(result, options, stageIndex)
-													}
-													uploadPreset={UPLOAD_PRESET}
-												>
-													+ Thêm hình
-												</Button>
-											</div>
-										</div> */}
-												{/* hiện hình ảnh */}
+
 												<h2 className="text-lg mb-4">Bạn có thể đến xăm vào lúc?</h2>
 												<div className="w-72">
 													<select

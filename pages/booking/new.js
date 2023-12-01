@@ -43,7 +43,12 @@ const BookingFormPage = () => {
 				.then((data) => {
 					const newStudio = {
 						id: studioId,
-						services: data.services,
+						services: data.services.map((service) => {
+							return {
+								...service,
+								quantity: 0
+							}
+						}),
 						name: 'Studio',
 						avatar: ''
 					};
