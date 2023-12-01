@@ -15,9 +15,9 @@ function ArtistInfo({ account, onReload }) {
 	const { update, data } = useSession();
 	const [defaultAccount, setDefaultAccount] = useState(account);
 	const [profile, setProfile] = useState(JSON.parse(JSON.stringify(account)));
-	const [isArtist, setIsArtist] = useState(false);
+	const [isArtist, setIsArtist] = useState(account.styles);
 	const [artistStyles, setArtistStyles] = useState(
-		account.styles.map((style) => style.id)
+		account.styles?.map((style) => style.id)
 	);
 	const [artistStudios, setArtistStudios] = useState([]);
 	const [avatarKey, setAvatarKey] = useState(account.avatar);
@@ -95,16 +95,6 @@ function ArtistInfo({ account, onReload }) {
 		);
 		setArtistStudios(JSON.parse(JSON.stringify(defaultAccount.studios)));
 	};
-
-	useEffect(() => {
-		if (account.styles) {
-			setArtistStyles(
-				JSON.parse(JSON.stringify(account.styles.map((style) => style.id)))
-			);
-			setArtistStudios(JSON.parse(JSON.stringify(account.studios)));
-			setIsArtist(true);
-		}
-	}, []);
 
 	useEffect(() => {
 		setAvatarKey(profile.avatar);
