@@ -1,5 +1,5 @@
 import ArtistInfo from 'layout/Artist/Profile';
-import { fetcher, fetcherPut } from 'lib';
+import { fetcher } from 'lib';
 import { BASE_URL } from 'lib/env';
 import { ROLE } from 'lib/status';
 import { useSession } from 'next-auth/react';
@@ -11,13 +11,6 @@ const ProfilePage = () => {
 	const { status, data } = useSession();
 	const [profile, setProfile] = useState(undefined);
 
-	const handleSubmit = (account, artistStyles, artistStudios) => {
-		fetcherPut(`${BASE_URL}/artist-profile`, account);
-		if (JSON.stringify(profile.styles) !== JSON.stringify(artistStyles)) {
-			fetcherPut(`${BASE_URL}/artists/${account.id}/artist-style`, artistStyles);
-		}
-	};
-
 	if (status === 'loading') {
 		return (
 			<div className="flex items-center justify-center h-full">
@@ -27,7 +20,7 @@ const ProfilePage = () => {
 	}
 
 	if (status === 'unauthenticated') {
-		Router.replace('/')
+		Router.replace('/');
 		return (
 			<div className="flex items-center justify-center h-full">
 				<Loading />
@@ -79,7 +72,14 @@ const ProfilePage = () => {
 				</div>
 			);
 		} else {
-			return <ArtistInfo handleSubmit={handleSubmit} account={profile} />;
+			return (
+				<ArtistInfo
+					account={profile}
+					onReload={() => {
+						setProfile(undefined);
+					}}
+				/>
+			);
 		}
 	}
 };

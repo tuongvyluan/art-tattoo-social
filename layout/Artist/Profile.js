@@ -1,19 +1,24 @@
 import Button from 'components/Button';
 import Pill from 'components/Pill';
-import { UPLOAD_PRESET } from 'lib/env';
+import { fetcherPut } from 'lib';
+import { BASE_URL, UPLOAD_PRESET } from 'lib/env';
 import { ROLE } from 'lib/status';
 import { tattooStyleList } from 'lib/tattooStyle';
+import { useSession } from 'next-auth/react';
 import { CldUploadButton } from 'next-cloudinary';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { MdUpload } from 'react-icons/md';
 import { Alert, Avatar, Card, CardBody } from 'ui';
 
-function ArtistInfo({ account, handleSubmit }) {
+function ArtistInfo({ account, onReload }) {
+	const { update, data } = useSession();
 	const [defaultAccount, setDefaultAccount] = useState(account);
 	const [profile, setProfile] = useState(JSON.parse(JSON.stringify(account)));
 	const [isArtist, setIsArtist] = useState(false);
-	const [artistStyles, setArtistStyles] = useState([]);
+	const [artistStyles, setArtistStyles] = useState(
+		account.styles.map((style) => style.id)
+	);
 	const [artistStudios, setArtistStudios] = useState([]);
 	const [avatarKey, setAvatarKey] = useState(account.avatar);
 	const [showAlert, setShowAlert] = useState(false);
@@ -43,6 +48,7 @@ function ArtistInfo({ account, handleSubmit }) {
 		} else {
 			newStyle.splice(index, 1);
 		}
+		console.log(newStyle);
 		setArtistStyles(newStyle);
 	};
 
@@ -50,33 +56,57 @@ function ArtistInfo({ account, handleSubmit }) {
 		setProfile({ ...profile, [e.target.name]: e.target.value });
 	};
 
-	const handleFormSubmit = (e) => {
-		e.preventDefault();
+	const handleSubmit = (newProfile, artistStyles, artistStudios) => {
+		if (JSON.stringify(profile.styles) !== JSON.stringify(artistStyles)) {
+			fetcherPut(`${BASE_URL}/artists/${newProfile.id}/artist-style`, artistStyles);
+		}
+		fetcherPut(`${BASE_URL}/artist-profile`, newProfile).then(() => {
+			if (newProfile.avatar !== account.avatar) {
+				update({
+					...data,
+					user: {
+						...data?.user,
+						avatar: newProfile.avatar
+					}
+				});
+				onReload()
+			}
+		});
+	};
+
+	const handleFormSubmit = () => {
 		handleSubmit(profile, artistStyles, artistStudios);
 		setDefaultAccount({
 			...profile,
-			styles: artistStyles,
+			styles: artistStyles.map((style) => {
+				return {
+					id: style
+				};
+			}),
 			artistStudios: artistStudios
 		});
-		handleAlert(true, 'Cập nhật thông tin cá nhân thành công')
+		handleAlert(true, 'Cập nhật thông tin cá nhân thành công');
 	};
 
 	const handleFormReset = () => {
 		setProfile(JSON.parse(JSON.stringify(defaultAccount)));
-		setArtistStyles(JSON.parse(JSON.stringify(defaultAccount.styles)));
+		setArtistStyles(
+			JSON.parse(JSON.stringify(defaultAccount.styles.map((style) => style.id)))
+		);
 		setArtistStudios(JSON.parse(JSON.stringify(defaultAccount.studios)));
 	};
 
 	useEffect(() => {
 		if (account.styles) {
-			setArtistStyles(JSON.parse(JSON.stringify(account.styles)));
+			setArtistStyles(
+				JSON.parse(JSON.stringify(account.styles.map((style) => style.id)))
+			);
 			setArtistStudios(JSON.parse(JSON.stringify(account.studios)));
 			setIsArtist(true);
 		}
 	}, []);
 
 	useEffect(() => {
-		console.log(profile.avatar)
 		setAvatarKey(profile.avatar);
 	}, [profile]);
 
@@ -94,7 +124,7 @@ function ArtistInfo({ account, handleSubmit }) {
 			<div className="sm:px-12 md:px-16 lg:px-32 xl:px-56 flex justify-center">
 				<Card className={'w-full max-w-2xl'}>
 					<CardBody>
-						<form method="post" className="pt-3" onSubmit={handleFormSubmit}>
+						<div method="post" className="pt-3">
 							<div>
 								<h1 className="border-b border-gray-300 pb-3 text-base">
 									Thông tin cá nhân
@@ -207,10 +237,10 @@ function ArtistInfo({ account, handleSubmit }) {
 									</Button>
 								</div>
 								<div className="w-16">
-									<Button>Lưu</Button>
+									<Button onClick={handleFormSubmit}>Lưu</Button>
 								</div>
 							</div>
-						</form>
+						</div>
 					</CardBody>
 				</Card>
 			</div>
@@ -220,7 +250,7 @@ function ArtistInfo({ account, handleSubmit }) {
 
 ArtistInfo.propTypes = {
 	account: PropTypes.object.isRequired,
-	handleSubmit: PropTypes.func
+	onReload: PropTypes.func
 };
 
 export default ArtistInfo;
