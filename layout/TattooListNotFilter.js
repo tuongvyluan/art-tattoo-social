@@ -1,9 +1,7 @@
 import { IoMdHeartEmpty, IoIosLink, IoMdHeart } from 'react-icons/io';
-import { stringPlacements, stringSize } from 'lib/status';
 import PropTypes from 'prop-types';
 import { Avatar, Link, Loading, WidgetPostCard } from 'ui';
 import { useCallback, useEffect, useState } from 'react';
-import { tattooStyleMap } from 'lib/tattooStyle';
 import debounce from 'lodash.debounce';
 import { Tooltip } from 'flowbite-react';
 import { useSession } from 'next-auth/react';

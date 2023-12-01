@@ -296,7 +296,6 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 		if (tattoo.id === '') {
 			handleAlert(true, 'Đang tạo hình xăm...');
 			handleCreateTattoo();
-			handleCreateUpdateStage();
 		} else if (hasTattooChange() || hasStageChange) {
 			handleAlert(true, 'Đang cập nhật hình xăm...');
 			handleUpdateTattoo();
