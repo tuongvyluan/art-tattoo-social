@@ -1,9 +1,8 @@
 import Button from 'components/Button';
 import { ChevronDown, ChevronUp } from 'icons/outline';
 import TattooListNotFilter from 'layout/TattooListNotFilter';
-import { formatDateTime, formatPhoneNumber, formatTime } from 'lib';
+import { formatPhoneNumber } from 'lib';
 import { BASE_URL } from 'lib/env';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { FiClock, FiHome, FiPhone } from 'react-icons/fi';
@@ -107,26 +106,22 @@ const StudioPage = ({ studio }) => {
 						<CardBody>
 							<div className={`block`}>
 								<div className="pb-5">
-									<div className='flex gap-2 py-2 text-base items-center'>
-                    <div>
-                      <FiHome size={20} />
-                    </div>
+									<div className="flex gap-2 py-2 text-base items-center">
 										<div>
-											{studio.address}
+											<FiHome size={20} />
 										</div>
+										<div>{studio.address}</div>
 									</div>
-									<div className='flex gap-2 py-2 text-base items-center'>
-                    <div>
-                      <FiPhone size={20} />
-                    </div>
+									<div className="flex gap-2 py-2 text-base items-center">
 										<div>
-											{formatPhoneNumber(studio.phoneNumber)}
+											<FiPhone size={20} />
 										</div>
+										<div>{formatPhoneNumber(studio.phoneNumber)}</div>
 									</div>
-									<div className='flex gap-2 py-2 text-base items-center'>
-                    <div>
-                      <FiClock size={20} />
-                    </div>
+									<div className="flex gap-2 py-2 text-base items-center">
+										<div>
+											<FiClock size={20} />
+										</div>
 										<div>
 											{studio.openTime.split(':')[0]}:{studio.openTime.split(':')[1]}{' '}
 											- {studio.closeTime.split(':')[0]}:
@@ -142,18 +137,50 @@ const StudioPage = ({ studio }) => {
 				</div>
 			</div>
 			<div className="hidden md:block pb-5 pt-0 text-center text-3xl text-gray-700">
+				Nghệ sĩ xăm
+			</div>
+			<div className="w-full lg:px-20 xl:px-44 2xl:px-56">
+				<Card>
+					<CardBody>
+						<div className="overflow-x-auto">
+							<div className="flex justify-center gap-2 items-center">
+								{studio.artists?.map((artist) => (
+									<div className="w-40" key={artist.id}>
+										<div className="mx-auto w-max">
+											<div className="flex justify-center">
+												<Avatar
+													size={80}
+													src={
+														artist?.artist?.avatar
+															? artist.artist.avatar
+															: '/images/ATL.png'
+													}
+												/>
+											</div>
+											<div className="text-center pt-2">
+												{artist?.artist?.firstName} {artist?.artist?.lastName}
+											</div>
+										</div>
+									</div>
+								))}
+							</div>
+						</div>
+					</CardBody>
+				</Card>
+			</div>
+			<div className="hidden md:block pb-5 pt-0 text-center text-3xl text-gray-700">
 				Tác phẩm
 			</div>
-			{/* <TattooListNotFilter
-				url={`${BASE_URL}/TattooArts/TattooUser?artistId=${studio.id}`}
+			<TattooListNotFilter
+				url={`${BASE_URL}/TattooArts/TattooUser?studioId=${studio.id}`}
 				pageSize={12}
-			/> */}
+			/>
 		</div>
 	);
 };
 
 StudioPage.propTypes = {
-	artist: PropTypes.object.isRequired
+	studio: PropTypes.object.isRequired
 };
 
 export default StudioPage;
