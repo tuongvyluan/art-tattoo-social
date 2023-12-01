@@ -1,5 +1,7 @@
+import CryptoJS from "crypto-js";
 import Button from 'components/Button';
 import Pill from 'components/Pill';
+import { Tooltip } from 'flowbite-react';
 import { fetcherPut } from 'lib';
 import { BASE_URL, UPLOAD_PRESET } from 'lib/env';
 import { ROLE } from 'lib/status';
@@ -11,6 +13,8 @@ import { useEffect, useState } from 'react';
 import { MdUpload } from 'react-icons/md';
 import { Alert, Avatar, Card, CardBody } from 'ui';
 
+const ENCRYPT_SECRET = 'qo7r0q3yrwfdngposdgv';
+
 function ArtistInfo({ account, onReload }) {
 	const { update, data } = useSession();
 	const [defaultAccount, setDefaultAccount] = useState(account);
@@ -19,7 +23,7 @@ function ArtistInfo({ account, onReload }) {
 	const [artistStyles, setArtistStyles] = useState(
 		account.styles?.map((style) => style.id)
 	);
-	const [artistStudios, setArtistStudios] = useState([]);
+	const [studio, setStudio] = useState(account.studio);
 	const [avatarKey, setAvatarKey] = useState(account.avatar);
 	const [showAlert, setShowAlert] = useState(false);
 
@@ -28,6 +32,18 @@ function ArtistInfo({ account, onReload }) {
 		content: '',
 		isWarn: false
 	});
+
+	const copyKey = () => {
+		const id = account.id;
+		const time = new Date().getTime();
+		const key = {
+			id: id,
+			key: time
+		};
+		navigator.clipboard.writeText(
+			CryptoJS.AES.encrypt(JSON.stringify(key), ENCRYPT_SECRET).toString()
+		);
+	};
 
 	const handleAlert = (state, title, content, isWarn = false) => {
 		setShowAlert((prev) => state);
@@ -69,13 +85,13 @@ function ArtistInfo({ account, onReload }) {
 						avatar: newProfile.avatar
 					}
 				});
-				onReload()
+				onReload();
 			}
 		});
 	};
 
 	const handleFormSubmit = () => {
-		handleSubmit(profile, artistStyles, artistStudios);
+		handleSubmit(profile, artistStyles, studio);
 		setDefaultAccount({
 			...profile,
 			styles: artistStyles.map((style) => {
@@ -83,7 +99,7 @@ function ArtistInfo({ account, onReload }) {
 					id: style
 				};
 			}),
-			artistStudios: artistStudios
+			studio: studio
 		});
 		handleAlert(true, 'Cập nhật thông tin cá nhân thành công');
 	};
@@ -93,7 +109,7 @@ function ArtistInfo({ account, onReload }) {
 		setArtistStyles(
 			JSON.parse(JSON.stringify(defaultAccount.styles.map((style) => style.id)))
 		);
-		setArtistStudios(JSON.parse(JSON.stringify(defaultAccount.studios)));
+		setStudio(JSON.parse(JSON.stringify(defaultAccount.studios)));
 	};
 
 	useEffect(() => {
@@ -200,34 +216,66 @@ function ArtistInfo({ account, onReload }) {
 							}
 							{isArtist && (
 								<div className="pb-5">
-									<h1 className="border-b border-gray-300 pb-3 text-base">Style</h1>
-									<div className="py-2 flex flex-wrap gap-2">
-										{styles.map((style, index) => (
-											<div
-												className="cursor-pointer"
-												onClick={() => handleSelectStyle(style.id)}
-												key={style.id}
-											>
-												<Pill
-													selected={
-														artistStyles.findIndex((item) => item === style.id) >= 0
-													}
-												>
-													{style.name}
-												</Pill>
+									<div>
+										<h1 className="border-b border-gray-300 pb-3 text-base mb-3">
+											Tiệm xăm
+										</h1>
+										<div className="flex flex-wrap gap-2 items-center">
+											<Avatar
+												size={50}
+												src={
+													studio?.studioAvatar
+														? studio?.studioAvatar
+														: '/images/ATL.png'
+												}
+											/>
+											<div className="text-base font-semibold">
+												{studio?.studioName}
 											</div>
-										))}
+										</div>
+									</div>
+									<div className="py-5">
+										<h1 className="border-b border-gray-300 pb-3 text-base">
+											Style
+										</h1>
+										<div className="py-2 flex flex-wrap gap-2">
+											{styles.map((style, index) => (
+												<div
+													className="cursor-pointer"
+													onClick={() => handleSelectStyle(style.id)}
+													key={style.id}
+												>
+													<Pill
+														selected={
+															artistStyles.findIndex((item) => item === style.id) >=
+															0
+														}
+													>
+														{style.name}
+													</Pill>
+												</div>
+											))}
+										</div>
 									</div>
 								</div>
 							)}
-							<div className="flex justify-end gap-2">
-								<div className="w-16">
-									<Button reset={true} onClick={handleFormReset} outline>
-										Reset
-									</Button>
-								</div>
-								<div className="w-16">
-									<Button onClick={handleFormSubmit}>Lưu</Button>
+							<div className="flex justify-between w-full">
+								{isArtist && (
+									<div>
+										<Tooltip content="Copy key gửi tiệm xăm để gia nhập tiệm xăm">
+											<Button onClick={() => copyKey()}>Lấy key</Button>
+										</Tooltip>
+									</div>
+								)}
+								<div className="flex justify-end gap-2">
+									<div className="w-16">
+										<Button reset={true} onClick={handleFormReset} outline>
+											Reset
+										</Button>
+									</div>
+									<div className="w-16">
+										<Button onClick={handleFormSubmit}>Lưu</Button>
+									</div>
 								</div>
 							</div>
 						</div>

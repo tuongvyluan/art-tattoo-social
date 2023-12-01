@@ -55,7 +55,7 @@ const ProfilePage = () => {
 							bioContent: data.bioContent ? data.bioContent : '',
 							avatar: data.avatar ? data.avatar : '/images/avatar.png',
 							styles: data.artistStyles,
-							studios: data.studioArtists
+							studio: data.studioArtists?.at(0)
 						};
 						setProfile(myProfile);
 					})
