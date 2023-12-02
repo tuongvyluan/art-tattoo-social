@@ -1,15 +1,36 @@
 import Button from 'components/Button';
 import Pill from 'components/Pill';
+import { Tooltip } from 'flowbite-react';
 import { ChevronDown, ChevronUp } from 'icons/outline';
 import TattooListNotFilter from 'layout/TattooListNotFilter';
+import { fetcherPut } from 'lib';
 import { BASE_URL } from 'lib/env';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Avatar, Card, CardBody } from 'ui';
 
-const ArtistPage = ({ artist }) => {
+const ArtistPage = ({ artist, accountId }) => {
 	const [showMoreInfo, setShowMoreInfo] = useState(false);
+	const [isFollowed, setIsFollowed] = useState(artist.isFollow);
+
+	const handleFollow = () => {
+		if (accountId) {
+			if (isFollowed) {
+				fetcherPut(
+					`${BASE_URL}/follow/unfollow-artist?accountId=${accountId}&artistId=${artist.id}`
+				);
+				setIsFollowed(false);
+			} else {
+				fetcherPut(
+					`${BASE_URL}/follow/follow-artist?accountId=${accountId}&artistId=${artist.id}`
+				);
+				setIsFollowed(true);
+			}
+		} else {
+			window.open('/auth/signin', 'blank');
+		}
+	};
 
 	return (
 		<div className="relative">
@@ -43,8 +64,8 @@ const ArtistPage = ({ artist }) => {
 									</a>
 								</div>
 							)}
-							<div className="w-20">
-								<Button outline>Theo dõi</Button>
+							<div onClick={handleFollow} className="w-24">
+								<Button outline>{isFollowed ? 'Bỏ theo dõi' : 'Theo dõi'}</Button>
 							</div>
 						</div>
 						{
@@ -136,8 +157,8 @@ const ArtistPage = ({ artist }) => {
 										</a>
 									</div>
 								)}
-								<div className="w-20">
-									<Button outline>Theo dõi</Button>
+								<div onClick={handleFollow} className="w-24">
+									<Button outline>{isFollowed ? 'Bỏ theo dõi' : 'Theo dõi'}</Button>
 								</div>
 							</div>
 						</CardBody>
@@ -203,7 +224,8 @@ const ArtistPage = ({ artist }) => {
 };
 
 ArtistPage.propTypes = {
-	artist: PropTypes.object.isRequired
+	artist: PropTypes.object.isRequired,
+	accountId: PropTypes.string
 };
 
 export default ArtistPage;
