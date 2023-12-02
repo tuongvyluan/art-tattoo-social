@@ -43,7 +43,6 @@ const deepCopyMap = (map) => {
 };
 
 function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
-	console.log(bookingId);
 	const [defaultTattoo, setDefaultTattoo] = useState(
 		JSON.parse(JSON.stringify(artTattoo))
 	);
@@ -52,7 +51,6 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 	const [mediaMap, setMediaMap] = useState(stageMapMedia(defaultTattoo.stages));
 	const [hasStageChange, setHasStageChange] = useState(false);
 	const [showAlert, setShowAlert] = useState(false);
-	const stageLength = tattoo.stages.length;
 
 	const [alertContent, setAlertContent] = useState({
 		title: '',
@@ -220,6 +218,7 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 			thumbnail: thumbnail,
 			isPublicized: tattoo.isPublicized
 		};
+		console.log(tattooStyleById(tattoo.styleId), tattoo.styleId)
 		fetcherPost(`${BASE_URL}/TattooArts/CreateTattoo`, newTattoo)
 			.then((data) => {
 				tattoo.id = data.id;

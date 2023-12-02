@@ -87,7 +87,7 @@ const authOptions = {
 				const data = await fetcherPost(`${BASE_URL}/Auth/GoogleAuth`, {
 					token: user.name
 				});
-				const jwtObj = readJwt(data.jwt);
+				const jwtObj = readJwt(data.accountResult.jwt);
 				// Check role
 				const roleString = jwtObj['role'];
 				let role;
@@ -112,10 +112,10 @@ const authOptions = {
 					firstName: profile.family_name,
 					lastName: profile.given_name,
 					avatar: profile.picture,
-					id: data.accountId,
-					customerId: data.customerId,
-					studioId: data.studioId,
-					artistId: data.artistId,
+					id: data.accountResult.accountId,
+					customerId: data.accountResult.customerId,
+					studioId: data.accountResult.studioId,
+					artistId: data.accountResult.artistId,
 					role: role
 				};
 			}

@@ -24,13 +24,13 @@ const MyTattooPage = () => {
 	} else if (!url) {
 		switch (data.user.role) {
 			case ROLE.CUSTOMER:
-				setUrl(`${BASE_URL}/TattooArts/TattooUser?customerId=${data.user.customerId}`);
+				setUrl(`${BASE_URL}/TattooArts/TattooUser?customerId=${data.user.customerId}&accountId=${data.user.id}`);
 				break;
 			case ROLE.ARTIST:
-				setUrl(`${BASE_URL}/TattooArts/TattooUser?artistId=${data.user.id}`);
+				setUrl(`${BASE_URL}/TattooArts/TattooUser?artistId=${data.user.id}&accountId=${data.user.id}`);
 				break;
 			case ROLE.STUDIO:
-				setUrl(`${BASE_URL}/TattooArts/TattooUser?studioId=${data.user.id}`);
+				setUrl(`${BASE_URL}/TattooArts/TattooUser?studioId=${data.user.studioId}`);
 				break;
 		}
 		return (

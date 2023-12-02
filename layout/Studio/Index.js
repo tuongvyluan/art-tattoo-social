@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp } from 'icons/outline';
 import TattooListNotFilter from 'layout/TattooListNotFilter';
 import { formatPhoneNumber } from 'lib';
 import { BASE_URL } from 'lib/env';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { FiClock, FiHome, FiPhone } from 'react-icons/fi';
@@ -146,21 +147,23 @@ const StudioPage = ({ studio }) => {
 							<div className="flex justify-center gap-2 items-center">
 								{studio.artists?.map((artist) => (
 									<div className="w-40" key={artist.id}>
-										<div className="mx-auto w-max">
-											<div className="flex justify-center">
-												<Avatar
-													size={80}
-													src={
-														artist?.artist?.avatar
-															? artist.artist.avatar
-															: '/images/ATL.png'
-													}
-												/>
+										<Link href={`/artist/${artist.artist.id}`}>
+											<div className="mx-auto w-max cursor-pointer">
+												<div className="flex justify-center">
+													<Avatar
+														size={80}
+														src={
+															artist?.artist?.avatar
+																? artist.artist.avatar
+																: '/images/ATL.png'
+														}
+													/>
+												</div>
+												<div className="text-center pt-2">
+													{artist?.artist?.firstName} {artist?.artist?.lastName}
+												</div>
 											</div>
-											<div className="text-center pt-2">
-												{artist?.artist?.firstName} {artist?.artist?.lastName}
-											</div>
-										</div>
+										</Link>
 									</div>
 								))}
 							</div>

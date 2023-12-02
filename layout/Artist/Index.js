@@ -3,6 +3,7 @@ import Pill from 'components/Pill';
 import { ChevronDown, ChevronUp } from 'icons/outline';
 import TattooListNotFilter from 'layout/TattooListNotFilter';
 import { BASE_URL } from 'lib/env';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Avatar, Card, CardBody } from 'ui';
@@ -152,28 +153,30 @@ const ArtistPage = ({ artist }) => {
 									{artist.workAt && (
 										<div className="pb-5 border-b border-gray-300 pt-3">
 											<h1 className="font-semibold text-base pb-2">Tiệm xăm</h1>
-											<div className="flex gap-4 items-center">
-												<Avatar
-													size={44}
-													src={
-														artist.workAt?.avatar
-															? artist.workAt?.avatar
-															: '/images/ATL.png'
-													}
-													alt="studio logo"
-												/>
-												<div>
-													<div className="font-semibold">
-														{artist.workAt?.studioName}
+											<Link href={`/studio/${artist.workAt.id}`}>
+												<div className="flex gap-4 items-center cursor-pointer">
+													<Avatar
+														size={44}
+														src={
+															artist.workAt?.avatar
+																? artist.workAt?.avatar
+																: '/images/ATL.png'
+														}
+														alt="studio logo"
+													/>
+													<div>
+														<div className="font-semibold">
+															{artist.workAt?.studioName}
+														</div>
 													</div>
 												</div>
-											</div>
+											</Link>
 										</div>
 									)}
 									{artist.styles.at(0) && (
 										<div className="py-3">
 											<h1 className="font-semibold text-base pb-2">Styles</h1>
-											<div className="flex gap-4 items-center">
+											<div className="flex flex-wrap gap-4 items-center">
 												{artist.styles.map((style, index) => (
 													<div className="" key={style.id}>
 														<Pill>{style.name}</Pill>
