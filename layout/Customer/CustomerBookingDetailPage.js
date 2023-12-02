@@ -252,7 +252,7 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 								// Customer services
 							}
 							<div className="pt-3">
-								<CustomerServices services={renderData.services} />
+								<CustomerServices bookingServices={renderData.services} />
 							</div>
 
 							{

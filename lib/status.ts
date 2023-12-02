@@ -35,7 +35,8 @@ export const enum SERVICE_SIZE {
 	SMALL = 0,
 	MEDIUM = 1,
 	LARGE = 2,
-	EXTRA = 3
+	EXTRA = 3,
+	ANY = 4
 }
 
 export const stringSize = [
@@ -45,6 +46,12 @@ export const stringSize = [
 	'Size XL (>30cm)',
 	'Size bất kỳ'
 ];
+
+export const stringServiceStatus = [
+	'Đang thực hiện',
+	'Hoàn thành',
+	'Đã huỷ'
+]
 
 export const stringColor = (isColor: boolean) => {
 	return isColor ? 'Có màu' : 'Trắng đen';
@@ -91,14 +98,11 @@ export const stringBookingStatuses = [
 ];
 
 export const operationNames = [
-	'Full combo xăm',
-	'Xăm',
-	'Thiết kế',
+	'Khác',
+	'Trọn gói',
 	'Xoá xăm',
-	'Sửa xăm/Xăm đè',
-	'Xăm dặm lại',
-	'Đi nét viền',
-	'Tô màu'
+	'Dặm lại',
+	'Sửa xăm'
 ];
 
 export const enum TATTOO_ART_STATUS {
@@ -133,7 +137,7 @@ export const enum PLACEMENT {
 }
 
 export const stringPlacements = [
-	'Vị trí khác',
+	'Vị trí bất kỳ',
 	'Full lưng',
 	'Nửa lưng',
 	'Full ngực',
@@ -169,7 +173,7 @@ export const enum SERVICE_PLACEMENT {
 }
 
 export const stringServicePlacement = [
-	'Vị trí khác',
+	'Vị trí bất kỳ',
 	'Full lưng',
 	'Nửa lưng',
 	'Full ngực',

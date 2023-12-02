@@ -273,7 +273,7 @@ function CustomerBookingPage({ artistId }) {
 													Các dịch vụ đã đặt ({booking.services?.length ? (booking.services?.length) : '0'})
 												</div>
 											</div>
-											<CustomerServices services={booking.services} />
+											<CustomerServices bookingServices={booking.services} />
 
 											<div className="flex justify-end pt-3 items-start">
 												<div className="text-right">
