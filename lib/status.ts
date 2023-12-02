@@ -42,7 +42,8 @@ export const stringSize = [
 	'Size S (<8cm)',
 	'Size M (8 - 15cm)',
 	'Size L (15 - 30cm)',
-	'Size XL (>30cm)'
+	'Size XL (>30cm)',
+	'Size bất kỳ'
 ];
 
 export const stringColor = (isColor: boolean) => {

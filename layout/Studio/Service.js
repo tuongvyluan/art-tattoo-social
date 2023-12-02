@@ -78,7 +78,7 @@ function ServicePage({ services, onChange }) {
 											>
 												<td className="px-3 py-4">
 													<div className="text-base p-1">
-														{service.name} {stringSize.at(service.size)}{', '}
+														{service.title}, {stringSize.at(service.size)}{', '}
 														{stringPlacements.at(service.placement)}
 													</div>
 												</td>

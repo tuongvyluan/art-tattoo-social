@@ -27,22 +27,20 @@ const BookingForm = ({
 	const [time, setTime] = useState(0);
 	const [minPrice, setMinPrice] = useState(0);
 	const [maxPrice, setMaxPrice] = useState(0);
-	const [selectedServices, setSelectedServices] = useState(new Map())
+	const [selectedServices, setSelectedServices] = useState(new Map());
 
 	const handleDescription = (e) => {
 		setDescription(e.target.value);
 	};
 	const handleSelectChange = (isIncrease, service) => {
-		if (
-			isIncrease
-		) {
+		if (isIncrease) {
 			setMinPrice((prev) => prev + service.minPrice);
 			setMaxPrice((prev) => prev + service.maxPrice);
 		} else {
 			setMinPrice((prev) => prev - service.minPrice);
 			setMaxPrice((prev) => prev - service.maxPrice);
 		}
-		selectedServices.set(service.id, service.quantity)
+		selectedServices.set(service.id, service.quantity);
 	};
 
 	const [showAlert, setShowAlert] = useState(false);
@@ -65,14 +63,14 @@ const BookingForm = ({
 		handleAlert(true, 'Đang đặt hẹn');
 		let newDescription = `Ngày hẹn dự tính: ${estimeDate.at(time)}. ${description}`;
 		const bookingServices = Array.from(selectedServices, ([key, value]) => ({
-			id: key,
-			quantity: value.quantity
-		})).filter((service) => service.quantity > 0)
-		fetcherPost(`${BASE_URL}/customers/bookings`, {
+			serviceId: key,
+			quantity: value
+		})).filter((service) => service.quantity > 0);
+		fetcherPost(`${BASE_URL}/customers/CreateBookingWithServices`, {
 			studioId: studio.id,
 			customerId: customerId,
-			services: bookingServices,
-			description: newDescription
+			description: newDescription,
+			serviceIds: bookingServices
 		})
 			.then((data) => {
 				handleAlert(true, 'Đặt hẹn thành công');

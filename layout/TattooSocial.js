@@ -230,7 +230,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 									</div>
 								</div>
 								{artist.isVerified && artist.workAt.id && (
-									<div className='pb-3'>
+									<div className="pb-3">
 										<a target="_blank" href={`/booking/new?artist=${artist.id}`}>
 											<Button>Đặt hẹn</Button>
 										</a>
@@ -277,21 +277,25 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 								</div>
 								<div className="pb-3">{tattoo.description}</div>
 								{tattoo.doneAt.id && (
-									<div className="pb-3">
-										<div className="font-semibold text-gray-500 pb-1">Thực hiện ở:</div>
-										<div className="p-3 hover:bg-gray-100 cursor-pointer flex flex-wrap items-center w-max gap-2">
-											<div>
-												<Avatar
-													src={
-														tattoo.doneAt.avatar
-															? tattoo.doneAt.avatar
-															: '/images/ATL.png'
-													}
-												/>
+									<Link href={`/studio/${tattoo.doneAt.id}`}>
+										<div className="pb-3">
+											<div className="font-semibold text-gray-500 pb-1">
+												Thực hiện ở:
 											</div>
-											<div>{tattoo.doneAt.name}</div>
+											<div className="p-3 hover:bg-gray-100 cursor-pointer flex flex-wrap items-center w-max gap-2">
+												<div>
+													<Avatar
+														src={
+															tattoo.doneAt.avatar
+																? tattoo.doneAt.avatar
+																: '/images/ATL.png'
+														}
+													/>
+												</div>
+												<div className='font-semibold'>{tattoo.doneAt.name}</div>
+											</div>
 										</div>
-									</div>
+									</Link>
 								)}
 								<div className="flex items-start gap-1">
 									<div className="flex gap-1 items-center">
