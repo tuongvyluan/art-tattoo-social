@@ -64,7 +64,6 @@ function ArtistInfo({ account, onReload }) {
 		} else {
 			newStyle.splice(index, 1);
 		}
-		console.log(newStyle);
 		setArtistStyles(newStyle);
 	};
 
