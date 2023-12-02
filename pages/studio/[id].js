@@ -25,7 +25,8 @@ const Studio = () => {
         closeTime: data.closeTime,
 				isAuthorized: data.isAuthorized,
 				isPrioritized: data.isPrioritized,
-        artists: data.studioArtists
+        artists: data.studioArtists,
+				interiors: data.interiors.map((i) => i.url)
 			});
 		});
 		return (

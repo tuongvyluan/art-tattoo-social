@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { stringPlacements, stringServiceStatus, stringSize } from 'lib/status';
+import { stringBookingServiceStatus, stringBookingServiceStatusColor, stringBookingStatuses, stringPlacements, stringServiceStatus, stringSize } from 'lib/status';
 import { formatDateTimeForInput, formatPrice, formatTime } from 'lib';
 import { Avatar, Card, Dropdown, DropdownMenu, DropdownToggle } from 'ui';
 import { MdEdit, MdOutlineCalendarMonth, MdOutlineClose } from 'react-icons/md';
@@ -227,7 +227,7 @@ const CustomerServices = ({
 									}
 									{bookingService.price > 0 && (
 										<div className="flex flex-wrap items-center text-base font-semibold bg-teal-300 px-2 rounded-full">
-											<div>{formatPrice(2000000)}</div>
+											<div>{formatPrice(bookingService.price)}</div>
 										</div>
 									)}
 									{
@@ -242,8 +242,8 @@ const CustomerServices = ({
 									{
 										// Trạng thái
 									}
-									<div className="flex flex-wrap gap-1 items-center text-base font-semibold bg-yellow-300 px-2 rounded-full">
-										<div>Đang thực hiện</div>
+									<div className={`flex flex-wrap gap-1 items-center text-base font-semibold bg-${stringBookingServiceStatusColor.at(bookingService.status)} px-2 rounded-full`}>
+										<div>{stringBookingServiceStatus.at(bookingService.status)}</div>
 									</div>
 								</div>
 								{

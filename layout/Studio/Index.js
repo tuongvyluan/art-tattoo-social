@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { FiClock, FiHome, FiPhone } from 'react-icons/fi';
 import { Avatar, Card, CardBody } from 'ui';
+import { TattooArtCarousel } from 'ui/TattooArtCarousel';
 
 const StudioPage = ({ studio }) => {
 	const [showMoreInfo, setShowMoreInfo] = useState(false);
@@ -72,7 +73,7 @@ const StudioPage = ({ studio }) => {
 						</div>
 					</CardBody>
 				</Card>
-				<div className="hidden md:flex gap-3">
+				<div className="hidden md:flex gap-7">
 					<Card className={'max-w-min'}>
 						<CardBody className={'px-4 lg:px-10 xl:px-20'}>
 							<div className="mx-auto text-center pb-4">
@@ -137,40 +138,54 @@ const StudioPage = ({ studio }) => {
 					</Card>
 				</div>
 			</div>
-			<div className="hidden md:block pb-5 pt-0 text-center text-3xl text-gray-700">
-				Nghệ sĩ xăm
-			</div>
-			<div className="w-full lg:px-20 xl:px-44 2xl:px-56">
-				<Card>
-					<CardBody>
-						<div className="overflow-x-auto">
-							<div className="flex justify-center gap-2 items-center">
-								{studio.artists?.map((artist) => (
-									<div className="w-40" key={artist.id}>
-										<Link href={`/artist/${artist.artist.id}`}>
-											<div className="mx-auto w-max cursor-pointer">
-												<div className="flex justify-center">
-													<Avatar
-														size={80}
-														src={
-															artist?.artist?.avatar
-																? artist.artist.avatar
-																: '/images/ATL.png'
-														}
-													/>
+			{
+				// Artist
+			}
+			<div>
+				<div className="hidden md:block pb-5 pt-0 text-center text-3xl text-gray-700">
+					Nghệ sĩ xăm
+				</div>
+				<div className="w-full lg:px-20 xl:px-44 2xl:px-56">
+					<Card>
+						<CardBody>
+							<div className="overflow-x-auto">
+								<div className="flex justify-center gap-2 items-center">
+									{studio.artists?.map((artist) => (
+										<div className="w-40" key={artist.id}>
+											<Link href={`/artist/${artist.artist.id}`}>
+												<div className="mx-auto w-max cursor-pointer">
+													<div className="flex justify-center">
+														<Avatar
+															size={80}
+															src={
+																artist?.artist?.avatar
+																	? artist.artist.avatar
+																	: '/images/ATL.png'
+															}
+														/>
+													</div>
+													<div className="text-center pt-2">
+														{artist?.artist?.firstName} {artist?.artist?.lastName}
+													</div>
 												</div>
-												<div className="text-center pt-2">
-													{artist?.artist?.firstName} {artist?.artist?.lastName}
-												</div>
-											</div>
-										</Link>
-									</div>
-								))}
+											</Link>
+										</div>
+									))}
+								</div>
 							</div>
-						</div>
-					</CardBody>
-				</Card>
+						</CardBody>
+					</Card>
+				</div>
 			</div>
+			{studio.interiors?.length > 0 && (
+				<div className='xl:px-32 pb-5'>
+					<div className="hidden md:block pb-5 pt-0 text-center text-3xl text-gray-700">
+						Cơ sở vật chất
+					</div>
+					<TattooArtCarousel imageHeight={600} images={studio.interiors} />
+				</div>
+			)}
+
 			<div className="hidden md:block pb-5 pt-0 text-center text-3xl text-gray-700">
 				Tác phẩm
 			</div>

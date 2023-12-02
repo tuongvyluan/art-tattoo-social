@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { formatDateTime } from 'lib';
+import { formatTime } from 'lib';
 
 export const WidgetOrderStatus = ({ timeline }) => {
 	timeline.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -19,7 +19,7 @@ export const WidgetOrderStatus = ({ timeline }) => {
 					<small
 						className={`sm:w-1/3 inline-block sm:absolute sm:top-0 text-gray-800 pl-4 sm:text-right sm:pr-10 sm:left-0`}
 					>
-						{formatDateTime(new Date(item.date))}
+						{formatTime(new Date(item.date))}
 					</small>
 					<div
 						className={`sm:w-2/3 block sm:inline-block relative mt-0 sm:-mt-5 sm:float-right`}

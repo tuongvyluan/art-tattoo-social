@@ -292,7 +292,7 @@ function CustomerBookingPage({ customerId }) {
 														<div>
 															Ngày hẹn:{' '}
 															<span className="text-base">
-																{formatDateTime(booking.date)}
+																{formatTime(booking.date)}
 															</span>
 														</div>
 													)}

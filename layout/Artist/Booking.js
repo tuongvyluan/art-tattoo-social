@@ -1,19 +1,13 @@
 import PropTypes from 'prop-types';
-import { fetcher, formatPrice, formatDateTime } from 'lib';
+import { fetcher, formatPrice, formatTime } from 'lib';
 import { useEffect, useState } from 'react';
 import { Card, CardBody, Loading, Ripple } from 'ui';
 import { Search } from 'icons/outline';
 import debounce from 'lodash.debounce';
 import {
 	BOOKING_STATUS,
-	operationNames,
 	stringBookingStatuses,
-	stringColor,
-	stringDifficult,
-	stringPlacements,
-	stringSize
 } from 'lib/status';
-import Image from 'next/image';
 import MyPagination from 'ui/MyPagination';
 import { BASE_URL } from 'lib/env';
 import CustomerServices from 'layout/CustomerServices';
@@ -280,7 +274,7 @@ function CustomerBookingPage({ artistId }) {
 													<div>
 														Ngày tạo đơn:{' '}
 														<span className="text-base">
-															{formatDateTime(booking.createdAt)}
+															{formatTime(booking.createdAt)}
 														</span>
 													</div>
 													{booking.cancelAt && (
@@ -288,7 +282,7 @@ function CustomerBookingPage({ artistId }) {
 															<div>
 																Ngày huỷ:{' '}
 																<span className="text-base">
-																	{formatDateTime(booking.cancelAt)}
+																	{formatTime(booking.cancelAt)}
 																</span>
 															</div>
 														</div>
@@ -297,7 +291,7 @@ function CustomerBookingPage({ artistId }) {
 														<div>
 															Ngày hẹn:{' '}
 															<span className="text-base">
-																{formatDateTime(booking.date)}
+																{formatTime(booking.date)}
 															</span>
 														</div>
 													)}
