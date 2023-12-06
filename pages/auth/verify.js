@@ -1,11 +1,11 @@
-import { fetcher } from "lib";
-import { BASE_URL } from "lib/env";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { Loading } from "ui";
+import { fetcher } from 'lib';
+import { BASE_URL } from 'lib/env';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { Loading } from 'ui';
 
 const VerifyPage = () => {
-  const router = useRouter();
+	const router = useRouter();
 	const token = router.query.token;
 	const [loading, setLoading] = useState(true);
 	const [isSuccess, setIsSuccess] = useState(false);
@@ -34,7 +34,7 @@ const VerifyPage = () => {
 	if (isSuccess) {
 		return (
 			<div className="flex items-center justify-center h-screen">
-				Bạn đã xác thực và tạo tiệm xăm thành công.
+				<div className="text-center">Bạn đã xác thực tài khoản thành công.</div>
 			</div>
 		);
 	}
@@ -43,6 +43,6 @@ const VerifyPage = () => {
 			Yêu cầu xác thực không hợp lệ.
 		</div>
 	);
-}
+};
 
 export default VerifyPage;
