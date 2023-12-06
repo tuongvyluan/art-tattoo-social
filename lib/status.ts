@@ -87,8 +87,9 @@ export const enum BOOKING_STATUS {
 
 export const enum BOOKING_DETAIL_STATUS {
 	PENDING = 0,
-	CANCELLED = 1,
-	COMPLETED = 2
+	IN_PROGRESS = 1,
+	CANCELLED = 2,
+	COMPLETED = 3
 }
 
 export const enum BOOKING_MEETING_STATUS {
@@ -223,4 +224,18 @@ export const stringBookingServiceStatusColor = [
 	'yellow-300',
 	'green-300',
 	'red-300'
+]
+
+export const enum SERVICE_CATEGORY {
+	NEW_TATTOO = 0, // Xăm hình mới
+	COVER_UP = 1, // Xăm đè lên hình cũ
+	AFTERCARE = 2, // Bảo hành, sửa lỗi cho hình xăm có sẵn
+	REMOVAL = 3 // Xoá xăm
+}
+
+export const stringServiceCategories = [
+	'Xăm hình mới',
+	'Xăm đè',
+	'Bảo hành sau xăm',
+	'Xoá xăm'
 ]
