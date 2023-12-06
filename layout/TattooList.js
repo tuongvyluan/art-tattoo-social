@@ -158,9 +158,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 			);
 		}
 		return (
-			<div className="absolute text-base w-full text-center -bottom-12 pb-3">
-				Đã tải hết hình xăm
-			</div>
+			<div></div>
 		);
 	};
 

@@ -82,9 +82,7 @@ const TattooListUpdate = ({ url, pageSize = 20 }) => {
 			);
 		}
 		return (
-			<div className="absolute text-base w-full text-center -bottom-7 pb-3">
-				Đã tải hết hình xăm
-			</div>
+			<div></div>
 		);
 	};
 	
