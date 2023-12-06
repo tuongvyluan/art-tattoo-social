@@ -17,8 +17,7 @@ const RegisterPage = () => {
 	}, [status]);
 
 	const [user, setUser] = useState({
-		firstName: '',
-		lastName: '',
+		fullName: '',
 		email: '',
 		phoneNumber: '',
 		password: '',

@@ -13,8 +13,7 @@ const TattooDetails = () => {
 	const [artTattoo, setArtTattoo] = useState(undefined);
 	const [artist, setArtist] = useState({
 		id: [Math.floor(Math.random() * 900)],
-		firstName: 'Vy',
-		lastName: 'Luân'
+		fullName: 'Vy Luân',
 	});
 	const [medias, setMedias] = useState([]);
 	const [likes, setLikes] = useState([]);
@@ -43,8 +42,7 @@ const TattooDetails = () => {
 				...artist,
 				id: data.artistId,
 				avatar: data.avatar,
-				firstName: data.artist.firstName,
-				lastName: data.artist.lastName,
+				fullName: data.artist.fullName,
 				isVerified: data.artist?.isVerified ? data.artist.isVerified : false,
 				workAt: {
 					id: data.studioWorkedAtId,

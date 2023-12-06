@@ -46,18 +46,18 @@ const ArtistPage = ({ artist, accountId }) => {
 									<Avatar
 										size={60}
 										src={artist.avatar ? artist.avatar : '/images/avatar.png'}
-										alt={artist.firstName}
+										alt={artist.fullName}
 									/>
 								</div>
 							</div>
 							<div className="cursor-pointer">
 								<div className="font-semibold text-base">
-									{artist.firstName} {artist.lastName}
+									{artist.fullName}
 								</div>
 							</div>
 						</div>
 						<div className="pb-6 flex justify-center flex-wrap gap-2 w-full">
-							{artist.isVerified && artist.workAt && (
+							{artist.workAt && (
 								<div className="w-20">
 									<a target="_blank" href={`/booking/new?artist=${artist.id}`}>
 										<Button>Đặt hẹn</Button>
@@ -139,18 +139,18 @@ const ArtistPage = ({ artist, accountId }) => {
 										<Avatar
 											size={200}
 											src={artist.avatar ? artist.avatar : '/images/avatar.png'}
-											alt={artist.firstName}
+											alt={artist.fullName}
 										/>
 									</div>
 								</div>
 								<div className="cursor-pointer">
 									<div className="font-semibold text-lg pt-4">
-										{artist.firstName} {artist.lastName}
+										{artist.fullName}
 									</div>
 								</div>
 							</div>
 							<div className="pb-3 flex justify-center flex-wrap gap-2 w-full min-w-max">
-								{artist.isVerified && artist.workAt && (
+								{artist.workAt && (
 									<div className="w-20">
 										<a target="_blank" href={`/booking/new?artist=${artist.id}`}>
 											<Button>Đặt hẹn</Button>
@@ -179,8 +179,8 @@ const ArtistPage = ({ artist, accountId }) => {
 													<Avatar
 														size={44}
 														src={
-															artist.workAt?.avatar
-																? artist.workAt?.avatar
+															artist.workAt?.studioAvatar
+																? artist.workAt?.studioAvatar
 																: '/images/ATL.png'
 														}
 														alt="studio logo"

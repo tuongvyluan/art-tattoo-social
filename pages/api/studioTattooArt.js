@@ -16,7 +16,7 @@ const data = {
 	customer: {
 		customerId: v4(),
 		accountId: v4(),
-		firstName: [
+		fullName: [
 			'Vy',
 			'Trân',
 			'Trường',
@@ -28,18 +28,7 @@ const data = {
 			'Tuấn',
 			'Đức'
 		][randomFrom0To(10)],
-		lastName: [
-			'Nguyễn',
-			'Luân',
-			'Trần',
-			'Lâm',
-			'Vũ',
-			'Lê',
-			'Hoàng',
-			'Đinh',
-			'Lý',
-			'Hồ'
-		][randomFrom0To(3)],
+		
 		email: `email${[randomFrom0To(3)]}@gmail.com`,
 		phoneNumber: '0912345678'
 	},
@@ -57,7 +46,7 @@ const data = {
 	placement: randomFrom0To(stringPlacements.length),
 	artist: {
 		id: Math.floor(Math.random() * 900),
-		firstName: [
+		fullName: [
 			'Megan',
 			'Jeffrey',
 			'Amber',

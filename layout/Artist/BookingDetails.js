@@ -113,8 +113,7 @@ function BookingDetailsPage({ data, studioId, setLoading, artistId }) {
 												Thông tin khách hàng
 											</div>
 											<div className="text-base">
-												{renderData.customer.firstName}{' '}
-												{renderData.customer.lastName}
+												{renderData.customer.fullName}
 											</div>
 											<div>{renderData.customer.phoneNumber}</div>
 											<div>{renderData.customer.email}</div>
@@ -233,7 +232,7 @@ function BookingDetailsPage({ data, studioId, setLoading, artistId }) {
 															<div>
 																<span>Nghệ sĩ xăm: </span>
 																<span className="font-semibold">
-																	{tattoo.artist.firstName} {tattoo.artist.lastName}
+																	{tattoo.artist.fullName}
 																</span>
 															</div>
 															{tattoo.bookingDetails.map(

@@ -375,7 +375,7 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 								<div className="pb-3 flex items-center gap-1">
 									<div className="w-20">Nghệ sĩ xăm:</div>
 									<span className="font-semibold">
-										{tattoo.artist.firstName} {tattoo.artist.lastName}
+										{tattoo.artist.fullName}
 									</span>
 								</div>
 								<div className="pb-3 flex items-center gap-1">

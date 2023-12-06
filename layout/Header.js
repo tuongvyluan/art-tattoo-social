@@ -198,7 +198,7 @@ const Header = ({ toggleOpen }) => {
 															? data.user.avatar
 															: `/images/avatar.png`
 													}
-													alt={data ? data.user.firstName : 'Unknown'}
+													alt={data ? data.user.fullName : 'Unknown'}
 												/>
 											</div>
 											{data?.user.role != -1 && roleString.at(data.user.role)}

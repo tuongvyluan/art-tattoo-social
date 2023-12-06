@@ -1,67 +1,70 @@
-import { Table } from 'components/Table';
-import React from 'react';
-import { Loading } from 'ui';
+import React, { useEffect, useState } from 'react';
 import { fetcher } from 'lib';
-import useSWR from 'swr';
-import { Title } from 'ui/Title';
+import TattooStudioTabs from 'components/TattooStudioTabs';
+import Link from 'next/link';
+import { BASE_URL } from 'lib/env';
+import { BackgroundImg } from 'ui';
 
 function AdminStudioPage() {
-	const columns = React.useMemo(
-		() => [
-			{
-				Header: 'Studio',
-				columns: [
-					{
-						Header: 'Name',
-						accessor: 'owner.fullName'
-					},
-					{
-						Header: 'Address',
-						accessor: 'address'
-					},
-					{
-						Header: 'Rating',
-						accessor: 'rating'
-					}
-				]
-			},
-			{
-				Header: 'Status',
-				columns: [
-					{
-						Header: 'Approved',
-						accessor: 'approveStatus'
-					},
-					{
-						Header: 'Active',
-						accessor: 'activeStatus'
-					}
-				]
-			}
-		],
-		[]
-	);
+	const [items, setItems] = useState([]);
+	const [error, setError] = useState(false);
+	const [page, setPage] = useState(1);
+	const [totalPage, setTotalPage] = useState(0);
+	const pageSize = 30;
 
-	const baseUrl = `${process.env.NEXT_PUBLIC_API_BASEURL}/Studios`;
+	useEffect(() => {
+		fetcher(`${BASE_URL}/studios`)
+			.then((data) => {
+				setItems(data.studios);
+				setTotalPage(Math.ceil(data.total / pageSize));
+			})
+			.catch((e) => {
+				setError(true);
+			});
+	}, []);
 
-	const { data, error } = useSWR(baseUrl, fetcher);
-	if (error)
+	useEffect(() => {
+		fetcher(`${BASE_URL}/studios?page=${page}&pageSize=${pageSize}`)
+			.then((data) => {
+				setItems(data.studios);
+			})
+			.catch((e) => {
+				setError(true);
+			});
+	}, [page]);
+
+	if (error) {
 		return (
-			<div className="flex items-center justify-center h-full">
-				Failed to load table data
+			<div>
+				<TattooStudioTabs />
+				<div className="flex items-center justify-center h-full">
+					Tải dữ liệu thất bại
+				</div>
 			</div>
 		);
-	if (!data)
-		return (
-			<div className="flex items-center justify-center h-full">
-				<Loading />
-			</div>
-		);
+	}
 
 	return (
 		<div>
-			<Title>Studio</Title>
-			<Table data={data} columns={columns} />
+			<TattooStudioTabs />
+			<div className="relative lg:mx-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-5">
+				{items?.map((studio) => (
+					<div key={studio.id}>
+						<div>
+							<BackgroundImg
+								className="relative w-full bg-center bg-cover"
+								height={250}
+								image={studio.avatar ? studio.avatar : '/images/ATL.png'}
+							/>
+						</div>
+						<div>
+							<Link href={`/studio/${studio.id}`}>
+								<div>{studio.studioName}</div>
+							</Link>
+						</div>
+					</div>
+				))}
+			</div>
 		</div>
 	);
 }

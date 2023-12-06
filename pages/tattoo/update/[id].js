@@ -59,8 +59,7 @@ const TattooDetails = () => {
 				...data,
 				artist: {
 					id: data.artistId,
-					firstName: data.firstName,
-					lastName: data.lastName
+					fullName: data.fullName
 				},
 				bookingId: data.bookingId ? data.bookingId : '',
 				stages: Array.from(stageMap, ([id, value]) => value)
@@ -92,8 +91,7 @@ const TattooDetails = () => {
 				bookingId: booking,
 				artist: {
 					id: data.user.id,
-					firstName: data.user.firstName,
-					lastName: data.user.lastName
+					fullName: data.user.fullName
 				},
 				styleId: 14,
 				stages: [

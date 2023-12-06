@@ -165,7 +165,7 @@ const StudioPage = ({ studio }) => {
 														/>
 													</div>
 													<div className="text-center pt-2">
-														{artist?.artist?.firstName} {artist?.artist?.lastName}
+														{artist?.artist?.fullName}
 													</div>
 												</div>
 											</Link>

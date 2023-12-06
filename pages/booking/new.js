@@ -29,8 +29,7 @@ const BookingFormPage = () => {
 				.then((data) => {
 					setStudioId(data.studioArtists[0].id)
 					setArtist({
-						firstName: data.firstName,
-						lastName: data.lastName,
+						fullName: data.fullName,
 						id: data.id
 					});
 				})

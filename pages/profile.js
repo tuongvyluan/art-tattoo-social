@@ -32,8 +32,7 @@ const ProfilePage = () => {
 		if (!profile) {
 			let myProfile = {
 				id: data.user.id,
-				firstName: '',
-				lastName: '',
+				fullName: '',
 				email: '',
 				phoneNumber: ''
 			};
@@ -49,8 +48,7 @@ const ProfilePage = () => {
 					.then((data) => {
 						myProfile = {
 							id: data.id,
-							firstName: data.firstName,
-							lastName: data.lastName,
+							fullName: data.fullName,
 							role: ROLE.ARTIST,
 							bioContent: data.bioContent ? data.bioContent : '',
 							avatar: data.avatar ? data.avatar : '/images/avatar.png',

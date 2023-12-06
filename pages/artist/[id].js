@@ -29,8 +29,7 @@ const Artist = () => {
 			}`
 		).then((data) => {
 			setArtist({
-				firstName: data.firstName,
-				lastName: data.lastName,
+				fullName: data.fullName,
 				id: data.id,
 				avatar: data.avatar,
 				bioContent: data.bioContent,

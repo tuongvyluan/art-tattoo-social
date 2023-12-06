@@ -205,7 +205,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 											<Avatar
 												size={40}
 												src={artist.avatar ? artist.avatar : '/images/avatar.png'}
-												alt={artist.firstName}
+												alt={artist.fullName}
 											/>
 										</div>
 									</Link>
@@ -213,7 +213,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 										<Link href={`/artist/${artist.id}`}>
 											<div className="cursor-pointer">
 												<div className="font-semibold">
-													{artist.firstName} {artist.lastName}
+													{artist.fullName}
 												</div>
 											</div>
 										</Link>
@@ -229,7 +229,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 										)}
 									</div>
 								</div>
-								{artist.isVerified && artist.workAt.id && (
+								{artist.workAt.id && (
 									<div className="pb-3">
 										<a target="_blank" href={`/booking/new?artist=${artist.id}`}>
 											<Button>Đặt hẹn</Button>
@@ -399,12 +399,12 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 													<Avatar
 														size={30}
 														src={cmt.avatar ? cmt.avatar : ''}
-														alt={cmt.firstName}
+														alt={cmt.fullName}
 													/>
 												</div>
 												<div className="break-words overflow-hidden ml-1">
 													<span className="font-semibold pr-1">
-														{cmt.firstName} {cmt.lastName}
+														{cmt.fullName}
 													</span>
 													{cmt.content}
 												</div>

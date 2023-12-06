@@ -81,11 +81,8 @@ const TattooListUpdate = ({ url, pageSize = 20 }) => {
 				</div>
 			);
 		}
-		return (
-			<div></div>
-		);
+		return <div></div>;
 	};
-	
 
 	useEffect(() => {
 		//add eventlistener to window
@@ -216,9 +213,7 @@ const TattooListUpdate = ({ url, pageSize = 20 }) => {
 																			}
 																			size={20}
 																		/>
-																		<div>
-																			{item.firstName} {item.lastName}
-																		</div>
+																		<div>{item.fullName}</div>
 																	</div>
 																</div>
 															</Link>

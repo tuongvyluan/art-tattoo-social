@@ -294,7 +294,7 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 															<div>
 																<span>Nghệ sĩ xăm: </span>
 																<span className="font-semibold">
-																	{tattoo.artist.firstName} {tattoo.artist.lastName}
+																	{tattoo.artist.fullName}
 																</span>
 															</div>
 															{tattoo.bookingDetails.map(

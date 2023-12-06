@@ -130,7 +130,7 @@ const BookingForm = ({
 															</p>
 															{artist && (
 																<span className="ltr:mr-2 rtl:ml-2 text-sm ">
-																	{artist.firstName} {artist.lastName}
+																	{artist.fullName}
 																</span>
 															)}
 														</div>

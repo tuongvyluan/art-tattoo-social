@@ -20,7 +20,7 @@ const data = Array(15)
 			customer: {
 				customerId: v4() + `${i}`,
 				accountId: v4() + `${i}`,
-				firstName: [
+				fullName: [
 					'Vy',
 					'Trân',
 					'Trường',
@@ -32,18 +32,7 @@ const data = Array(15)
 					'Tuấn',
 					'Đức'
 				][randomFrom0To(10)],
-				lastName: [
-					'Nguyễn',
-					'Luân',
-					'Trần',
-					'Lâm',
-					'Vũ',
-					'Lê',
-					'Hoàng',
-					'Đinh',
-					'Lý',
-					'Hồ'
-				][randomFrom0To(3)],
+				
 				email: `email${[randomFrom0To(3)]}@gmail.com`,
 				phoneNumber: '0912345678'
 			},

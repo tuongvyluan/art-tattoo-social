@@ -41,24 +41,11 @@ const Register = ({ user, setUser, handleSubmit }) => {
 									<div className="grid md:grid-cols-2 grid-cols-1 gap-5 w-full">
 										<div>
 											<div className="block mb-3">
-												<label>{'Họ'}</label>
-												<input
-													aria-label={'Last name'}
-													name="lastName"
-													type="text"
-													value={user.lastName}
-													onChange={handleFormChange}
-													required
-													className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
-													placeholder={'Họ'}
-												/>
-											</div>
-											<div className="block mb-3">
 												<label>{'Tên'}</label>
 												<input
-													aria-label={'First name'}
-													name="firstName"
-													value={user.firstName}
+													aria-label={'Full name'}
+													name="fullName"
+													value={user.fullName}
 													onChange={handleFormChange}
 													type="text"
 													required

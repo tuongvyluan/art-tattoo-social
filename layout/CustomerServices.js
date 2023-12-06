@@ -102,8 +102,7 @@ const CustomerServices = ({
 								<Dropdown className="relative h-full flex items-center">
 									<DropdownToggle>
 										<div className="w-40 rounded-lg p-1 border border-gray-300">
-											{artistList?.at(selectedArtist)?.firstName}{' '}
-											{artistList?.at(selectedArtist)?.lastName}
+											{artistList?.at(selectedArtist)?.fullName}
 										</div>
 									</DropdownToggle>
 									<DropdownMenu>
@@ -113,7 +112,7 @@ const CustomerServices = ({
 												// onClick={() => setTattooState('size', statusIndex)}
 												className={`px-2 py-1 cursor-pointer hover:bg-gray-100`}
 											>
-												{artist?.firstName} {artist.lastName}
+												{artist?.fullName}
 											</div>
 										))}
 									</DropdownMenu>
@@ -260,8 +259,7 @@ const CustomerServices = ({
 											}
 										/>
 										<div>
-											{bookingService.artist?.firstName}{' '}
-											{bookingService.artist?.lastName}
+											{bookingService.artist?.fullName}
 										</div>
 									</div>
 								)}

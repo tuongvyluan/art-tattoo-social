@@ -532,7 +532,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 																			size={20}
 																		/>
 																		<div>
-																			{item.firstName} {item.lastName}
+																			{item.fullName}
 																		</div>
 																	</div>
 																</div>
