@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
-import { Link, Logo } from 'ui';
+import { Logo } from 'ui';
 
 import Button from './Button';
 import { ROLE } from 'lib/status';
+import MyInput from './MyInput';
+import Link from 'next/link';
 
 const Register = ({ user, setUser, handleSubmit }) => {
 	const handleFormChange = (e) => {
@@ -23,9 +25,11 @@ const Register = ({ user, setUser, handleSubmit }) => {
 				<div className="w-full flex justify-center mx-0 mt-5">
 					<div className="w-full md:w-4/5 px-5 flex justify-center">
 						<div className="w-full max-w-xl">
-							<div className="text-center mb-5 text-gray-700">
-								<Logo height={50} width={50} />
-							</div>
+							<Link href={'/'}>
+								<div className="text-center mb-5 text-gray-700 cursor-pointer">
+									<Logo height={50} width={50} />
+								</div>
+							</Link>
 							<form onSubmit={handleSubmit}>
 								<div className="text-center mb-5">
 									<h1 className="uppercase text-2xl mb-3 font-bold leading-none text-gray-700">
@@ -42,68 +46,63 @@ const Register = ({ user, setUser, handleSubmit }) => {
 										<div>
 											<div className="block mb-3">
 												<label>{'Tên'}</label>
-												<input
+												<MyInput
 													aria-label={'Full name'}
 													name="fullName"
 													value={user.fullName}
 													onChange={handleFormChange}
 													type="text"
 													required
-													className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
 													placeholder={'Tên'}
 												/>
 											</div>
 											<div className="block mb-3">
 												<label>{'Số điện thoại'}</label>
-												<input
+												<MyInput
 													aria-label={'Phone'}
 													name="phoneNumber"
 													value={user.phoneNumber}
 													onChange={handleFormChange}
 													type="tel"
 													required
-													className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
 													placeholder={'Email'}
 												/>
 											</div>
-										</div>
-										<div>
 											<div className="block mb-3">
 												<label>{'Email'}</label>
-												<input
+												<MyInput
 													aria-label={'Email'}
 													name="email"
 													value={user.email}
 													onChange={handleFormChange}
 													type="email"
 													required
-													className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
 													placeholder={'Email'}
 												/>
 											</div>
+										</div>
+										<div>
 											<div className="block mb-3">
 												<label>{'Password'}</label>
-												<input
+												<MyInput
 													aria-label={'Password'}
 													name="password"
 													value={user.password}
 													onChange={handleFormChange}
 													type="password"
 													required
-													className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
 													placeholder={'Password'}
 												/>
 											</div>
 											<div className="block mb-3">
 												<label>{'Xác nhận password'}</label>
-												<input
+												<MyInput
 													aria-label={'cpassword'}
 													name="cpassword"
 													value={user.cpassword}
 													onChange={handleFormChange}
 													type="password"
 													required
-													className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
 													placeholder={'Xác nhận password'}
 												/>
 											</div>
@@ -123,7 +122,7 @@ const Register = ({ user, setUser, handleSubmit }) => {
 								</div>
 
 								<div className="flex justify-center">
-									<div className='w-full max-w-md'>
+									<div className="w-full max-w-md">
 										<Button>Đăng ký</Button>
 									</div>
 								</div>

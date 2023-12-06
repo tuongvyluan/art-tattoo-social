@@ -1,8 +1,10 @@
-import { Link, Logo } from 'ui';
+import { Logo } from 'ui';
 import PropTypes from 'prop-types';
 import Button from './Button';
 import { signIn } from 'next-auth/react';
 import GoogleLogo from '/public/svg/google.svg';
+import MyInput from './MyInput';
+import Link from 'next/link';
 
 const Login = ({ handleSubmit, user, setUser }) => {
 	const handleFormChange = (e) => {
@@ -15,9 +17,11 @@ const Login = ({ handleSubmit, user, setUser }) => {
 				<div className="w-full flex justify-center mx-0">
 					<div className="w-full md:w-1/2 px-2 flex justify-center">
 						<div className="w-full max-w-md">
-							<div className="text-center mb-5 text-indigo-500">
-								<Logo height={50} width={50} />
-							</div>
+							<Link href={'/'}>
+								<div className="text-center mb-5 text-gray-700 cursor-pointer">
+									<Logo height={50} width={50} />
+								</div>
+							</Link>
 							<form className="sign-in-form" onSubmit={handleSubmit}>
 								<div className="text-center mb-5">
 									<h1 className="uppercase text-2xl mb-3 font-bold leading-none ">
@@ -32,27 +36,25 @@ const Login = ({ handleSubmit, user, setUser }) => {
 								<div className="rounded-lg shadow-sm">
 									<div className="block mb-3">
 										<label>Email</label>
-										<input
+										<MyInput
 											aria-label={'Email'}
 											name="email"
 											type="email"
 											value={user.email}
 											onChange={handleFormChange}
 											required
-											className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
 											placeholder={'Email'}
 										/>
 									</div>
 									<div className="block mb-3">
 										<label>Password</label>
-										<input
+										<MyInput
 											aria-label={'Password'}
 											name="password"
 											type="password"
 											value={user.password}
 											onChange={handleFormChange}
 											required
-											className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
 											placeholder={'Password'}
 										/>
 									</div>
@@ -64,10 +66,7 @@ const Login = ({ handleSubmit, user, setUser }) => {
 							</form>
 
 							<div className="flex justify-center pt-3">
-								<Button
-									outline
-									onClick={() => signIn('google')}
-								>
+								<Button outline onClick={() => signIn('google')}>
 									<div className="flex flex-wrap gap-2 items-center justify-center">
 										<GoogleLogo className="w-4 h-4" />
 										<div>Đăng nhập với Google</div>
