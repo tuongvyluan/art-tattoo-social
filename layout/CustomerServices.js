@@ -180,7 +180,7 @@ const CustomerServices = ({
 						className={`shadow-lg ${
 							!showMore && bookingServiceIndex > 2 ? 'hidden' : ''
 						}`}
-						key={bookingDetail.bookingServiceId}
+						key={bookingDetail.id}
 					>
 						<div className="w-full flex justify-start gap-2 items-start bg-gray-50 py-5 relative">
 							{canEdit && (

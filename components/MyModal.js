@@ -48,7 +48,7 @@ MyModal.propTypes = {
 	warn: PropTypes.bool,
 	openModal: PropTypes.bool.isRequired,
 	setOpenModal: PropTypes.func.isRequired,
-	onSubmit: PropTypes.func.isRequired
+	onSubmit: PropTypes.func
 };
 
 export default MyModal;

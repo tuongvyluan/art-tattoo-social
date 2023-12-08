@@ -25,8 +25,8 @@ const BookingDetails = () => {
 			(data.user.role === ROLE.CUSTOMER || data.user.role === ROLE.ARTIST) &&
 			loading
 		) {
-			fetcher(`${BASE_URL}/bookings/${bookingId}/details-studio`)
-				.then((data) => {
+		fetcher(`${BASE_URL}/bookings/get-by-id?bookingId=${bookingId}`)
+			.then((data) => {
 					setBookingData(data);
 					setLoading(false);
 				})
