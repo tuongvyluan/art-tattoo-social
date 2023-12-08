@@ -33,7 +33,7 @@ const API_SECRET = process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET;
 const stageMapMedia = (stages) => {
 	return new Map(
 		stages.map((stage) => {
-			return [stage.id, stage.tattooImages];
+			return [stage.id, stage.medias];
 		})
 	);
 };
@@ -102,14 +102,14 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 		}
 		const newMap = deepCopyMap(mediaMap);
 		const stages = tattoo.stages;
-		const tattooImages = newMap.get(stages.at(stageIndex).id);
-		const image = tattooImages.at(mediaIndex);
+		const medias = newMap.get(stages.at(stageIndex).id);
+		const image = medias.at(mediaIndex);
 		// If this image was recently added and its link hasn't been saved to db, completely remove it from cloudinary
 		if (!image.saved) {
 			deleteCloudinaryImage(imgUrl);
 		}
-		tattooImages.splice(mediaIndex, 1);
-		newMap.set(stages.at(stageIndex).id, tattooImages);
+		medias.splice(mediaIndex, 1);
+		newMap.set(stages.at(stageIndex).id, medias);
 		setMediaMap(newMap);
 	};
 
@@ -119,15 +119,15 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 		}
 		const newMap = deepCopyMap(mediaMap);
 		const stages = tattoo.stages;
-		const tattooImages = newMap.get(stages.at(stageIndex).id);
-		tattooImages.push({
+		const medias = newMap.get(stages.at(stageIndex).id);
+		medias.push({
 			id: v4(),
 			url: result.info?.url,
 			description: '',
 			isPublicized: false,
 			saved: false
 		});
-		newMap.set(stages.at(stageIndex).id, tattooImages);
+		newMap.set(stages.at(stageIndex).id, medias);
 		setMediaMap(newMap);
 	};
 
@@ -137,12 +137,12 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 		}
 		const newMap = deepCopyMap(mediaMap);
 		const stages = tattoo.stages;
-		const tattooImages = newMap.get(stages.at(stageIndex).id);
-		tattooImages[mediaIndex] = {
-			...tattooImages[mediaIndex],
-			isPublicized: !tattooImages[mediaIndex].isPublicized
+		const medias = newMap.get(stages.at(stageIndex).id);
+		medias[mediaIndex] = {
+			...medias[mediaIndex],
+			isPublicized: !medias[mediaIndex].isPublicized
 		};
-		newMap.set(stages.at(stageIndex).id, tattooImages);
+		newMap.set(stages.at(stageIndex).id, medias);
 		setMediaMap(newMap);
 	};
 
@@ -157,7 +157,7 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 			id: newId,
 			stageStyle: 0,
 			description: '',
-			tattooImages: []
+			medias: []
 		});
 		newMap.set(newId, []);
 		setTattoo({ ...tattoo, stages: stages });
@@ -184,12 +184,12 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 		const stageLength = stages.length;
 		let i = 0;
 		let j;
-		let tattooImages;
+		let medias;
 		for (i; i < stageLength; i++) {
-			tattooImages = stages.at(i).tattooImages;
-			for (j = 0; j < tattooImages.length; j++) {
-				if (!tattooImages.at(j).saved) {
-					deleteCloudinaryImage(tattooImages.at(j).url);
+			medias = stages.at(i).medias;
+			for (j = 0; j < medias.length; j++) {
+				if (!medias.at(j).saved) {
+					deleteCloudinaryImage(medias.at(j).url);
 				}
 			}
 		}
@@ -222,25 +222,7 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 		fetcherPost(`${BASE_URL}/TattooArts/CreateTattoo`, newTattoo)
 			.then((data) => {
 				tattoo.id = data.id;
-				for (let i = 0; i < tattoo.stages.length; i++) {
-					let stage = tattoo.stages.at(i);
-					fetcherPost(`${BASE_URL}/TattooArts/CreateTattooStage`, {
-						tattooArtId: data.id,
-						stageStyle: stage.stageStyle,
-						description: stage.description
-					}).then((stageResponse) => {
-						let tattooImages = mediaMap.get(stage.id);
-						for (let j = 0; j < tattooImages.length; j++) {
-							let media = tattooImages.at(j);
-							fetcherPost(`${BASE_URL}/Media/CreateMedia`, {
-								tattooArtStageId: stageResponse.id,
-								url: media.url,
-								isPublicized: media.isPublicized
-							});
-						}
-					});
-				}
-				handleAlert(true, 'Tạo hình xăm thành công');
+				handleCreateUpdateStage()
 			})
 			.catch((e) => {
 				handleAlert(true, 'Tạo hình xăm thất bại', '', true);
@@ -273,7 +255,7 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 		if (hasStageChange) {
 			const stages = JSON.parse(JSON.stringify(tattoo.stages));
 			stages.forEach((stage) => {
-				stage.tattooImages = mediaMap.get(stage.id).map((media) => {
+				stage.medias = mediaMap.get(stage.id).map((media) => {
 					return {
 						id: media.id,
 						url: media.url,
@@ -519,7 +501,7 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 						}
 						<div>
 							{
-								// Add tattoo stage, including tattoo tattooImages
+								// Add tattoo stage, including tattoo medias
 							}
 							<div>
 								<div className="flex pt-3">

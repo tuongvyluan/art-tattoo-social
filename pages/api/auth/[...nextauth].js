@@ -148,7 +148,6 @@ const authOptions = {
 			return session;
 		},
 		async signIn({ account, profile, user, credentials }, options, param) {
-			console.log('param: ', param);
 			if (account.provider === 'google') {
 				user.name = account.id_token;
 				return profile.email_verified;
@@ -162,6 +161,8 @@ const authOptions = {
 					password: password
 				};
 				const res = await fetcherPost(BASE_URL + '/Auth/Login', payload);
+
+				console.log(res)
 
 				// Read token from response
 				const jwtObj = readJwt(res.jwt);
