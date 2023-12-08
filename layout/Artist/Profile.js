@@ -299,7 +299,7 @@ function ArtistInfo({ account, onReload }) {
 								</div>
 							)}
 							<div className="flex justify-between w-full">
-								{isArtist && (
+								{isArtist && data?.user?.artistId && (
 									<div>
 										<Tooltip content="Copy key gửi tiệm xăm để gia nhập tiệm xăm">
 											<Button onClick={() => copyKey()}>Lấy key</Button>
