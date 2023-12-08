@@ -15,7 +15,7 @@ const TattooDetails = () => {
 		id: [Math.floor(Math.random() * 900)],
 		fullName: 'Vy Luân',
 	});
-	const [medias, setMedias] = useState([]);
+	const [tattooImages, setTattooImages] = useState([]);
 	const [likes, setLikes] = useState([]);
 	const [comments, setComments] = useState([]);
 
@@ -51,7 +51,7 @@ const TattooDetails = () => {
 			});
 			setLikes(data.likes);
 			setComments(data.comments);
-			setMedias([{ url: data.thumbnail }].concat(data.medias));
+			setTattooImages([{ url: data.thumbnail }].concat(data.tattooImages));
 			// setArtist(data.artist);
 		});
 	}, [router.query.id]);
@@ -73,7 +73,7 @@ const TattooDetails = () => {
 					comments={comments}
 					tattoo={artTattoo}
 					artist={artist}
-					medias={medias}
+					tattooImages={tattooImages}
 				/>
 				{
 					// More tattoo arts

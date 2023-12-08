@@ -107,7 +107,7 @@ const data = Array(15)
 					][Math.floor(Math.random() * 3)]
 				}
 			],
-			tattooMedias: [
+			tattooTattooImages: [
 				{
 					tattooMediaId: Math.floor(Math.random() * 1000),
 					tattooArtStage: [

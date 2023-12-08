@@ -1,37 +1,54 @@
-import { formatPrice } from 'lib';
-import { stringPlacements, stringSize } from 'lib/status';
+import Button from 'components/Button';
+import { extractServiceName, formatPrice } from 'lib';
+import { stringPlacements, stringServiceCategories, stringSize } from 'lib/status';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, Card, CardBody } from 'ui';
+import { v4 } from 'uuid';
 
 function ServicePage({ services, onChange }) {
 	const [serviceList, setServiceList] = useState(services);
-
 	const [showAlert, setShowAlert] = useState(false);
 
 	const [alertContent, setAlertContent] = useState({
 		title: '',
 		content: '',
-		isWarn: false
+		isWarn: 'blue'
 	});
 
-	const handleAlert = (state, title, content, isWarn = false) => {
+	const handleAlert = (state, title, content, isWarn = 0) => {
 		setShowAlert((prev) => state);
+		let color;
+
+		switch (isWarn) {
+			case 1:
+				color = 'green';
+				break;
+			case 2:
+				color = 'red';
+				break;
+			default:
+				color = 'blue';
+				break;
+		}
 		setAlertContent({
 			title: title,
 			content: content,
-			isWarn: isWarn
+			isWarn: color
 		});
 	};
 
-	const onSelectService = (index, quantity) => {
+	const onSelectService = (index) => {
 		const services = [...serviceList];
-		const isIncrease = Number.parseInt(quantity) > services[index]['quantity']
-		services[index]['quantity'] = Number.parseInt(quantity);
-		const service = services[index]
+		services[index]['quantity'] = services[index]['quantity'] + 1;
+		const service = services[index];
 		setServiceList(services);
-		onChange(isIncrease, service);
+		onChange(true, service);
 	};
+
+	useEffect(() => {
+		setServiceList(services)
+	}, [services])
 
 	return (
 		<div className="relative">
@@ -46,27 +63,36 @@ function ServicePage({ services, onChange }) {
 			</Alert>
 			<div className="sm:px-3 md:px-1 lg:px-10 xl:px-12">
 				<Card>
-					<CardBody>
+					<div>
 						<div className="pt-1">
 							<h2 className="text-lg font-semibold pb-3 text-center">
 								Bảng giá dịch vụ
 							</h2>
-							<div className="relative shadow-md sm:rounded-lg">
+							<div className="relative shadow-md sm:rounded-lg w-max overflow-auto">
 								<table className="w-full text-sm text-left text-gray-500 pb-20">
 									<thead className="text-xs text-gray-700 uppercase dark:text-gray-400">
 										<tr>
 											<th
 												scope="col"
-												className="w-1/3 px-3 py-3 bg-gray-50 text-center"
+												className="w-1/3 sm:px-3 sm:py-3 bg-gray-50 text-center"
 											>
 												Tên dịch vụ
 											</th>
-											<th scope="col" className="px-3 py-3 bg-gray-50 text-center">
+											<th
+												scope="col"
+												className="sm:px-3 sm:py-3 bg-gray-50 text-center"
+											>
+												Loại dịch vụ
+											</th>
+											<th
+												scope="col"
+												className="sm:px-3 sm:py-3 bg-gray-50 text-center"
+											>
 												Giá
 											</th>
 											<th
 												scope="col"
-												className="px-3 py-3 bg-gray-50 text-center"
+												className="sm:px-3 sm:py-3 bg-gray-50 text-center"
 											></th>
 										</tr>
 									</thead>
@@ -76,31 +102,33 @@ function ServicePage({ services, onChange }) {
 												key={service.id}
 												className="bg-white border-b hover:bg-gray-50 text-black"
 											>
-												<td className="px-3 py-4">
+												<td className="sm:px-3 sm:py-4">
 													<div className="text-base p-1">
-														{service.title}, {stringSize.at(service.size)}{', '}
-														{stringPlacements.at(service.placement)}
+														{extractServiceName(service)}
 													</div>
 												</td>
-												<td className="px-3 py-4">
-													<div className="text-base flex flex-wrap max-w-max mx-auto gap-2 items-center">
+												<td className="sm:px-3 sm:py-4 text-base">
+													{stringServiceCategories.at(service.serviceCategoryId)}
+												</td>
+												<td className="sm:px-3 sm:py-4">
+													<div className="text-base flex flex-wrap min-w-max mx-auto gap-2 items-center">
 														<div>{formatPrice(service.minPrice)}</div>
 														<span>tới</span>
 														<div>{formatPrice(service.maxPrice)}</div>
 													</div>
 												</td>
-												<td className="px-3 py-4 flex flex-wrap gap-2">
-													<div className='w-20'>
-														<input
-															type="number"
-															className="text-base text-black flex flex-row items-center rounded-lg py-0.5 pr-2 border border-gray-300 pl-5 w-full"
-															step={1}
-															min={0}
-															value={service.quantity}
-															onChange={(e) =>
-																onSelectService(serviceIndex, e.target.value)
-															}
-														/>
+												<td className="sm:px-3 sm:py-4 flex flex-col justify-center">
+													<div className="w-20">
+														<div className="flex">
+															<Button
+																key={`${service.quantity}${service.id}`}
+																reset={true}
+																onClick={() => onSelectService(serviceIndex)}
+															>
+																Chọn{' '}
+																{service.quantity > 0 && `(${service.quantity})`}
+															</Button>
+														</div>
 													</div>
 												</td>
 											</tr>
@@ -109,7 +137,7 @@ function ServicePage({ services, onChange }) {
 								</table>
 							</div>
 						</div>
-					</CardBody>
+					</div>
 				</Card>
 			</div>
 		</div>

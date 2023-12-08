@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { fetcher, formatPrice, formatTime } from 'lib';
 import { useEffect, useState } from 'react';
-import { Card, CardBody, Loading, Ripple } from 'ui';
+import { Avatar, Card, CardBody, Loading, Ripple } from 'ui';
 import { Search } from 'icons/outline';
 import debounce from 'lodash.debounce';
 import { BOOKING_STATUS, stringBookingStatuses } from 'lib/status';
@@ -11,10 +11,9 @@ import CustomerServices from 'layout/CustomerServices';
 
 const ALL_TAB = '1';
 const PENDING_TAB = '2';
-const CONFIRMED_TAB = '3';
-const IN_PROGRESS_TAB = '4';
-const COMPLETE_TAB = '5';
-const CANCELLED_TAB = '6';
+const IN_PROGRESS_TAB = '3';
+const COMPLETE_TAB = '4';
+const CANCELLED_TAB = '5';
 
 function CustomerBookingPage({ customerId }) {
 	const [data, setData] = useState([]);
@@ -53,7 +52,7 @@ function CustomerBookingPage({ customerId }) {
 		setError(false);
 
 		fetcher(
-			`${BASE_URL}/bookings/bookings-customer?customerId=${customerId}&page=${page}&pageSize=${pageSize}${
+			`${BASE_URL}/bookings/get-all-bookings?customerId=${customerId}&page=${page}&pageSize=${pageSize}${
 				filter >= 0 ? `&status=${filter}` : ''
 			}`
 		)
@@ -76,10 +75,6 @@ function CustomerBookingPage({ customerId }) {
 				setPage(1);
 				setFilter(BOOKING_STATUS.PENDING);
 				break;
-			case CONFIRMED_TAB:
-				setPage(1);
-				setFilter(BOOKING_STATUS.CONFIRMED);
-				break;
 			case IN_PROGRESS_TAB:
 				setPage(1);
 				setFilter(BOOKING_STATUS.IN_PROGRESS);
@@ -94,7 +89,7 @@ function CustomerBookingPage({ customerId }) {
 				break;
 			default:
 				setPage(1);
-				setFilter(undefined);
+				setFilter(-1);
 				break;
 		}
 	}, [activeTab]);
@@ -137,24 +132,6 @@ function CustomerBookingPage({ customerId }) {
 								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
 							>
 								Chờ xác nhận
-								<Ripple color="black" />
-							</a>
-						</li>
-						<li
-							className={`text-center cursor-pointer ${
-								activeTab === CONFIRMED_TAB
-									? 'border-b-2 border-solid border-gray-700'
-									: ''
-							}`}
-						>
-							<a
-								onClick={() => {
-									toggle(CONFIRMED_TAB);
-								}}
-								href="#"
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
-							>
-								Đã xác nhận
 								<Ripple color="black" />
 							</a>
 						</li>
@@ -248,13 +225,14 @@ function CustomerBookingPage({ customerId }) {
 									<a className="text-black" href={`/booking/${booking.id}`}>
 										<div className="cursor-pointer ">
 											<div className="flex justify-between mx-auto border-b border-gray-300 pb-3">
-												<div className="flex gap-3 items-start">
-													<div className="font-semibold">
+												<div className="flex gap-2 items-center">
+													<Avatar size={39} src={booking.studio.owner.avatar ? booking.studio.owner.avatar : '/images/ATL.png'} />
+													<div className="font-semibold text-base">
 														{booking.studio.studioName}
 													</div>
 												</div>
 												<div>
-													<div className="text-red-500">
+													<div className="text-red-500 font-semibold text-base">
 														{stringBookingStatuses.at(booking.status)}
 													</div>
 												</div>
@@ -262,13 +240,16 @@ function CustomerBookingPage({ customerId }) {
 											<div className="flex justify-between w-full pb-1">
 												<div className="text-base font-semibold py-2">
 													Các dịch vụ đã đặt (
-													{booking.bookingServices?.length
-														? booking.bookingServices?.length
+													{booking.bookingDetails?.length
+														? booking.bookingDetails?.length
 														: '0'}
 													)
 												</div>
 											</div>
-											<CustomerServices canEdit={false} bookingServices={booking.bookingServices} />
+											<CustomerServices
+												canEdit={false}
+												bookingDetails={booking.bookingDetails}
+											/>
 
 											<div className="flex justify-end pt-3 items-start">
 												<div className="text-right">
@@ -278,29 +259,21 @@ function CustomerBookingPage({ customerId }) {
 															{formatTime(booking.createdAt)}
 														</span>
 													</div>
-													{booking.cancelAt && (
+													{booking.cancelledAt && (
 														<div>
 															<div>
 																Ngày huỷ:{' '}
 																<span className="text-base">
-																	{formatTime(booking.cancelAt)}
+																	{formatTime(booking.cancelledAt)}
 																</span>
 															</div>
 														</div>
 													)}
-													{booking.date && (
+													{booking.completedAt && (
 														<div>
-															Ngày hẹn:{' '}
+															Ngày hoàn thành:{' '}
 															<span className="text-base">
-																{formatTime(booking.date)}
-															</span>
-														</div>
-													)}
-													{booking.total && (
-														<div>
-															Thành tiền:{' '}
-															<span className="text-lg text-red-500">
-																{formatPrice(booking.total)}
+																{formatTime(booking.completedAt)}
 															</span>
 														</div>
 													)}

@@ -32,34 +32,39 @@ const ProfilePage = () => {
 		if (!profile) {
 			let myProfile = {
 				id: data.user.id,
-				fullName: '',
+				fullName: data.user.fullName,
 				email: '',
-				phoneNumber: ''
+				phoneNumber: '',
+				avatar: data.user.avatar
 			};
 			if (data.user.role === ROLE.ARTIST) {
 				myProfile = {
 					...myProfile,
 					bioContent: '',
 					styles: [],
-					studios: [],
+					studios: undefined,
 					role: ROLE.ARTIST
 				};
-				fetcher(`${BASE_URL}/artists/${data.user.id}/artist-details`)
-					.then((data) => {
-						myProfile = {
-							id: data.id,
-							fullName: data.fullName,
-							role: ROLE.ARTIST,
-							bioContent: data.bioContent ? data.bioContent : '',
-							avatar: data.avatar ? data.avatar : '/images/avatar.png',
-							styles: data.artistStyles,
-							studio: data.studioArtists?.at(0)
-						};
-						setProfile(myProfile);
-					})
-					.catch((e) => {
-						console.log(e);
-					});
+				if (data.user.artistId) {
+					fetcher(`${BASE_URL}/artists/${data.user.artistId}/artist-details`)
+						.then((data) => {
+							myProfile = {
+								id: data.id,
+								fullName: data.fullName,
+								role: ROLE.ARTIST,
+								bioContent: data.bioContent ? data.bioContent : '',
+								avatar: data.avatar ? data.avatar : '/images/avatar.png',
+								styles: data.artistStyles,
+								studio: data.studioArtists?.at(0)
+							};
+							setProfile(myProfile);
+						})
+						.catch((e) => {
+							console.log(e);
+						});
+				} else {
+					setProfile(myProfile);
+				}
 			} else {
 				setProfile(myProfile);
 			}

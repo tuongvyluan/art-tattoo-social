@@ -1,8 +1,8 @@
-import CryptoJS from "crypto-js";
+import CryptoJS from 'crypto-js';
 import Button from 'components/Button';
 import Pill from 'components/Pill';
 import { Tooltip } from 'flowbite-react';
-import { fetcherPut } from 'lib';
+import { fetcherPost, fetcherPut } from 'lib';
 import { BASE_URL, UPLOAD_PRESET } from 'lib/env';
 import { ROLE } from 'lib/status';
 import { tattooStyleList } from 'lib/tattooStyle';
@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { MdUpload } from 'react-icons/md';
 import { Alert, Avatar, Card, CardBody } from 'ui';
+import MyInput from 'components/MyInput';
 
 const ENCRYPT_SECRET = 'qo7r0q3yrwfdngposdgv';
 
@@ -47,10 +48,22 @@ function ArtistInfo({ account, onReload }) {
 
 	const handleAlert = (state, title, content, isWarn = false) => {
 		setShowAlert((prev) => state);
+		let color;
+		switch (isWarn) {
+			case 1:
+				color = 'green';
+				break;
+			case 2:
+				color = 'red';
+				break;
+			default:
+				color = 'blue';
+				break;
+		}
 		setAlertContent({
 			title: title,
 			content: content,
-			isWarn: isWarn
+			isWarn: color
 		});
 	};
 
@@ -71,7 +84,7 @@ function ArtistInfo({ account, onReload }) {
 		setProfile({ ...profile, [e.target.name]: e.target.value });
 	};
 
-	const handleSubmit = (newProfile, artistStyles, artistStudios) => {
+	const handleUpdateArtist = (newProfile, artistStyles) => {
 		if (JSON.stringify(profile.styles) !== JSON.stringify(artistStyles)) {
 			fetcherPut(`${BASE_URL}/artists/${newProfile.id}/artist-style`, artistStyles);
 		}
@@ -89,6 +102,45 @@ function ArtistInfo({ account, onReload }) {
 		});
 	};
 
+	const handleCreateArtist = (newProfile, artistStyles) => {
+		fetcherPost(`${BASE_URL}/Auth/CreateArtist`, {
+			id: account.id,
+			bioContent: newProfile.bioContent,
+			status: 0,
+			fullName: newProfile.fullName,
+			avatar: newProfile.avatar
+		}).then(() => {
+			update({
+				...data,
+				user: {
+					...data?.user,
+					artistId: account.id,
+					avatar: newProfile.avatar
+				}
+			});
+			if (JSON.stringify(profile.styles) !== JSON.stringify(artistStyles)) {
+				fetcherPut(
+					`${BASE_URL}/artists/${newProfile.id}/artist-style`,
+					artistStyles
+				).then(() => {
+					onReload();
+				});
+			} else {
+				onReload();
+			}
+		}).catch((e) => {
+			console.log(e)
+		});
+	};
+
+	const handleSubmit = (newProfile, artistStyles, artistStudios) => {
+		if (data.user.artistId) {
+			handleUpdateArtist(newProfile, artistStyles);
+		} else {
+			handleCreateArtist(newProfile, artistStyles);
+		}
+	};
+
 	const handleFormSubmit = () => {
 		handleSubmit(profile, artistStyles, studio);
 		setDefaultAccount({
@@ -100,7 +152,7 @@ function ArtistInfo({ account, onReload }) {
 			}),
 			studio: studio
 		});
-		handleAlert(true, 'Cập nhật thông tin cá nhân thành công');
+		handleAlert(true, 'Cập nhật thông tin cá nhân thành công', '', 1);
 	};
 
 	const handleFormReset = () => {
@@ -120,7 +172,7 @@ function ArtistInfo({ account, onReload }) {
 			<Alert
 				showAlert={showAlert}
 				setShowAlert={setShowAlert}
-				color={alertContent.isWarn ? 'red' : 'blue'}
+				color={alertContent.isWarn}
 				className="bottom-2 right-2 fixed max-w-md z-50"
 			>
 				<strong className="font-bold mr-1">{alertContent.title}</strong>
@@ -164,33 +216,17 @@ function ArtistInfo({ account, onReload }) {
 										</div>
 									</div>
 								</div>
-								<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 pt-2">
-									<div className="w-full pb-0">
-										<label>{'Họ'}</label>
-										<input
-											aria-label={'fullName'}
-											name="fullName"
-											type="text"
-											value={profile.fullName}
-											onChange={handleFormChange}
-											required
-											className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
-											placeholder={'Họ'}
-										/>
-									</div>
-									<div className="w-full">
-										<label>{'Tên'}</label>
-										<input
-											aria-label={'lastName'}
-											name="lastName"
-											type="text"
-											value={profile.lastName}
-											onChange={handleFormChange}
-											required
-											className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
-											placeholder={'Tên'}
-										/>
-									</div>
+								<div className="w-full mb-3">
+									<label>{'Tên'}</label>
+									<MyInput
+										aria-label={'fullName'}
+										name="fullName"
+										type="text"
+										value={profile.fullName}
+										onChange={handleFormChange}
+										required
+										placeholder={'Tên'}
+									/>
 								</div>
 
 								{account.role === ROLE.ARTIST && (
@@ -204,7 +240,7 @@ function ArtistInfo({ account, onReload }) {
 											onChange={handleFormChange}
 											required
 											rows={5}
-											className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
+											className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-base leading-none"
 											placeholder={'Nhập bio cho tài khoản'}
 										/>
 									</div>
@@ -219,19 +255,23 @@ function ArtistInfo({ account, onReload }) {
 										<h1 className="border-b border-gray-300 pb-3 text-base mb-3">
 											Tiệm xăm
 										</h1>
-										<div className="flex flex-wrap gap-2 items-center">
-											<Avatar
-												size={50}
-												src={
-													studio?.studioAvatar
-														? studio?.studioAvatar
-														: '/images/ATL.png'
-												}
-											/>
-											<div className="text-base font-semibold">
-												{studio?.studioName}
+										{studio ? (
+											<div className="flex flex-wrap gap-2 items-center">
+												<Avatar
+													size={50}
+													src={
+														studio?.studioAvatar
+															? studio?.studioAvatar
+															: '/images/ATL.png'
+													}
+												/>
+												<div className="text-base font-semibold">
+													{studio?.studioName}
+												</div>
 											</div>
-										</div>
+										) : (
+											<div>Bạn không làm việc cho tiệm xăm nào</div>
+										)}
 									</div>
 									<div className="py-5">
 										<h1 className="border-b border-gray-300 pb-3 text-base">

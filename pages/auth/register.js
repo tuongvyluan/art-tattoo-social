@@ -45,11 +45,16 @@ const RegisterPage = () => {
 			handleAlert(true, '', 'Đang đăng ký tài khoản...');
 
 			try {
-				await fetcherPost(`${BASE_URL}/Auth/Register`, {
+				fetcherPost(`${BASE_URL}/Auth/Register`, {
 					...user,
 					redirect: false
-				});
-				Router.replace('/auth/signin');
+				}).then((data) => {
+					console.log(data)
+					handleAlert(true, 'Đăng ký tài khoản thành công', 'Bạn hãy kiểm tra mail để xác thực tài khoản nhé.', 1);
+				}).catch((e) => {
+					console.log(e)
+					handleAlert(true, 'Đăng ký tài khoản thất bại', '', 2);
+				})
 			} catch (e) {
 				console.log(e);
 				let mesageTitle = 'Đăng ký tài khoản không thành công.';
@@ -57,17 +62,29 @@ const RegisterPage = () => {
 				if (e.message.includes('already an account')) {
 					messageContent = 'Email hoặc số điện thoại này đã tồn tại.';
 				}
-				handleAlert(true, mesageTitle, messageContent, true);
+				handleAlert(true, mesageTitle, messageContent, 2);
 			}
 		}
 	};
 
 	const handleAlert = (state, title, content, isWarn = false) => {
 		setShowAlert((prev) => state);
+		let color;
+		switch (isWarn) {
+			case 1:
+				color = 'green'
+				break;
+			case 2:
+				color = 'red'
+				break;
+			default:
+				color = 'blue'
+				break;
+		}
 		setAlertContent({
 			title: title,
 			content: content,
-			isWarn: isWarn
+			isWarn: color
 		});
 	};
 
@@ -76,7 +93,7 @@ const RegisterPage = () => {
 			<Alert
 				showAlert={showAlert}
 				setShowAlert={setShowAlert}
-				color={alertContent.isWarn ? 'red' : 'blue'}
+				color={alertContent.isWarn}
 				className="bottom-2 right-2 absolute"
 			>
 				<strong className="font-bold mr-1">{alertContent.title}</strong>

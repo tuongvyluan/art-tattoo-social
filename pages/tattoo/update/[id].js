@@ -38,21 +38,21 @@ const TattooDetails = () => {
 	if (id !== 'new' && !artTattoo) {
 		fetcher(`${BASE_URL}/TattooArts/Details?id=${id}`).then((data) => {
 			const stageMap = new Map(
-				data.medias.map((obj) => {
+				data.tattooImages.map((obj) => {
 					return [
 						obj.tattooArtStageId,
 						{
 							id: obj.tattooArtStageId,
 							stageStyle: obj.stageStyle,
 							description: obj.description ? obj.description : '',
-							medias: []
+							tattooImages: []
 						}
 					];
 				})
 			);
-			data.medias.map((obj) => {
+			data.tattooImages.map((obj) => {
 				const value = stageMap.get(obj.tattooArtStageId);
-				value.medias.push({ ...obj, saved: true }); // saved field to note that this image has been saved to db
+				value.tattooImages.push({ ...obj, saved: true }); // saved field to note that this image has been saved to db
 				stageMap.set(obj.tattooArtStageId, value);
 			});
 			const renderData = {
@@ -99,7 +99,7 @@ const TattooDetails = () => {
 					// 	id: 1,
 					// 	stageStyle: 0,
 					// 	description: '',
-					// 	medias: [
+					// 	tattooImages: [
 							// {
 							// id: '',
 							// url: '',

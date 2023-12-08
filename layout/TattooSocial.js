@@ -18,11 +18,11 @@ import Router from 'next/router';
 import { Tooltip } from 'flowbite-react';
 import StylePill from 'components/StylePill';
 
-const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
+const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 	const { status, data } = useSession();
 	const [countLike, setCountLike] = useState(likes.length);
 	const [likeList, setLikeList] = useState(likes);
-	const images = medias.map((media) => media.url);
+	const images = tattooImages.map((media) => media.url);
 	const [commentList, setCommentList] = useState(comments);
 	const [myComment, setMyComment] = useState('');
 	const [authen, setAuthen] = useState(false);
@@ -517,7 +517,7 @@ const TattooSocial = ({ tattoo, medias, artist, likes, comments }) => {
 
 TattooSocial.propTypes = {
 	tattoo: PropTypes.object.isRequired,
-	medias: PropTypes.array.isRequired,
+	tattooImages: PropTypes.array.isRequired,
 	likes: PropTypes.array.isRequired,
 	comments: PropTypes.array.isRequired,
 	artist: PropTypes.object.isRequired

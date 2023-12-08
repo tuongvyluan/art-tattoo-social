@@ -114,7 +114,7 @@ function TattooDetailNoUpdatePage({ bookingId, artTattoo }) {
 					}
 					<div>
 						{
-							// Add tattoo stage, including tattoo medias
+							// Add tattoo stage, including tattoo tattooImages
 						}
 						<div>
 							<div className="font-semibold text-lg pb-2">
@@ -138,7 +138,7 @@ function TattooDetailNoUpdatePage({ bookingId, artTattoo }) {
 													//Show media section
 												}
 												<div className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-													{stage.medias.map((media, mediaIndex) => (
+													{stage.tattooImages.map((media, mediaIndex) => (
 														<div className="relative" key={media.id}>
 															<div className="absolute top-0 left-0 flex items-center cursor-pointer gap-2">
 																<div className="text-gray-500">Public:</div>

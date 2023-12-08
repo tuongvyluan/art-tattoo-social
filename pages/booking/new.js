@@ -1,6 +1,7 @@
 import BookingForm from 'layout/BookingForm';
 import { fetcher } from 'lib';
 import { BASE_URL } from 'lib/env';
+import { SERVICE_STATUS } from 'lib/status';
 import { useSession } from 'next-auth/react';
 import Router, { useRouter } from 'next/router';
 import NotFound from 'pages/404';
@@ -27,29 +28,34 @@ const BookingFormPage = () => {
 		if (isArtist && !artist) {
 			fetcher(`${BASE_URL}/artists/${artistId}/artist-details`)
 				.then((data) => {
-					setStudioId(data.studioArtists[0].id)
+					setStudioId(data.studioArtists[0].id);
 					setArtist({
 						fullName: data.fullName,
 						id: data.id
 					});
 				})
 				.catch((e) => {
-					console.log(e)
-				})
+					console.log(e);
+				});
 		}
 		if (studioId !== '' && !studio) {
-			fetcher(`${BASE_URL}/studios/${studioId}/services?pageSize=100`)
+			fetcher(`${BASE_URL}/studios/${studioId}/services-for-create-booking`)
 				.then((data) => {
 					const newStudio = {
 						id: studioId,
-						services: data.services.map((service) => {
-							return {
-								...service,
-								quantity: 0
-							}
-						}),
+						services: data.services
+							.filter((service) => service.status === SERVICE_STATUS.AVAILABLE)
+							?.map((service) => {
+								return {
+									...service,
+									quantity: 0
+								};
+							}),
 						name: 'Studio',
-						avatar: ''
+						avatar: '',
+						artists: data.artists,
+						openTime: data.openTime,
+						closeTime: data.closeTime
 					};
 					setStudio(newStudio);
 				})
@@ -62,7 +68,7 @@ const BookingFormPage = () => {
 				})
 				.finally(() => {
 					setLoading(false);
-				})
+				});
 		}
 
 		return (

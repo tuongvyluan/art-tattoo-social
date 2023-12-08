@@ -1,12 +1,30 @@
-import { Alert, Avatar, BackgroundImg } from 'ui';
+import {
+	Alert,
+	Avatar,
+	BackgroundImg,
+	Dropdown,
+	DropdownMenu,
+	DropdownToggle
+} from 'ui';
 import PropTypes from 'prop-types';
 import BookingModal from 'components/BookingModal';
 import Link from 'next/link';
 import ServicePage from './Studio/Service';
 import { useState } from 'react';
-import { fetcherPost, formatPrice } from 'lib';
+import {
+	extractServiceName,
+	fetcherPost,
+	formatPrice,
+	formatTime,
+	formatTimeWithoutSecond
+} from 'lib';
 import { BASE_URL } from 'lib/env';
 import Router from 'next/router';
+import { v4 } from 'uuid';
+import { stringServiceCategories } from 'lib/status';
+import { BsTrash } from 'react-icons/bs';
+import MyInput from 'components/MyInput';
+import { ChevronDown } from 'icons/outline';
 
 const estimeDate = [
 	'Trong vòng 7 ngày tới',
@@ -23,19 +41,36 @@ const BookingForm = ({
 	hasLogin = true,
 	customerId
 }) => {
+	const [serviceList, setServiceList] = useState(studio.services);
 	const [description, setDescription] = useState('');
 	const [time, setTime] = useState(0);
+	const [estimateTime, setEstimateTime] = useState(studio.openTime);
 	const [minPrice, setMinPrice] = useState(0);
 	const [maxPrice, setMaxPrice] = useState(0);
 	const [selectedServices, setSelectedServices] = useState(new Map());
+	const [bookingDetails, setBookingDetails] = useState([]);
+	const [artists, setArtists] = useState(
+		[
+			{
+				id: null,
+				account: {
+					fullName: 'Nghệ sĩ bất kỳ'
+				}
+			}
+		].concat(studio.artists)
+	);
+
+	console.log(artists);
 
 	const handleDescription = (e) => {
 		setDescription(e.target.value);
 	};
+
 	const handleSelectChange = (isIncrease, service) => {
 		if (isIncrease) {
 			setMinPrice((prev) => prev + service.minPrice);
 			setMaxPrice((prev) => prev + service.maxPrice);
+			handleAddBookingDetail(service);
 		} else {
 			setMinPrice((prev) => prev - service.minPrice);
 			setMaxPrice((prev) => prev - service.maxPrice);
@@ -43,25 +78,78 @@ const BookingForm = ({
 		selectedServices.set(service.id, service.quantity);
 	};
 
+	const handleAddBookingDetail = (service) => {
+		const id = v4();
+		const detail = {
+			id: id,
+			service: service,
+			serviceId: service.id,
+			description: '',
+			artistId: null
+		};
+		const details = [...bookingDetails];
+		details.push(detail);
+		setBookingDetails(details);
+	};
+
+	const handleRemoveBookingDetail = (index) => {
+		const details = [...bookingDetails];
+		const service = details.at(index).service;
+		handleSelectChange(false, service);
+		const services = [...serviceList];
+		const serviceIndex = services.findIndex((s) => s.id === service.id);
+		services[serviceIndex] = {
+			...service,
+			quantity: services[serviceIndex].quantity - 1
+		};
+		setServiceList(services);
+		details.splice(index, 1);
+		setBookingDetails(details);
+	};
+
+	const handleChangeBookingDetail = (index, name, value) => {
+		console.log(value);
+		const detail = {
+			...bookingDetails[index],
+			[name]: value
+		};
+		bookingDetails[index] = detail;
+		setBookingDetails([...bookingDetails]);
+	};
+
 	const [showAlert, setShowAlert] = useState(false);
 
 	const [alertContent, setAlertContent] = useState({
 		title: '',
 		content: '',
-		isWarn: false
+		isWarn: 'blue'
 	});
 
-	const handleAlert = (state, title, content, isWarn = false) => {
+	const handleAlert = (state, title, content, isWarn = 0) => {
 		setShowAlert((prev) => state);
+		let color;
+		switch (isWarn) {
+			case 1:
+				color = 'green';
+				break;
+			case 2:
+				color = 'red';
+				break;
+			default:
+				color = 'blue';
+				break;
+		}
 		setAlertContent({
 			title: title,
 			content: content,
-			isWarn: isWarn
+			isWarn: color
 		});
 	};
 	const handleSubmit = () => {
-		handleAlert(true, 'Đang đặt hẹn');
-		let newDescription = `Ngày hẹn dự tính: ${estimeDate.at(time)}. ${description}`;
+		handleAlert(true, 'Đang đặt hẹn', '', 0);
+		let newDescription = `Thời gian hẹn dự tính: ${estimeDate.at(
+			time
+		)}, lúc ${formatTimeWithoutSecond(estimateTime)}. ${description}`;
 		const bookingServices = Array.from(selectedServices, ([key, value]) => ({
 			serviceId: key,
 			quantity: value
@@ -70,14 +158,14 @@ const BookingForm = ({
 			studioId: studio.id,
 			customerId: customerId,
 			description: newDescription,
-			serviceIds: bookingServices
+			bookingDetails: bookingDetails
 		})
 			.then((data) => {
-				handleAlert(true, 'Đặt hẹn thành công');
-				Router.replace('/booking');
+				handleAlert(true, 'Đặt hẹn thành công', '', 1);
+				// Router.replace('/booking');
 			})
 			.catch((e) => {
-				handleAlert(true, 'Đặt hẹn thất bại', '', true);
+				handleAlert(true, 'Đặt hẹn thất bại', '', 2);
 			});
 	};
 
@@ -89,13 +177,13 @@ const BookingForm = ({
 			<Alert
 				showAlert={showAlert}
 				setShowAlert={setShowAlert}
-				color={alertContent.isWarn ? 'red' : 'blue'}
+				color={alertContent.isWarn}
 				className="bottom-2 right-2 fixed max-w-md z-50"
 			>
 				<strong className="font-bold mr-1">{alertContent.title}</strong>
 				<span className="block sm:inline">{alertContent.content}</span>
 			</Alert>
-			<div className="absolute -top-3 -left-5 -right-10 overflow-hidden h-noFooter">
+			<div className="absolute -top-3 -left-5 -right-10 h-noFooter">
 				<BackgroundImg
 					image={'/images/booking-img.jpg'}
 					className="relative w-full h-full bg-center bg-cover bg-fallback"
@@ -111,7 +199,7 @@ const BookingForm = ({
 						{hasLogin ? (
 							<div>
 								{customerId ? (
-									<div className="h-96 w-full overflow-auto">
+									<div className="h-96 w-full min-w-min overflow-auto">
 										{/* <!-- Hiển thị tên studio --> */}
 										<div className="flex bg-white flex-row w-0 min-w-full">
 											<div className="flex justify-between items-center py-4 px-2">
@@ -144,50 +232,131 @@ const BookingForm = ({
 										{/* <!-- Hiển thị form--> */}
 										<div className=" overflow-y-auto min-w-full py-4 px-2">
 											<h2 className="text-xl font-semibold mb-4">
-												Mô tả hình xăm bạn mong muốn:
+												Chọn dịch vụ bạn mong muốn:
 											</h2>
 											<form>
-												{studio.services && (
+												{serviceList && (
 													<div>
 														<ServicePage
 															onChange={handleSelectChange}
-															services={studio.services}
+															services={serviceList}
 														/>
 													</div>
 												)}
-												<div>
-													<div className="block mb-3">
-														<label className=" text-lg">Mô tả thêm ý tưởng</label>
-														<textarea
-															aria-label="description"
-															name="description"
-															onChange={handleDescription}
-															required
-															className=" mt-4 mb-4 text-base appearance-none h-20 relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
-															placeholder="Ví dụ: Tôi muốn hình xăm máy bay giấy kích thước vào khoảng 3-5cm và được xăm theo phong cách tối giản "
-														/>
-													</div>
+
+												<h2 className="text-lg font-semibold mb-2">
+													Chi tiết yêu cầu
+												</h2>
+												<div className="mb-4 mr-4">
+													{bookingDetails.map((detail, detailIndex) => (
+														<div key={detail.id} className="pt-3">
+															<div className="text-lg">
+																{detailIndex + 1}.{' '}
+																{extractServiceName(detail.service)} -{' '}
+																{stringServiceCategories.at(
+																	detail.service.serviceCategoryId
+																)}
+															</div>
+															<div className="flex flex-wrap gap-2 my-2 items-center">
+																<div>Nghệ sĩ xăm mong muốn:</div>
+																<Dropdown className={'relative w-44'}>
+																	<DropdownToggle>
+																		<div className="appearance-none relative block w-full px-3 py-2.5 border border-gray-600 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-base leading-none">
+																			<div>
+																				{
+																					artists
+																						.filter((a) => a.id === detail.artistId)
+																						.at(0).account.fullName
+																				}
+																			</div>
+																			<div className="absolute top-2 right-2">
+																				<ChevronDown width={16} height={16} />
+																			</div>
+																		</div>
+																	</DropdownToggle>
+																	<DropdownMenu className={'max-h-32 overflow-auto'}>
+																		{artists.map((a, aIndex) => (
+																			<div
+																				key={a.id}
+																				onClick={() =>
+																					handleChangeBookingDetail(
+																						detailIndex,
+																						'artistId',
+																						a.id
+																					)
+																				}
+																				className={`px-2 py-1 cursor-pointer hover:bg-gray-100 ${
+																					a.id === detail.artistId
+																						? 'bg-indigo-100'
+																						: ''
+																				}`}
+																			>
+																				{a.account.fullName}
+																			</div>
+																		))}
+																	</DropdownMenu>
+																</Dropdown>
+															</div>
+															<div className="flex justify-between items-center gap-2">
+																<MyInput
+																	name="description"
+																	value={detail.description}
+																	onChange={(e) =>
+																		handleChangeBookingDetail(
+																			detailIndex,
+																			'description',
+																			e.target.value
+																		)
+																	}
+																/>
+																<div
+																	className="cursor-pointer"
+																	onClick={() =>
+																		handleRemoveBookingDetail(detailIndex)
+																	}
+																>
+																	<BsTrash size={25} />
+																</div>
+															</div>
+														</div>
+													))}
 												</div>
 
-												<h2 className="text-lg mb-4">Bạn có thể đến xăm vào lúc?</h2>
-												<div className="w-72">
-													<select
-														id="time"
-														className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-													>
-														{estimeDate.map((time, index) => (
-															<option
-																className={`${
-																	index === time ? 'font-semibold bg-gray-50' : ''
-																}`}
-																onChange={() => setTime(index)}
-																key={time}
-																value={index}
-															>
-																{time}
-															</option>
-														))}
-													</select>
+												<h2 className="text-lg font-semibold mb-4">
+													Bạn có thể đến xăm vào lúc?
+												</h2>
+												<div className="flex flex-wrap items-center gap-2 mb-4">
+													<div className="w-60">
+														<select
+															id="time"
+															className="bg-gray-50 border border-gray-600 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+														>
+															{estimeDate.map((time, index) => (
+																<option
+																	className={`${
+																		index === time ? 'font-semibold bg-gray-50' : ''
+																	}`}
+																	onChange={() => setTime(index)}
+																	key={time}
+																	value={index}
+																>
+																	{time}
+																</option>
+															))}
+														</select>
+													</div>
+													<div>Vào lúc</div>
+													<div>
+														<input
+															type="time"
+															className="bg-gray-50 border border-gray-600 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+															min={studio.openTime}
+															max={studio.closeTime}
+															step={1}
+															value={estimateTime}
+															onChange={(e) => setEstimateTime(e.target.value)}
+														/>
+													</div>
 												</div>
 												<div className="mb-4">
 													Giá dịch vụ ước tính:{' '}

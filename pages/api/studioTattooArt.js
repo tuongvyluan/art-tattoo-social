@@ -118,7 +118,7 @@ const data = {
 					'Trước khi xoá',
 					'Sau khi xoá xăm'
 				][Math.floor(Math.random() * 8)],
-				medias: [
+				tattooImages: [
 					{
 						tattooMediaId: Math.floor(Math.random() * 1000),
 						url: randomPhoto,
