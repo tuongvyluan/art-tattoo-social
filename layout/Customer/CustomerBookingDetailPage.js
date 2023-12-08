@@ -4,6 +4,7 @@ import {
 	fetcherPut,
 	formatDate,
 	formatPrice,
+	hasBookingMeeting,
 	isFuture
 } from 'lib';
 import { BOOKING_STATUS, operationNames, stringBookingStatuses } from 'lib/status';
@@ -17,17 +18,6 @@ import { BASE_URL } from 'lib/env';
 import MyModal from 'components/MyModal';
 import customerCancelReasons from 'lib/cancelReasons';
 import CustomerServices from '../CustomerServices';
-
-const hasBookingMeeting = (bookingMeetings) => {
-	let result;
-	if (
-		bookingMeetings?.at(0)?.meetingDate &&
-		isFuture(bookingMeetings?.at(0)?.meetingDate)
-	) {
-		result = new Date(bookingMeetings?.at(0)?.meetingDate);
-	}
-	return result;
-};
 
 const calculateTotal = (tattooArts) => {
 	if (!tattooArts) {

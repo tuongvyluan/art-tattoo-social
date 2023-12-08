@@ -148,10 +148,6 @@ const CustomerServices = ({
 									</DropdownMenu>
 								</Dropdown>
 							</div>
-							<div className="pb-3 flex items-center gap-1">
-								<input type="checkbox" />
-								<div>Tạo hình xăm</div>
-							</div>
 						</div>
 					</div>
 					{
