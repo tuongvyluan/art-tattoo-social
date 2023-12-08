@@ -189,10 +189,10 @@ const CustomerServices = ({
 										onClick={() => onSelectUpdatedService(bookingServiceIndex)}
 										className="relative"
 									>
-										<MdEdit serviceSize={20} />
+										<MdEdit size={20} />
 									</div>
 									<div className="relative">
-										<MdOutlineClose serviceSize={20} />
+										<MdOutlineClose size={20} />
 									</div>
 								</div>
 							)}
@@ -230,7 +230,7 @@ const CustomerServices = ({
 							{
 								// Phần bên phải của khung booking service
 							}
-							<div className="px-3 w-full">
+							<div className="pl-3 pr-16 w-full">
 								<div
 									key={bookingDetail.id}
 									className="pb-1 flex flex-wrap text-base"
