@@ -18,6 +18,7 @@ import { BASE_URL } from 'lib/env';
 import MyModal from 'components/MyModal';
 import customerCancelReasons from 'lib/cancelReasons';
 import CustomerServices from '../CustomerServices';
+import Heading from 'components/Heading';
 
 const calculateTotal = (tattooArts) => {
 	if (!tattooArts) {
@@ -41,7 +42,9 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 	// Cancel related vars
 	const [cancelStatus, setCancelStatus] = useState(BOOKING_STATUS.CUSTOMER_CANCEL);
 	const [confirmCancelBookingModal, setConfirmCancelBookingModal] = useState(false);
-	const [cancelReason, setCancelReason] = useState(customerCancelReasons.at(0).reason);
+	const [cancelReason, setCancelReason] = useState(
+		customerCancelReasons.at(0).reason
+	);
 	const [cancelReasonMore, setCancelReasonMore] = useState('');
 
 	const handleCancelReason = ({ status, reason }) => {
@@ -145,9 +148,7 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 									</div>
 								</Link>
 								<div>
-									<span>
-										Mã đơn hàng: {renderData.id.split('-').at(0)} |{' '}
-									</span>
+									<span>Mã đơn hàng: {renderData.id.split('-').at(0)} | </span>
 									<span className="text-red-500">
 										{stringBookingStatuses[bookingStatus]}
 									</span>
@@ -158,7 +159,7 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 							}
 							<div className="pt-5 border-b border-gray-300 pb-3">
 								<div className="flex justify-start flex-wrap">
-									<div className="w-full md:pr-1 md:w-1/3 md:border-r mb-5 md:mb-0 md:border-b-0 border-b border-gray-300">
+									<div className="w-full md:pr-1 md:w-1/2 md:border-r mb-5 md:mb-0 md:border-b-0 border-b border-gray-300">
 										<div>
 											<div className="font-semibold text-xl pb-2">
 												Thông tin tiệm xăm
@@ -172,53 +173,10 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 												{renderData.studio.closeTime.split(':')[1]}
 											</div>
 										</div>
-										{
-											// Confirm ngày hẹn
-										}
-										{(bookingStatus === BOOKING_STATUS.CONFIRMED ||
-											bookingStatus === BOOKING_STATUS.IN_PROGRESS) && (
-											<div className="pt-3 mt-3 border-t border-gray-300">
-												<div className="font-semibold text-xl pb-2">
-													Thông tin buổi hẹn
-												</div>
-												<div className="">
-													<div>
-														{hasBookingMeeting(renderData.bookingMeetings) ? (
-															<div>
-																<div className="text-base">
-																	<div className="pb-2">
-																		Buổi hẹn kế tiếp vào ngày:
-																	</div>
-																	<div className="font-bold text-lg text-green-500">
-																		{formatDate(
-																			hasBookingMeeting(renderData.bookingMeetings)
-																		)}
-																	</div>
-																</div>
-															</div>
-														) : (
-															<div>
-																{(renderData.status === BOOKING_STATUS.CONFIRMED ||
-																	renderData.status === BOOKING_STATUS.PENDING ||
-																	renderData.status ===
-																		BOOKING_STATUS.IN_PROGRESS) && (
-																	<div className="text-base">
-																		<div className="pb-2">
-																			Chưa có buổi hẹn kế tiếp
-																		</div>
-																	</div>
-																)}
-															</div>
-														)}
-													</div>
-												</div>
-											</div>
-										)}
 									</div>
 									<div className="flex flex-col justify-start flex-grow pt-3 md:pt-0">
-										{timeline.length > 0 ? (
-											<WidgetOrderStatus timeline={timeline} />
-										) : (
+										{(renderData.status === BOOKING_STATUS.CUSTOMER_CANCEL ||
+											renderData.status === BOOKING_STATUS.STUDIO_CANCEL) && (
 											<div className="text-center my-auto text-base text-red-500">
 												<div>ĐƠN HÀNG ĐÃ BỊ HUỶ</div>
 											</div>
@@ -230,7 +188,7 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 								// Customer description
 							}
 							{renderData.description && (
-								<div className="pt-3 pb-3 border-b border-gray-300 pb-3">
+								<div className="pt-3 pb-3 border-b border-gray-300">
 									<div className="font-semibold text-xl pb-2">
 										Mô tả của khách hàng
 									</div>
@@ -239,85 +197,21 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 							)}
 
 							{
-								// Customer services
-							}
-							<div className="pt-3">
-								<CustomerServices bookingServices={renderData.services} />
-							</div>
-
-							{
 								// Booking detail list
 							}
-							{
-								// Đơn hàng đã huỷ nhưng đã có tattoo art
-								(((data.status === BOOKING_STATUS.CUSTOMER_CANCEL ||
-									data.status === BOOKING_STATUS.STUDIO_CANCEL) &&
-									data.tattooArts.length > 0) ||
-									// Đơn hàng còn chưa bắt đầu
-									data.status === BOOKING_STATUS.IN_PROGRESS ||
-									data.status === BOOKING_STATUS.COMPLETED) && (
-									<div className="mt-6 pt-3 border-t border-gray-300 pb-3">
-										<div className="flex justify-between items-center font-semibold text-xl pb-2">
-											<div>Chi tiết đơn hàng</div>
-										</div>
-
-										{
-											// List hình xăm
-										}
-										{data.tattooArts?.map((tattoo, tattooIndex) => (
-											<div key={tattoo.id}>
-												<Link href={`/tattoo/${tattoo.id}?booking=${data.id}`}>
-													<div className="cursor-pointer py-2 flex justify-start gap-3 flex-wrap">
-														<div className="relative w-24 h-24">
-															<Image
-																layout="fill"
-																src={
-																	tattoo.thumbnail
-																		? tattoo.thumbnail
-																		: '/images/ATL.png'
-																}
-																alt={'a'}
-																className="object-contain rounded-2xl"
-															/>
-														</div>
-														<div className="flex-grow text-base">
-															<div>
-																<span>Nghệ sĩ xăm: </span>
-																<span className="font-semibold">
-																	{tattoo.artist.fullName}
-																</span>
-															</div>
-															{tattoo.bookingDetails.map(
-																(bookingDetail, bookingDetailIndex) => (
-																	<div
-																		key={bookingDetail.id}
-																		className="flex justify-between items-center"
-																	>
-																		<div className="text-base">
-																			{operationNames.at(bookingDetail.operationId)}
-																		</div>
-																		<div className="text-lg">
-																			{formatPrice(bookingDetail.price)}
-																		</div>
-																	</div>
-																)
-															)}
-														</div>
-													</div>
-												</Link>
-											</div>
-										))}
-									</div>
-								)
-							}
+							<div className="pt-3">
+								<div className="flex justify-between w-full pb-1">
+									<Heading>
+										Các dịch vụ đã đặt ({renderData.bookingDetails?.length})
+									</Heading>
+								</div>
+								<CustomerServices bookingDetails={renderData.bookingDetails} />
+							</div>
 
 							<div
 								className={`${
-									renderData.status === BOOKING_STATUS.COMPLETED ||
-									renderData.status === BOOKING_STATUS.CUSTOMER_CANCEL ||
-									renderData.status === BOOKING_STATUS.STUDIO_CANCEL
-										? 'hidden'
-										: 'mx-auto pt-3 flex flex-wrap justify-center gap-3'
+									renderData.status === BOOKING_STATUS.PENDING &&
+									'mx-auto pt-3 flex flex-wrap justify-center gap-3'
 								}`}
 							>
 								{(renderData.status === BOOKING_STATUS.PENDING ||

@@ -51,8 +51,8 @@ const BookingFormPage = () => {
 									quantity: 0
 								};
 							}),
-						name: 'Studio',
-						avatar: '',
+						name: data.studioName,
+						avatar: data.owner.avatar,
 						artists: data.artists,
 						openTime: data.openTime,
 						closeTime: data.closeTime

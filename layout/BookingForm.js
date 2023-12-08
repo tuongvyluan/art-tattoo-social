@@ -162,7 +162,7 @@ const BookingForm = ({
 		})
 			.then((data) => {
 				handleAlert(true, 'Đặt hẹn thành công', '', 1);
-				// Router.replace('/booking');
+				Router.replace('/booking');
 			})
 			.catch((e) => {
 				handleAlert(true, 'Đặt hẹn thất bại', '', 2);

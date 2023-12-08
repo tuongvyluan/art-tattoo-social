@@ -3,31 +3,22 @@ import {
 	stringBookingDetailStatus,
 	stringBookingDetailStatusColor,
 	stringPlacements,
-	stringServiceStatus,
 	stringSize
 } from 'lib/status';
-import { formatDateTimeForInput, formatPrice, formatTime } from 'lib';
-import { Avatar, Card, Dropdown, DropdownMenu, DropdownToggle } from 'ui';
+import {
+	formatDateTimeForInput,
+	formatPrice,
+	formatTime,
+	showTextMaxLength
+} from 'lib';
+import { Avatar, Card } from 'ui';
 import { MdEdit, MdOutlineCalendarMonth, MdOutlineClose } from 'react-icons/md';
-import MyModal from 'components/MyModal';
 import { useState } from 'react';
-import MoneyInput from 'components/MoneyInput';
-import MyInput from 'components/MyInput';
 import Link from 'next/link';
 import Image from 'next/image';
 
-const CustomerServices = ({
-	bookingDetails,
-	canEdit = false,
-	showMore = false,
-	artistList
-}) => {
-	const [bookingServiceModal, setBookingServiceModal] = useState(false);
+const CustomerServices = ({ bookingDetails, canEdit = false, showMore = false }) => {
 	const [selectedBookingDetail, setSelectedBookingDetail] = useState(undefined);
-	const [selectedArtist, setSelectedArtist] = useState(0);
-	const [selectedMeetingDate, setSelectedMeetingDate] = useState(
-		formatDateTimeForInput(new Date())
-	);
 
 	const onSelectUpdatedService = (detailIndex) => {
 		setSelectedArtist(0);
@@ -35,141 +26,8 @@ const CustomerServices = ({
 		setBookingServiceModal(true);
 	};
 
-	const handleChangeDetail = (e) => {
-		setSelectedBookingDetail({
-			...selectedBookingDetail,
-			[e.target.name]: e.target.value
-		});
-	};
-
 	return (
 		<div className="relative">
-			<MyModal
-				serviceSize="2xl"
-				serviceTitle="Chỉnh sửa dịch vụ"
-				openModal={bookingServiceModal}
-				setOpenModal={setBookingServiceModal}
-			>
-				<div className="h-52 overflow-auto">
-					{
-						// Tên dịch vụ
-					}
-					<div className="pb-3 flex flex-wrap text-xl font-semibold">
-						<div className="pr-1">{selectedBookingDetail?.serviceTitle},</div>
-						<div className="pr-1">
-							{stringSize.at(selectedBookingDetail?.serviceSize)},
-						</div>
-
-						{selectedBookingDetail?.servicePlacement ? (
-							<div className="pr-1">
-								Vị trí xăm:{' '}
-								{stringPlacements.at(selectedBookingDetail?.servicePlacement)},
-							</div>
-						) : (
-							<></>
-						)}
-
-						<div className="pr-1">
-							{formatPrice(selectedBookingDetail?.serviceMinPrice)} -{' '}
-							{formatPrice(selectedBookingDetail?.serviceMaxPrice)}
-						</div>
-					</div>
-					{
-						// Description của booking details
-					}
-					<div className="pb-3 flex items-center gap-1">
-						<div className="w-20">Lưu ý: </div>
-						<MyInput
-							name="description"
-							value={selectedBookingDetail?.description}
-							onChange={handleChangeDetail}
-						/>
-					</div>
-					{
-						// Thông tin cơ bản của dịch vụ
-					}
-					<div className="flex gap-8 w-full">
-						<div className="">
-							{
-								// Trạng thái
-							}
-							<div className="pb-3 flex items-center gap-1">
-								<div className="w-20">Trạng thái: </div>
-								<Dropdown className="relative h-full flex items-center">
-									<DropdownToggle>
-										<div className="w-40 rounded-lg p-1 border border-gray-300">
-											{stringServiceStatus.at(0)}
-										</div>
-									</DropdownToggle>
-									<DropdownMenu>
-										{stringServiceStatus.map((status, statusIndex) => (
-											<div
-												key={status}
-												// onClick={() => setTattooState('serviceSize', statusIndex)}
-												className={`px-2 py-1 cursor-pointer hover:bg-gray-100`}
-											>
-												{status}
-											</div>
-										))}
-									</DropdownMenu>
-								</Dropdown>
-							</div>
-							<div className="pb-3 flex items-center gap-1">
-								<div className="w-20">Giá: </div>
-								<div className="w-40">
-									<MoneyInput
-										value={1000000}
-										onAccept={(value, mask) => {
-											return value;
-										}}
-									/>
-								</div>
-							</div>
-						</div>
-						<div>
-							<div className="pb-3 flex items-center gap-1">
-								<div className="w-20">Phân công: </div>
-								<Dropdown className="relative h-full flex items-center">
-									<DropdownToggle>
-										<div className="w-40 rounded-lg p-1 border border-gray-300">
-											{artistList?.at(selectedArtist)?.fullName}
-										</div>
-									</DropdownToggle>
-									<DropdownMenu>
-										{artistList?.map((artist, artistIndex) => (
-											<div
-												key={artist.id}
-												// onClick={() => setTattooState('serviceSize', statusIndex)}
-												className={`px-2 py-1 cursor-pointer hover:bg-gray-100`}
-											>
-												{artist?.fullName}
-											</div>
-										))}
-									</DropdownMenu>
-								</Dropdown>
-							</div>
-						</div>
-					</div>
-					{
-						// Thông tin về booking meeting cho dịch vụ
-					}
-					<div className="flex gap-2 w-full items-center">
-						<div className="flex items-start gap-1 w-full">
-							<div className="w-20">Ngày hẹn:</div>
-							<div className="w-min">
-								<input
-									className="appearance-none relative block w-full text-base mb-2 px-3 py-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
-									type="datetime-local"
-									value={selectedMeetingDate}
-									onChange={(e) =>
-										setSelectedMeetingDate(formatDateTimeForInput(e.target.value))
-									}
-								/>
-							</div>
-						</div>
-					</div>
-				</div>
-			</MyModal>
 			<div className="block">
 				{bookingDetails.map((bookingDetail, bookingServiceIndex) => (
 					<Card
@@ -246,9 +104,7 @@ const CustomerServices = ({
 									)}
 
 									{bookingDetail.serviceCategory ? (
-										<div className="pr-1">
-											{bookingDetail.serviceCategory.name},
-										</div>
+										<div className="pr-1">{bookingDetail.serviceCategory.name},</div>
 									) : (
 										<></>
 									)}
@@ -257,6 +113,12 @@ const CustomerServices = ({
 										{formatPrice(bookingDetail.serviceMinPrice)} -{' '}
 										{formatPrice(bookingDetail.serviceMaxPrice)}
 									</div>
+								</div>
+								{
+									//Description
+								}
+								<div className="pb-1">
+									{showTextMaxLength(bookingDetail.description, 50)}
 								</div>
 								<div className="flex flex-wrap gap-3 items-center ">
 									{
