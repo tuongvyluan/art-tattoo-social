@@ -2,7 +2,7 @@ import CryptoJS from 'crypto-js';
 import Button from 'components/Button';
 import Pill from 'components/Pill';
 import { Tooltip } from 'flowbite-react';
-import { fetcherPost, fetcherPut } from 'lib';
+import { fetcherPost, fetcherPut, formatDate } from 'lib';
 import { BASE_URL, UPLOAD_PRESET } from 'lib/env';
 import { ROLE } from 'lib/status';
 import { tattooStyleList } from 'lib/tattooStyle';
@@ -24,7 +24,7 @@ function ArtistInfo({ account, onReload }) {
 	const [artistStyles, setArtistStyles] = useState(
 		account.styles?.map((style) => style.id)
 	);
-	const [studio, setStudio] = useState(account.studio);
+	const [studios, setStudios] = useState(account.studios);
 	const [avatarKey, setAvatarKey] = useState(account.avatar);
 	const [showAlert, setShowAlert] = useState(false);
 
@@ -109,28 +109,30 @@ function ArtistInfo({ account, onReload }) {
 			status: 0,
 			fullName: newProfile.fullName,
 			avatar: newProfile.avatar
-		}).then(() => {
-			update({
-				...data,
-				user: {
-					...data?.user,
-					artistId: account.id,
-					avatar: newProfile.avatar
-				}
-			});
-			if (JSON.stringify(profile.styles) !== JSON.stringify(artistStyles)) {
-				fetcherPut(
-					`${BASE_URL}/artists/${newProfile.id}/artist-style`,
-					artistStyles
-				).then(() => {
-					onReload();
+		})
+			.then(() => {
+				update({
+					...data,
+					user: {
+						...data?.user,
+						artistId: account.id,
+						avatar: newProfile.avatar
+					}
 				});
-			} else {
-				onReload();
-			}
-		}).catch((e) => {
-			console.log(e)
-		});
+				if (JSON.stringify(profile.styles) !== JSON.stringify(artistStyles)) {
+					fetcherPut(
+						`${BASE_URL}/artists/${newProfile.id}/artist-style`,
+						artistStyles
+					).then(() => {
+						onReload();
+					});
+				} else {
+					onReload();
+				}
+			})
+			.catch((e) => {
+				console.log(e);
+			});
 	};
 
 	const handleSubmit = (newProfile, artistStyles, artistStudios) => {
@@ -142,7 +144,7 @@ function ArtistInfo({ account, onReload }) {
 	};
 
 	const handleFormSubmit = () => {
-		handleSubmit(profile, artistStyles, studio);
+		handleSubmit(profile, artistStyles, studios);
 		setDefaultAccount({
 			...profile,
 			styles: artistStyles.map((style) => {
@@ -150,7 +152,7 @@ function ArtistInfo({ account, onReload }) {
 					id: style
 				};
 			}),
-			studio: studio
+			studio: studios
 		});
 		handleAlert(true, 'Cập nhật thông tin cá nhân thành công', '', 1);
 	};
@@ -160,7 +162,7 @@ function ArtistInfo({ account, onReload }) {
 		setArtistStyles(
 			JSON.parse(JSON.stringify(defaultAccount.styles.map((style) => style.id)))
 		);
-		setStudio(JSON.parse(JSON.stringify(defaultAccount.studios)));
+		setStudios(JSON.parse(JSON.stringify(defaultAccount.studios)));
 	};
 
 	useEffect(() => {
@@ -255,19 +257,34 @@ function ArtistInfo({ account, onReload }) {
 										<h1 className="border-b border-gray-300 pb-3 text-base mb-3">
 											Tiệm xăm
 										</h1>
-										{studio ? (
-											<div className="flex flex-wrap gap-2 items-center">
-												<Avatar
-													size={50}
-													src={
-														studio?.studioAvatar
-															? studio?.studioAvatar
-															: '/images/ATL.png'
-													}
-												/>
-												<div className="text-base font-semibold">
-													{studio?.studioName}
-												</div>
+										{studios ? (
+											<div>
+												{studios.map((studioArtist) => (
+													<div
+														key={studioArtist.createdAt}
+														className="flex flex-wrap gap-2 items-center pb-3"
+													>
+														<Avatar
+															size={50}
+															src={
+																studioArtist?.studioAvatar
+																	? studioArtist?.studioAvatar
+																	: '/images/ATL.png'
+															}
+														/>
+														<div>
+															<div className="text-base font-semibold">
+																{studioArtist?.studioName}
+															</div>
+															<div>
+																Từ {formatDate(studioArtist.createdAt)} đến{' '}
+																{studioArtist.dismissedAt
+																	? `${formatDate(studioArtist.dismissedAt)}`
+																	: 'nay'}
+															</div>
+														</div>
+													</div>
+												))}
 											</div>
 										) : (
 											<div>Bạn không làm việc cho tiệm xăm nào</div>
@@ -299,12 +316,16 @@ function ArtistInfo({ account, onReload }) {
 								</div>
 							)}
 							<div className="flex justify-between w-full">
-								{isArtist && data?.user?.artistId && (
+								{isArtist &&
+								data?.user?.artistId &&
+								account.studios?.at(0)?.dismissedAt !== null ? (
 									<div>
 										<Tooltip content="Copy key gửi tiệm xăm để gia nhập tiệm xăm">
 											<Button onClick={() => copyKey()}>Lấy key</Button>
 										</Tooltip>
 									</div>
+								) : (
+									<div></div>
 								)}
 								<div className="flex justify-end gap-2">
 									<div className="w-16">

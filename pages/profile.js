@@ -55,7 +55,10 @@ const ProfilePage = () => {
 								bioContent: data.bioContent ? data.bioContent : '',
 								avatar: data.avatar ? data.avatar : '/images/avatar.png',
 								styles: data.artistStyles,
-								studio: data.studioArtists?.at(0)
+								studios: data.studioArtists?.sort(
+									(a, b) =>
+										new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+								)
 							};
 							setProfile(myProfile);
 						})
