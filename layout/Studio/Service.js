@@ -68,7 +68,7 @@ function ServicePage({ services, onChange }) {
 							<h2 className="text-lg font-semibold pb-3 text-center">
 								Bảng giá dịch vụ
 							</h2>
-							<div className="relative shadow-md sm:rounded-lg w-max overflow-auto">
+							<div className="relative shadow-md sm:rounded-lg min-w-max w-full overflow-auto flex justify-center">
 								<table className="w-full text-sm text-left text-gray-500 pb-20">
 									<thead className="text-xs text-gray-700 uppercase dark:text-gray-400">
 										<tr>

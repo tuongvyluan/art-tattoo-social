@@ -174,7 +174,7 @@ function BookingDetailsPage({ data, studioId, setLoading, artistId }) {
 								// Customer services
 							}
 							<div className="pt-3">
-								<CustomerServices bookingDetails={renderData.bookingDetails} />
+								<CustomerServices showMore={true} bookingDetails={renderData.bookingDetails} />
 							</div>
 
 							{

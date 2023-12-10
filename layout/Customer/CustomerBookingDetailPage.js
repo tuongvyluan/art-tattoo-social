@@ -58,32 +58,45 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 	const [alertContent, setAlertContent] = useState({
 		title: '',
 		content: '',
-		isWarn: false
+		isWarn: 'blue'
 	});
 
-	const handleAlert = (state, title, content, isWarn = false) => {
+	const handleAlert = (state, title, content, isWarn = 0) => {
 		setShowAlert((prev) => state);
+		let color;
+		switch (isWarn) {
+			case 1:
+				color = 'green';
+				break;
+			case 2:
+				color = 'red';
+				break;
+			default:
+				color = 'blue';
+				break;
+		}
 		setAlertContent({
 			title: title,
 			content: content,
-			isWarn: isWarn
+			isWarn: color
 		});
 	};
 
 	const handleAfterConfirmed = () => {
 		handleAlert(true, 'Đang huỷ đơn hàng');
 		const body = {
+			updaterId: renderData.customer.accountId,
 			status: BOOKING_STATUS.CUSTOMER_CANCEL,
 			customerCancelReason: cancelReason.concat(` ${cancelReasonMore}`)
 		};
-		fetcherPut(`${BASE_URL}/customers/bookings/${renderData.id}`, body)
+		fetcherPut(`${BASE_URL}/bookings/${renderData.id}`, body)
 			.then((data) => {
 				setBookingStatus(BOOKING_STATUS.CUSTOMER_CANCEL);
-				handleAlert(true, 'Huỷ đơn hàng thành công');
+				handleAlert(true, 'Huỷ đơn hàng thành công', '', 1);
 				setLoading(true);
 			})
 			.catch((e) => {
-				handleAlert(true, 'Huỷ đơn hàng thành công');
+				handleAlert(true, 'Huỷ đơn hàng thất bại', '', 2);
 			});
 		setConfirmCancelBookingModal(false);
 	};
@@ -93,7 +106,7 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 			<Alert
 				showAlert={showAlert}
 				setShowAlert={setShowAlert}
-				color={alertContent.isWarn ? 'red' : 'blue'}
+				color={alertContent.isWarn}
 				className="bottom-2 right-2 fixed max-w-md z-50"
 			>
 				<strong className="font-bold mr-1">{alertContent.title}</strong>
@@ -205,7 +218,7 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 										Các dịch vụ đã đặt ({renderData.bookingDetails?.length})
 									</Heading>
 								</div>
-								<CustomerServices bookingDetails={renderData.bookingDetails} />
+								<CustomerServices showMore={true} bookingDetails={renderData.bookingDetails} />
 							</div>
 
 							<div

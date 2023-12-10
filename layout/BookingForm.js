@@ -14,6 +14,7 @@ import { useState } from 'react';
 import {
 	extractServiceName,
 	fetcherPost,
+	formatDate,
 	formatPrice,
 	formatTime,
 	formatTimeWithoutSecond
@@ -25,12 +26,21 @@ import { stringServiceCategories } from 'lib/status';
 import { BsTrash } from 'react-icons/bs';
 import MyInput from 'components/MyInput';
 import { ChevronDown } from 'icons/outline';
+import moment from 'moment';
 
 const estimeDate = [
-	'Trong vòng 7 ngày tới',
-	'Trong 2 tuần kế tiếp',
-	'Trong tháng này',
-	'Trong tháng sau',
+	`Trong vòng 7 ngày tới (từ ${formatDate(moment())} tới ${formatDate(
+		moment().add(7, 'days')
+	)})`,
+	`Trong 2 tuần kế tiếp (từ ${formatDate(moment())} tới ${formatDate(
+		moment().add(14, 'days')
+	)})`,
+	`Trong tháng này (từ ${formatDate(moment())} tới ${formatDate(
+		moment().add(1, 'months')
+	)})`,
+	`Trong tháng sau (từ ${formatDate(moment().add(1, 'months'))} tới ${formatDate(
+		moment().add(2, 'months')
+	)})`,
 	'Lúc nào cũng được'
 ];
 
@@ -59,12 +69,6 @@ const BookingForm = ({
 			}
 		].concat(studio.artists)
 	);
-
-	console.log(artists);
-
-	const handleDescription = (e) => {
-		setDescription(e.target.value);
-	};
 
 	const handleSelectChange = (isIncrease, service) => {
 		if (isIncrease) {
@@ -150,10 +154,6 @@ const BookingForm = ({
 		let newDescription = `Thời gian hẹn dự tính: ${estimeDate.at(
 			time
 		)}, lúc ${formatTimeWithoutSecond(estimateTime)}. ${description}`;
-		const bookingServices = Array.from(selectedServices, ([key, value]) => ({
-			serviceId: key,
-			quantity: value
-		})).filter((service) => service.quantity > 0);
 		fetcherPost(`${BASE_URL}/customers/CreateBookingWithServices`, {
 			studioId: studio.id,
 			customerId: customerId,
@@ -274,7 +274,7 @@ const BookingForm = ({
 																			</div>
 																		</div>
 																	</DropdownToggle>
-																	<DropdownMenu className={'max-h-32 overflow-auto'}>
+																	<DropdownMenu>
 																		{artists.map((a, aIndex) => (
 																			<div
 																				key={a.id}
@@ -326,39 +326,54 @@ const BookingForm = ({
 													Bạn có thể đến xăm vào lúc?
 												</h2>
 												<div className="flex flex-wrap items-center gap-2 mb-4">
-													<div className="w-60">
-														<select
-															id="time"
-															className="bg-gray-50 border border-gray-600 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-														>
-															{estimeDate.map((time, index) => (
-																<option
-																	className={`${
-																		index === time ? 'font-semibold bg-gray-50' : ''
-																	}`}
-																	onChange={() => setTime(index)}
-																	key={time}
-																	value={index}
-																>
-																	{time}
-																</option>
-															))}
-														</select>
-													</div>
-													<div>Vào lúc</div>
 													<div>
-														<input
-															type="time"
-															className="bg-gray-50 border border-gray-600 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-															min={studio.openTime}
-															max={studio.closeTime}
-															step={1}
-															value={estimateTime}
-															onChange={(e) => setEstimateTime(e.target.value)}
-														/>
+														<Dropdown className={'relative'}>
+															<DropdownToggle className={'relative'}>
+																<div
+																	className={
+																		'appearance-none relative block w-full pl-1 pr-7 py-2.5 border border-gray-600 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-base leading-none'
+																	}
+																>
+																	{estimeDate.at(time)}
+																</div>
+																<div className="absolute top-2.5 right-2">
+																	<ChevronDown width={16} height={16} />
+																</div>
+															</DropdownToggle>
+															<DropdownMenu className={'max-h-24 overflow-auto'}>
+																<div>
+																	{estimeDate.map((date, index) => (
+																		<div
+																			className={`px-2 py-1 cursor-pointer hover:bg-gray-100 ${
+																				index === time && 'bg-blue-50'
+																			}`}
+																			onClick={() => setTime(index)}
+																			key={date}
+																			value={index}
+																		>
+																			{date}
+																		</div>
+																	))}
+																</div>
+															</DropdownMenu>
+														</Dropdown>
+													</div>
+													<div className="flex items-center gap-2">
+														<div>Vào lúc</div>
+														<div>
+															<input
+																type="time"
+																className="bg-gray-50 border border-gray-600 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																min={studio.openTime}
+																max={studio.closeTime}
+																step={1}
+																value={estimateTime}
+																onChange={(e) => setEstimateTime(e.target.value)}
+															/>
+														</div>
 													</div>
 												</div>
-												<div className="mb-4">
+												<div className="mt-3 mb-10">
 													Giá dịch vụ ước tính:{' '}
 													{maxPrice > 0 && (
 														<span className="text-lg">
