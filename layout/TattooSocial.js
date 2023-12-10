@@ -3,7 +3,7 @@ import { IoMdHeartEmpty, IoMdHeart, IoIosLink, IoMdSend } from 'react-icons/io';
 import { HiDotsVertical } from 'react-icons/hi';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Avatar, Dropdown, DropdownMenu, DropdownToggle, Loading } from 'ui';
 import { TattooArtCarousel } from 'ui/TattooArtCarousel';
 import Button from 'components/Button';
@@ -35,6 +35,15 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 	const [hidePostModal, setHidePostModal] = useState(false);
 	const [shareTooltipContent, setShareTooltipContent] =
 		useState('Copy link bài viết');
+
+	useEffect(() => {
+		setLikeList(likes);
+		setCountLike(likes.length);
+	}, [likes]);
+
+	useEffect(() => {
+		setCommentList(comments);
+	}, [comments]);
 
 	if (status === 'loading') {
 		return (
@@ -214,9 +223,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 									<div>
 										<Link href={`/artist/${artist.id}`}>
 											<div className="cursor-pointer">
-												<div className="font-semibold">
-													{artist.fullName}
-												</div>
+												<div className="font-semibold">{artist.fullName}</div>
 											</div>
 										</Link>
 										{artist.workAt.id && (
@@ -294,7 +301,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 														}
 													/>
 												</div>
-												<div className='font-semibold'>{tattoo.doneAt.name}</div>
+												<div className="font-semibold">{tattoo.doneAt.name}</div>
 											</div>
 										</div>
 									</Link>
@@ -405,9 +412,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 													/>
 												</div>
 												<div className="break-words overflow-hidden ml-1">
-													<span className="font-semibold pr-1">
-														{cmt.fullName}
-													</span>
+													<span className="font-semibold pr-1">{cmt.fullName}</span>
 													{cmt.content}
 												</div>
 											</div>

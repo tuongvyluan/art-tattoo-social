@@ -13,13 +13,15 @@ const TattooDetails = () => {
 	const [artTattoo, setArtTattoo] = useState(undefined);
 	const [artist, setArtist] = useState({
 		id: [Math.floor(Math.random() * 900)],
-		fullName: 'Vy Luân',
+		fullName: 'Vy Luân'
 	});
 	const [tattooImages, setTattooImages] = useState([]);
 	const [likes, setLikes] = useState([]);
 	const [comments, setComments] = useState([]);
 
 	useEffect(() => {
+		setLikes([]);
+		setComments([]);
 		fetcher(
 			`${BASE_URL}/TattooArts/GetTattooArtMediaById?id=${router.query.id}&isAll=false`
 		).then((data) => {
