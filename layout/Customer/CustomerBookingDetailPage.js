@@ -20,15 +20,13 @@ import customerCancelReasons from 'lib/cancelReasons';
 import CustomerServices from '../CustomerServices';
 import Heading from 'components/Heading';
 
-const calculateTotal = (tattooArts) => {
-	if (!tattooArts) {
+const calculateTotal = (bookingDetails) => {
+	if (!bookingDetails) {
 		return 0;
 	}
 	let total = 0;
-	tattooArts.forEach((a) => {
-		a.bookingDetails.forEach((b) => {
-			total += b.price;
-		});
+	bookingDetails.forEach((a) => {
+		total += a.price
 	});
 	return total;
 };
@@ -36,7 +34,6 @@ const calculateTotal = (tattooArts) => {
 function BookingDetailsPage({ data, studioId, setLoading }) {
 	const [renderData, setRenderData] = useState(data);
 
-	const timeline = extractBookingStatusTimeline(renderData);
 	const [bookingStatus, setBookingStatus] = useState(renderData.status);
 
 	// Cancel related vars
@@ -257,7 +254,7 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 												</th>
 												<td className="py-3 text-right text-xl text-red-500">
 													{/* {formatPrice(renderData.total)} */}
-													{formatPrice(calculateTotal(renderData.tattooArts))}
+													{formatPrice(calculateTotal(renderData.bookingDetails))}
 												</td>
 											</tr>
 											{/* <tr className="border-t border-gray-300">

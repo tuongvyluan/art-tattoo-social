@@ -6,7 +6,6 @@ import {
 	stringSize
 } from 'lib/status';
 import {
-	formatDateTimeForInput,
 	formatPrice,
 	formatTime,
 	showTextMaxLength
@@ -177,8 +176,7 @@ const CustomerServices = ({ bookingDetails, canEdit = false, showMore = false })
 CustomerServices.propTypes = {
 	bookingDetails: PropTypes.array,
 	canEdit: PropTypes.bool,
-	showMore: PropTypes.bool,
-	artistList: PropTypes.array
+	showMore: PropTypes.bool
 };
 
 export default CustomerServices;

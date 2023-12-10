@@ -43,7 +43,6 @@ function CustomerBookingPage({ customerId }) {
 	const toggle = (tab) => {
 		if (activeTab !== tab) {
 			setActiveTab(tab);
-			console.log(tab);
 		}
 	};
 
