@@ -5,12 +5,14 @@ import { ChevronDown, ChevronUp } from 'icons/outline';
 import TattooListNotFilter from 'layout/TattooListNotFilter';
 import { fetcherPut } from 'lib';
 import { BASE_URL } from 'lib/env';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Avatar, Card, CardBody } from 'ui';
 
 const ArtistPage = ({ artist, accountId }) => {
+	const { data } = useSession();
 	const [showMoreInfo, setShowMoreInfo] = useState(false);
 	const [isFollowed, setIsFollowed] = useState(artist.isFollow);
 
@@ -51,13 +53,11 @@ const ArtistPage = ({ artist, accountId }) => {
 								</div>
 							</div>
 							<div className="cursor-pointer">
-								<div className="font-semibold text-base">
-									{artist.fullName}
-								</div>
+								<div className="font-semibold text-base">{artist.fullName}</div>
 							</div>
 						</div>
 						<div className="pb-6 flex justify-center flex-wrap gap-2 w-full">
-							{artist.workAt && (
+							{artist.workAt && data?.user?.customerId && (
 								<div className="w-20">
 									<a target="_blank" href={`/booking/new?artist=${artist.id}`}>
 										<Button>Đặt hẹn</Button>
@@ -144,15 +144,16 @@ const ArtistPage = ({ artist, accountId }) => {
 									</div>
 								</div>
 								<div className="cursor-pointer">
-									<div className="font-semibold text-lg pt-4">
-										{artist.fullName}
-									</div>
+									<div className="font-semibold text-lg pt-4">{artist.fullName}</div>
 								</div>
 							</div>
 							<div className="pb-3 flex justify-center flex-wrap gap-2 w-full min-w-max">
-								{artist.workAt && (
+								{artist.workAt && data?.user?.customerId && (
 									<div className="w-20">
-										<a target="_blank" href={`/booking/new?studio=${artist.workAt.id}`}>
+										<a
+											target="_blank"
+											href={`/booking/new?studio=${artist.workAt.id}`}
+										>
 											<Button>Đặt hẹn</Button>
 										</a>
 									</div>

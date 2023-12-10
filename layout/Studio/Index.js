@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp } from 'icons/outline';
 import TattooListNotFilter from 'layout/TattooListNotFilter';
 import { formatPhoneNumber } from 'lib';
 import { BASE_URL } from 'lib/env';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
@@ -11,6 +12,7 @@ import { Avatar, Card, CardBody } from 'ui';
 import { TattooArtCarousel } from 'ui/TattooArtCarousel';
 
 const StudioPage = ({ studio }) => {
+	const { data } = useSession();
 	const [showMoreInfo, setShowMoreInfo] = useState(false);
 
 	return (
@@ -36,13 +38,13 @@ const StudioPage = ({ studio }) => {
 							</div>
 						</div>
 						<div className="pb-6 flex justify-center flex-wrap gap-2 w-full">
-							{
+							{data?.user?.customerId && (
 								<div className="w-20">
 									<a target="_blank" href={`/booking/new?studio=${studio.id}`}>
 										<Button>Đặt hẹn</Button>
 									</a>
 								</div>
-							}
+							)}
 							<div className="w-20">
 								<Button outline>Theo dõi</Button>
 							</div>
@@ -91,13 +93,13 @@ const StudioPage = ({ studio }) => {
 								</div>
 							</div>
 							<div className="pb-3 flex justify-center flex-wrap gap-2 w-full min-w-max">
-								{
+								{data?.user?.customerId && (
 									<div className="w-20">
 										<a target="_blank" href={`/booking/new?studio=${studio.id}`}>
 											<Button>Đặt hẹn</Button>
 										</a>
 									</div>
-								}
+								)}
 								<div className="w-20">
 									<Button outline>Theo dõi</Button>
 								</div>
@@ -178,7 +180,7 @@ const StudioPage = ({ studio }) => {
 				</div>
 			</div>
 			{studio.interiors?.length > 0 && (
-				<div className='xl:px-32 pb-5'>
+				<div className="xl:px-32 pb-5">
 					<div className="hidden md:block pb-5 pt-0 text-center text-3xl text-gray-700">
 						Cơ sở vật chất
 					</div>

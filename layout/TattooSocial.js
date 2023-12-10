@@ -238,9 +238,12 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 										)}
 									</div>
 								</div>
-								{artist.workAt.id && (
+								{artist.workAt.id && data?.user?.customerId && (
 									<div className="pb-3">
-										<a target="_blank" href={`/booking/new?studio=${artist.workAt.id}`}>
+										<a
+											target="_blank"
+											href={`/booking/new?studio=${artist.workAt.id}`}
+										>
 											<Button>Đặt hẹn</Button>
 										</a>
 									</div>
