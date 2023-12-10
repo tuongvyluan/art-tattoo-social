@@ -16,7 +16,6 @@ import {
 	fetcherPost,
 	formatDate,
 	formatPrice,
-	formatTime,
 	formatTimeWithoutSecond
 } from 'lib';
 import { BASE_URL } from 'lib/env';
@@ -45,8 +44,6 @@ const estimeDate = [
 ];
 
 const BookingForm = ({
-	isArtist = true,
-	artist,
 	studio,
 	hasLogin = true,
 	customerId
@@ -174,15 +171,6 @@ const BookingForm = ({
 	};
 	return (
 		<div className="relative">
-			<Alert
-				showAlert={showAlert}
-				setShowAlert={setShowAlert}
-				color={alertContent.isWarn}
-				className="bottom-2 right-2 fixed max-w-md z-50"
-			>
-				<strong className="font-bold mr-1">{alertContent.title}</strong>
-				<span className="block sm:inline">{alertContent.content}</span>
-			</Alert>
 			<div className="absolute -top-3 -left-5 -right-10 h-noFooter">
 				<BackgroundImg
 					image={'/images/booking-img.jpg'}
@@ -199,7 +187,18 @@ const BookingForm = ({
 						{hasLogin ? (
 							<div>
 								{customerId ? (
-									<div className="h-96 w-full min-w-min overflow-auto">
+									<div className="h-96 w-full min-w-min overflow-auto relative">
+										<Alert
+											showAlert={showAlert}
+											setShowAlert={setShowAlert}
+											color={alertContent.isWarn}
+											className="bottom-2 right-2 fixed max-w-md z-50"
+										>
+											<strong className="font-bold mr-1">
+												{alertContent.title}
+											</strong>
+											<span className="block sm:inline">{alertContent.content}</span>
+										</Alert>
 										{/* <!-- Hiển thị tên studio --> */}
 										<div className="flex bg-white flex-row w-0 min-w-full">
 											<div className="flex justify-between items-center py-4 px-2">
@@ -216,11 +215,6 @@ const BookingForm = ({
 															<p className="ltr:mr-2 rtl:ml-2 font-bold">
 																{studio.name}
 															</p>
-															{artist && (
-																<span className="ltr:mr-2 rtl:ml-2 text-sm ">
-																	{artist.fullName}
-																</span>
-															)}
 														</div>
 														<p className="mt-2 font-hairline text-sm">
 															{/* 123,456 {t("followers")} */}

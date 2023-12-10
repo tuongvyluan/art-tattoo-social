@@ -38,7 +38,7 @@ const StudioPage = ({ studio }) => {
 						<div className="pb-6 flex justify-center flex-wrap gap-2 w-full">
 							{
 								<div className="w-20">
-									<a target="_blank" href={`/booking/new?artist=${studio.id}`}>
+									<a target="_blank" href={`/booking/new?studio=${studio.id}`}>
 										<Button>Đặt hẹn</Button>
 									</a>
 								</div>

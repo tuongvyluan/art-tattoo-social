@@ -152,7 +152,7 @@ const ArtistPage = ({ artist, accountId }) => {
 							<div className="pb-3 flex justify-center flex-wrap gap-2 w-full min-w-max">
 								{artist.workAt && (
 									<div className="w-20">
-										<a target="_blank" href={`/booking/new?artist=${artist.id}`}>
+										<a target="_blank" href={`/booking/new?studio=${artist.workAt.id}`}>
 											<Button>Đặt hẹn</Button>
 										</a>
 									</div>

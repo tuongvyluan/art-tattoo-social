@@ -11,33 +11,13 @@ import { Loading } from 'ui';
 const BookingFormPage = () => {
 	const { data, status } = useSession();
 	const router = useRouter();
-	const [artist, setArtist] = useState(undefined);
-	const isArtist = typeof router.query.artist !== 'undefined';
 	const [studio, setStudio] = useState(undefined);
 	const [loading, setLoading] = useState(true);
-	const artistId = router.query.artist ? router.query.artist : '';
 	const [studioId, setStudioId] = useState(
 		router.query.studio ? router.query.studio : ''
 	);
 
-	if (artistId === '' && studioId === '') {
-		Router.replace('/');
-	}
-
-	if (loading && (status === 'loading' || !studio || (isArtist && !artist))) {
-		if (isArtist && !artist) {
-			fetcher(`${BASE_URL}/artists/${artistId}/artist-details`)
-				.then((data) => {
-					setStudioId(data.studioArtists[0].id);
-					setArtist({
-						fullName: data.fullName,
-						id: data.id
-					});
-				})
-				.catch((e) => {
-					console.log(e);
-				});
-		}
+	if (loading && (status === 'loading' || !studio)) {
 		if (studioId !== '' && !studio) {
 			fetcher(`${BASE_URL}/studios/${studioId}/services-for-create-booking`)
 				.then((data) => {
@@ -78,15 +58,13 @@ const BookingFormPage = () => {
 		);
 	}
 
-	if (!loading && (!studio || (isArtist && !artist))) {
+	if (!loading && (!studio)) {
 		return NotFound();
 	}
 
 	return (
 		<BookingForm
 			hasLogin={status === 'authenticated'}
-			isArtist={isArtist}
-			artist={artist}
 			studio={studio}
 			customerId={data?.user?.customerId}
 		/>
