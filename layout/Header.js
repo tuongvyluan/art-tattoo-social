@@ -189,10 +189,10 @@ const Header = ({ toggleOpen }) => {
 							{status === 'authenticated' ? (
 								<Dropdown className="px-3 relative h-full flex items-center">
 									<DropdownToggle>
-										<div className="mx-auto">
+										<div className="flex flex-wrap gap-2 items-center">
 											<div className="flex justify-center">
 												<Avatar
-													size={28}
+													size={32}
 													src={
 														data?.user?.avatar
 															? data.user.avatar
@@ -201,7 +201,12 @@ const Header = ({ toggleOpen }) => {
 													alt={data ? data.user.fullName : 'Unknown'}
 												/>
 											</div>
-											{data?.user.role != -1 && roleString.at(data.user.role)}
+											<div>
+												<div className='font-semibold'>{data?.user?.fullName}</div>
+												<div>
+													{data?.user.role != -1 && roleString.at(data.user.role)}
+												</div>
+											</div>
 										</div>
 									</DropdownToggle>
 									<DropdownMenu>
