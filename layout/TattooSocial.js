@@ -86,6 +86,8 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 						{
 							id: response.id,
 							accountId: data.user.id,
+							avatar: data.user.avatar,
+							fullName: data.user.fullName,
 							content: myComment
 						}
 					].concat(commentList);
