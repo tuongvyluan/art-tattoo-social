@@ -110,7 +110,7 @@ function TattooDetailNoUpdatePage({ bookingId, artTattoo, myTattoo = false }) {
 												{
 													//Show media section
 												}
-												<div className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+												<div className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 pt-3">
 													{stage.tattooImages?.map((media, mediaIndex) => (
 														<div className="relative" key={media.id}>
 															<div className="absolute top-0 left-0 flex items-center cursor-pointer gap-2">
@@ -130,7 +130,7 @@ function TattooDetailNoUpdatePage({ bookingId, artTattoo, myTattoo = false }) {
 
 															<BackgroundImg
 																key={media.id}
-																className="relative w-full bg-center bg-cover bg-fallback mt-1"
+																className="relative w-full bg-center bg-cover bg-fallback mt-7"
 																image={media.url}
 																height={150}
 															/>
