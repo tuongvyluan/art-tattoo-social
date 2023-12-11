@@ -1,17 +1,11 @@
 import { ChevronLeft } from 'icons/solid';
-import {
-	extractBookingStatusTimeline,
-	formatDate,
-	formatPrice,
-	hasBookingMeeting
-} from 'lib';
+import { extractBookingStatusTimeline, formatPrice } from 'lib';
 import { BOOKING_STATUS, stringBookingStatuses } from 'lib/status';
 import PropTypes from 'prop-types';
 import { Alert, Card, CardBody, Link } from 'ui';
-import { WidgetOrderStatus } from 'ui/WidgetOrderStatus';
 import { useState } from 'react';
-import CustomerServices from 'layout/CustomerServices';
 import Heading from 'components/Heading';
+import ArtistCustomerServices from './ArtistCustomerServices';
 
 const calculateTotal = (bookingDetails) => {
 	if (!bookingDetails) {
@@ -27,7 +21,6 @@ const calculateTotal = (bookingDetails) => {
 function BookingDetailsPage({ data, studioId, setLoading, artistId }) {
 	const [renderData, setRenderData] = useState(data);
 
-	const timeline = extractBookingStatusTimeline(renderData);
 	const [bookingStatus, setBookingStatus] = useState(renderData.status);
 
 	// Alert related vars
@@ -97,26 +90,53 @@ function BookingDetailsPage({ data, studioId, setLoading, artistId }) {
 							}
 							<div className="pt-5 border-b border-gray-300 pb-3">
 								<div className="flex justify-start flex-wrap">
-									<div className="w-full md:pr-1 md:w-1/2 md:border-r mb-5 md:mb-0 md:border-b-0 border-b border-gray-300">
+									<div className="w-full md:pr-1 md:w-1/2 md:border-r pb-5 md:pb-0 md:border-b-0 border-b border-gray-300">
 										<div>
-											<div className="font-semibold text-xl pb-2">
-												Thông tin tiệm xăm
+											<Heading>Thông tin khách hàng</Heading>
+											<div className="text-lg font-semibold">
+												{renderData.customer.fullName}
 											</div>
-											<div className="text-base">{renderData.studio.studioName}</div>
-											<div>Địa chỉ: {renderData.studio.address}</div>
 											<div>
-												Giờ mở cửa: {renderData.studio.openTime.split(':')[0]}:
-												{renderData.studio.openTime.split(':')[1]} -{' '}
-												{renderData.studio.closeTime.split(':')[0]}:
-												{renderData.studio.closeTime.split(':')[1]}
+												Số điện thoại:{' '}
+												<span className="font-semibold">
+													{renderData.customer.phoneNumber}
+												</span>
+											</div>
+											<div>
+												Email:{' '}
+												<span className="font-semibold">
+													{renderData.customer.email}
+												</span>
 											</div>
 										</div>
 									</div>
-									<div className="flex flex-col justify-start flex-grow pt-3 md:pt-0">
-										{(renderData.status === BOOKING_STATUS.CUSTOMER_CANCEL ||
-											renderData.status === BOOKING_STATUS.STUDIO_CANCEL) && (
+									<div className="pt-3 md:pt-0 md:pl-3 pl-0 w-full md:w-1/2">
+										{renderData.status === BOOKING_STATUS.CUSTOMER_CANCEL ||
+										renderData.status === BOOKING_STATUS.STUDIO_CANCEL ? (
 											<div className="text-center my-auto text-base text-red-500">
 												<div>ĐƠN HÀNG ĐÃ BỊ HUỶ</div>
+											</div>
+										) : (
+											<div>
+												<Heading>Thông tin tiệm xăm</Heading>
+												<div className="text-lg font-semibold">
+													{renderData.studio.studioName}
+												</div>
+												<div className="flex gap-1 flex-wrap w-full">
+													<div>Địa chỉ: </div>
+													<div className="font-semibold flex-grow w-min">
+														{renderData.studio.address}
+													</div>
+												</div>
+												<div>
+													Giờ mở cửa:{' '}
+													<span className="font-semibold">
+														{renderData.studio.openTime.split(':')[0]}:
+														{renderData.studio.openTime.split(':')[1]} -{' '}
+														{renderData.studio.closeTime.split(':')[0]}:
+														{renderData.studio.closeTime.split(':')[1]}
+													</span>
+												</div>
 											</div>
 										)}
 									</div>
@@ -143,9 +163,10 @@ function BookingDetailsPage({ data, studioId, setLoading, artistId }) {
 										Các dịch vụ đã đặt ({renderData.bookingDetails?.length})
 									</Heading>
 								</div>
-								<CustomerServices
+								<ArtistCustomerServices
 									showMore={true}
 									bookingDetails={renderData.bookingDetails}
+									bookingId={renderData.id}
 								/>
 							</div>
 

@@ -5,24 +5,80 @@ import {
 	stringPlacements,
 	stringSize
 } from 'lib/status';
-import { formatPrice, formatTime, showTextMaxLength } from 'lib';
-import { Avatar, Card } from 'ui';
-import { MdEdit, MdOutlineCalendarMonth, MdOutlineClose } from 'react-icons/md';
+import { fetcherPost, formatPrice, formatTime, showTextMaxLength } from 'lib';
+import { Alert, Avatar, Card } from 'ui';
+import { MdOutlineCalendarMonth } from 'react-icons/md';
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import Button from 'components/Button';
+import { BASE_URL } from 'lib/env';
+import Router from 'next/router';
 
-const CustomerServices = ({ bookingDetails, canEdit = false, showMore = false }) => {
-	const [selectedBookingDetail, setSelectedBookingDetail] = useState(undefined);
+const ArtistCustomerServices = ({ bookingDetails, showMore = false, bookingId }) => {
+	// Alert related vars
+	const [showAlert, setShowAlert] = useState(false);
 
-	const onSelectUpdatedService = (detailIndex) => {
-		setSelectedArtist(0);
-		setSelectedBookingDetail(bookingDetails.at(detailIndex));
-		setBookingServiceModal(true);
+	const [alertContent, setAlertContent] = useState({
+		title: '',
+		content: '',
+		isWarn: 'blue'
+	});
+
+	const handleAlert = (state, title, content, isWarn = 0) => {
+		setShowAlert((prev) => state);
+		let color;
+		switch (isWarn) {
+			case 1:
+				color = 'green';
+				break;
+			case 2:
+				color = 'red';
+				break;
+			default:
+				color = 'blue';
+				break;
+		}
+		setAlertContent({
+			title: title,
+			content: content,
+			isWarn: color
+		});
+	};
+	const handleCreateTattooArtFromBookingDetail = (detail) => {
+		const payload = {
+			artistId: detail.artistId,
+			bookingId: bookingId,
+			bookingDetailId: detail.id,
+			styleId: 1,
+			thumbnail: '',
+			description: '',
+			size: detail.serviceSize,
+			placement: detail.servicePlacement,
+			isPublicized: false
+		};
+		handleAlert(true, 'Đang tạo hình xăm', '', 0);
+		fetcherPost(`${BASE_URL}/TattooArts/CreateTattoo`, payload)
+			.then((data) => {
+				handleAlert(true, 'Tạo hình xăm thành công.', '', 1);
+				Router.replace(`/tattoo/update/${data.id}?booking=${bookingId}`);
+			})
+			.catch(() => {
+				handleAlert(true, 'Tạo hình xăm thất bại.', '', 2);
+			});
 	};
 
 	return (
 		<div className="relative">
+			<Alert
+				showAlert={showAlert}
+				setShowAlert={setShowAlert}
+				color={alertContent.isWarn}
+				className="bottom-2 right-2 fixed max-w-md z-50"
+			>
+				<strong className="font-bold mr-1">{alertContent.title}</strong>
+				<span className="block sm:inline">{alertContent.content}</span>
+			</Alert>
 			<div className="block">
 				{bookingDetails.map((bookingDetail, bookingServiceIndex) => (
 					<Card
@@ -32,19 +88,6 @@ const CustomerServices = ({ bookingDetails, canEdit = false, showMore = false })
 						key={bookingDetail.id}
 					>
 						<div className="w-full flex justify-start gap-2 items-start bg-gray-50 py-5 relative">
-							{canEdit && (
-								<div className="absolute top-4 right-4 cursor-pointer flex flex-wrap gap-2">
-									<div
-										onClick={() => onSelectUpdatedService(bookingServiceIndex)}
-										className="relative"
-									>
-										<MdEdit size={20} />
-									</div>
-									<div className="relative">
-										<MdOutlineClose size={20} />
-									</div>
-								</div>
-							)}
 							{
 								// Phần hình xăm của booking service
 							}
@@ -52,7 +95,7 @@ const CustomerServices = ({ bookingDetails, canEdit = false, showMore = false })
 								<div>
 									{bookingDetail.tattooArt ? (
 										<Link
-											href={`/tattoo/${bookingDetail.tattooArt.id}?booking=${bookingDetail.tattooArt.bookingId}`}
+											href={`/tattoo/update/${bookingDetail.tattooArt.id}?booking=${bookingDetail.tattooArt.bookingId}`}
 										>
 											<div className="cursor-pointer flex justify-start gap-3 flex-wrap">
 												<div className="relative w-24 h-24">
@@ -70,8 +113,15 @@ const CustomerServices = ({ bookingDetails, canEdit = false, showMore = false })
 											</div>
 										</Link>
 									) : (
-										<div className="border border-black rounded-xl w-24 h-24 cursor-default">
-											<div className="px-2 py-7 text-center">Không có hình xăm</div>
+										<div>
+											<div className="border border-black rounded-xl w-24 h-24 cursor-default">
+												<div className="px-2 py-7 text-center">
+													Không có hình xăm
+												</div>
+											</div>
+											<div className="flex pt-1">
+												<Button onClick={() => handleCreateTattooArtFromBookingDetail(bookingDetail)}>Tạo hình xăm</Button>
+											</div>
 										</div>
 									)}
 								</div>
@@ -169,10 +219,10 @@ const CustomerServices = ({ bookingDetails, canEdit = false, showMore = false })
 	);
 };
 
-CustomerServices.propTypes = {
+ArtistCustomerServices.propTypes = {
 	bookingDetails: PropTypes.array,
-	canEdit: PropTypes.bool,
+	bookingId: PropTypes.string.isRequired,
 	showMore: PropTypes.bool
 };
 
-export default CustomerServices;
+export default ArtistCustomerServices;

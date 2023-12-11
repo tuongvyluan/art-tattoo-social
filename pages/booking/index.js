@@ -1,4 +1,4 @@
-import BookingPage from 'layout/Artist/Booking';
+import ArtistBookingPage from 'layout/Artist/Booking';
 import CustomerBookingPage from 'layout/Customer/CustomerBookingPage';
 import { ROLE } from 'lib/status';
 import { useSession } from 'next-auth/react';
@@ -44,7 +44,7 @@ const Booking = () => {
 					</div>
 				);
 			}
-			return <BookingPage artistId={data.user?.artistId} />;
+			return <ArtistBookingPage artistId={data.user?.artistId} />;
 		}
 	}
 };

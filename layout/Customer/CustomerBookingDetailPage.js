@@ -26,7 +26,7 @@ const calculateTotal = (bookingDetails) => {
 	}
 	let total = 0;
 	bookingDetails.forEach((a) => {
-		total += a.price
+		total += a.price;
 	});
 	return total;
 };
@@ -171,16 +171,24 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 								<div className="flex justify-start flex-wrap">
 									<div className="w-full md:pr-1 md:w-1/2 md:border-r mb-5 md:mb-0 md:border-b-0 border-b border-gray-300">
 										<div>
-											<div className="font-semibold text-xl pb-2">
-												Thông tin tiệm xăm
+											<Heading>Thông tin tiệm xăm</Heading>
+											<div className="text-lg font-semibold">
+												{renderData.studio.studioName}
 											</div>
-											<div className="text-base">{renderData.studio.studioName}</div>
-											<div>Địa chỉ: {renderData.studio.address}</div>
+											<div className="flex gap-1 flex-wrap w-full">
+												<div>Địa chỉ: </div>
+												<div className="font-semibold flex-grow w-min">
+													{renderData.studio.address}
+												</div>
+											</div>
 											<div>
-												Giờ mở cửa: {renderData.studio.openTime.split(':')[0]}:
-												{renderData.studio.openTime.split(':')[1]} -{' '}
-												{renderData.studio.closeTime.split(':')[0]}:
-												{renderData.studio.closeTime.split(':')[1]}
+												Giờ mở cửa:{' '}
+												<span className="font-semibold">
+													{renderData.studio.openTime.split(':')[0]}:
+													{renderData.studio.openTime.split(':')[1]} -{' '}
+													{renderData.studio.closeTime.split(':')[0]}:
+													{renderData.studio.closeTime.split(':')[1]}
+												</span>
 											</div>
 										</div>
 									</div>
@@ -215,7 +223,10 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 										Các dịch vụ đã đặt ({renderData.bookingDetails?.length})
 									</Heading>
 								</div>
-								<CustomerServices showMore={true} bookingDetails={renderData.bookingDetails} />
+								<CustomerServices
+									showMore={true}
+									bookingDetails={renderData.bookingDetails}
+								/>
 							</div>
 
 							<div

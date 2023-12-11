@@ -1,25 +1,21 @@
 import PropTypes from 'prop-types';
-import { fetcher, formatPrice, formatTime } from 'lib';
+import { fetcher, formatTime } from 'lib';
 import { useEffect, useState } from 'react';
-import { Card, CardBody, Loading, Ripple } from 'ui';
+import { Avatar, Card, CardBody, Loading, Ripple } from 'ui';
 import { Search } from 'icons/outline';
 import debounce from 'lodash.debounce';
-import {
-	BOOKING_STATUS,
-	stringBookingStatuses,
-} from 'lib/status';
+import { BOOKING_STATUS, stringBookingStatuses } from 'lib/status';
 import MyPagination from 'ui/MyPagination';
 import { BASE_URL } from 'lib/env';
 import CustomerServices from 'layout/CustomerServices';
 
 const ALL_TAB = '1';
 const PENDING_TAB = '2';
-const CONFIRMED_TAB = '3';
-const IN_PROGRESS_TAB = '4';
-const COMPLETE_TAB = '5';
-const CANCELLED_TAB = '6';
+const IN_PROGRESS_TAB = '3';
+const COMPLETE_TAB = '4';
+const CANCELLED_TAB = '5';
 
-function CustomerBookingPage({ artistId }) {
+function ArtistBookingPage({ artistId }) {
 	const [data, setData] = useState([]);
 	const [activeTab, setActiveTab] = useState('1');
 	const [searchKey, setSearchKey] = useState('');
@@ -47,7 +43,6 @@ function CustomerBookingPage({ artistId }) {
 	const toggle = (tab) => {
 		if (activeTab !== tab) {
 			setActiveTab(tab);
-			console.log(tab);
 		}
 	};
 
@@ -56,7 +51,7 @@ function CustomerBookingPage({ artistId }) {
 		setError(false);
 
 		fetcher(
-			`${BASE_URL}/bookings/bookings-artist?artistId=${artistId}&page=${page}&pageSize=${pageSize}${
+			`${BASE_URL}/bookings/get-all-bookings?artistId=${artistId}&page=${page}&pageSize=${pageSize}${
 				filter >= 0 ? `&status=${filter}` : ''
 			}`
 		)
@@ -79,10 +74,6 @@ function CustomerBookingPage({ artistId }) {
 				setPage(1);
 				setFilter(BOOKING_STATUS.PENDING);
 				break;
-			case CONFIRMED_TAB:
-				setPage(1);
-				setFilter(BOOKING_STATUS.CONFIRMED);
-				break;
 			case IN_PROGRESS_TAB:
 				setPage(1);
 				setFilter(BOOKING_STATUS.IN_PROGRESS);
@@ -97,7 +88,7 @@ function CustomerBookingPage({ artistId }) {
 				break;
 			default:
 				setPage(1);
-				setFilter(undefined);
+				setFilter(-1);
 				break;
 		}
 	}, [activeTab]);
@@ -140,24 +131,6 @@ function CustomerBookingPage({ artistId }) {
 								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
 							>
 								Chờ xác nhận
-								<Ripple color="black" />
-							</a>
-						</li>
-						<li
-							className={`text-center cursor-pointer ${
-								activeTab === CONFIRMED_TAB
-									? 'border-b-2 border-solid border-gray-700'
-									: ''
-							}`}
-						>
-							<a
-								onClick={() => {
-									toggle(CONFIRMED_TAB);
-								}}
-								href="#"
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
-							>
-								Đã xác nhận
 								<Ripple color="black" />
 							</a>
 						</li>
@@ -251,23 +224,43 @@ function CustomerBookingPage({ artistId }) {
 									<a className="text-black" href={`/booking/${booking.id}`}>
 										<div className="cursor-pointer ">
 											<div className="flex justify-between mx-auto border-b border-gray-300 pb-3">
-												<div className="flex gap-3 items-start">
-													<div className="font-semibold">
-														{booking.studio.studioName}
+												<div className="flex gap-2 items-center">
+													<Avatar
+														size={39}
+														src={
+															booking.studio.owner.avatar
+																? booking.studio.owner.avatar
+																: '/images/ATL.png'
+														}
+													/>
+													<div>
+														<div className="font-semibold text-base">
+															{booking.studio.studioName}
+														</div>
+														<div className="text-base">
+															Khách hàng: {booking?.customer?.fullName}
+														</div>
 													</div>
 												</div>
 												<div>
-													<div className="text-red-500">
+													<div className="text-red-500 font-semibold text-base">
 														{stringBookingStatuses.at(booking.status)}
 													</div>
 												</div>
 											</div>
 											<div className="flex justify-between w-full pb-1">
-												<div className="text-base font-semibold pb-2">
-													Các dịch vụ đã đặt ({booking.services?.length ? (booking.services?.length) : '0'})
+												<div className="text-base font-semibold py-2">
+													Các dịch vụ đã đặt (
+													{booking.bookingDetails?.length
+														? booking.bookingDetails?.length
+														: '0'}
+													)
 												</div>
 											</div>
-											<CustomerServices bookingServices={booking.services} />
+											<CustomerServices
+												canEdit={false}
+												bookingDetails={booking.bookingDetails}
+											/>
 
 											<div className="flex justify-end pt-3 items-start">
 												<div className="text-right">
@@ -277,29 +270,21 @@ function CustomerBookingPage({ artistId }) {
 															{formatTime(booking.createdAt)}
 														</span>
 													</div>
-													{booking.cancelAt && (
+													{booking.cancelledAt && (
 														<div>
 															<div>
 																Ngày huỷ:{' '}
 																<span className="text-base">
-																	{formatTime(booking.cancelAt)}
+																	{formatTime(booking.cancelledAt)}
 																</span>
 															</div>
 														</div>
 													)}
-													{booking.date && (
+													{booking.completedAt && (
 														<div>
-															Ngày hẹn:{' '}
+															Ngày hoàn thành:{' '}
 															<span className="text-base">
-																{formatTime(booking.date)}
-															</span>
-														</div>
-													)}
-													{booking.total && (
-														<div>
-															Thành tiền:{' '}
-															<span className="text-lg text-red-500">
-																{formatPrice(booking.total)}
+																{formatTime(booking.completedAt)}
 															</span>
 														</div>
 													)}
@@ -321,8 +306,8 @@ function CustomerBookingPage({ artistId }) {
 	);
 }
 
-CustomerBookingPage.propTypes = {
+ArtistBookingPage.propTypes = {
 	artistId: PropTypes.string
 };
 
-export default CustomerBookingPage;
+export default ArtistBookingPage;

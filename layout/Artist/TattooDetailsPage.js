@@ -19,7 +19,12 @@ import { CldUploadButton } from 'next-cloudinary';
 import { generateSHA1, generateSignature } from 'lib/cloudinary_signature';
 import { AiOutlineClose } from 'react-icons/ai';
 import { extractPublicId } from 'cloudinary-build-url';
-import { operationNames, stringPlacements, stringSize, stringTattooStages } from 'lib/status';
+import {
+	operationNames,
+	stringPlacements,
+	stringSize,
+	stringTattooStages
+} from 'lib/status';
 import { tattooStyleById, tattooStyleList } from 'lib/tattooStyle';
 import { BASE_URL } from 'lib/env';
 import { v4 } from 'uuid';
@@ -218,11 +223,11 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 			thumbnail: thumbnail,
 			isPublicized: tattoo.isPublicized
 		};
-		console.log(tattooStyleById(tattoo.styleId), tattoo.styleId)
+		console.log(tattooStyleById(tattoo.styleId), tattoo.styleId);
 		fetcherPost(`${BASE_URL}/TattooArts/CreateTattoo`, newTattoo)
 			.then((data) => {
 				tattoo.id = data.id;
-				handleCreateUpdateStage()
+				handleCreateUpdateStage();
 			})
 			.catch((e) => {
 				handleAlert(true, 'Tạo hình xăm thất bại', '', true);
@@ -356,73 +361,79 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 								<div className="font-semibold text-lg pb-2">Thông tin hình xăm</div>
 								<div className="pb-3 flex items-center gap-1">
 									<div className="w-20">Nghệ sĩ xăm:</div>
-									<span className="font-semibold">
-										{tattoo.artist.fullName}
-									</span>
+									<span className="font-semibold">{tattoo.artist.fullName}</span>
 								</div>
 								<div className="pb-3 flex items-center gap-1">
 									<div className="w-20">Kích thước: </div>
-									<Dropdown className="relative h-full flex items-center">
-										<DropdownToggle>
-											<div className="relative">
-												<div className="w-32 rounded-lg p-1 border border-gray-300">
-													{stringSize.at(tattoo.size)}
-												</div>
+									{bookingId !== '' ? (
+										<div>{stringSize.at(tattoo.size)}</div>
+									) : (
+										<Dropdown className="relative h-full flex items-center">
+											<DropdownToggle>
+												<div className="relative">
+													<div className="w-32 rounded-lg p-1 border border-gray-300">
+														{stringSize.at(tattoo.size)}
+													</div>
 
-												<div className="absolute top-1.5 right-2 text-gray-700">
-													<ChevronDown width={17} height={17} />
+													<div className="absolute top-1.5 right-2 text-gray-700">
+														<ChevronDown width={17} height={17} />
+													</div>
 												</div>
-											</div>
-										</DropdownToggle>
-										<DropdownMenu>
-											{stringSize.map((size, sizeIndex) => (
-												<div
-													key={size}
-													onClick={() => setTattooState('size', sizeIndex)}
-													className={`px-2 py-1 cursor-pointer hover:bg-gray-100 ${
-														tattoo.size === sizeIndex ? 'bg-indigo-100' : ''
-													}`}
-												>
-													{size}
-												</div>
-											))}
-										</DropdownMenu>
-									</Dropdown>
+											</DropdownToggle>
+											<DropdownMenu>
+												{stringSize.map((size, sizeIndex) => (
+													<div
+														key={size}
+														onClick={() => setTattooState('size', sizeIndex)}
+														className={`px-2 py-1 cursor-pointer hover:bg-gray-100 ${
+															tattoo.size === sizeIndex ? 'bg-indigo-100' : ''
+														}`}
+													>
+														{size}
+													</div>
+												))}
+											</DropdownMenu>
+										</Dropdown>
+									)}
 								</div>
 								<div className="pb-3 flex gap-1 items-center">
 									<div className="w-20">Vị trí xăm:</div>
-									<Dropdown className="relative h-full flex items-center">
-										<DropdownToggle>
-											<div>
-												<div className="w-32 rounded-lg p-1 border border-gray-300">
-													{stringPlacements.at(tattoo.placement)}
-												</div>
-
-												<div className="absolute top-1.5 right-2 text-gray-700">
-													<ChevronDown width={17} height={17} />
-												</div>
-											</div>
-										</DropdownToggle>
-										<DropdownMenu className={'top-2 left-2'}>
-											<div className="h-40 overflow-y-auto">
-												{stringPlacements.map((placement, placementIndex) => (
-													<div
-														key={placement}
-														onClick={() =>
-															setTattooState('placement', placementIndex)
-														}
-														className={`px-2 py-1 cursor-pointer hover:bg-gray-100 ${
-															tattoo.placement === placementIndex
-																? 'bg-indigo-100'
-																: ''
-														}`}
-													>
-														{placement}
+									{bookingId !== '' ? (
+										<div className="">{stringPlacements.at(tattoo.placement)}</div>
+									) : (
+										<Dropdown className="relative h-full flex items-center">
+											<DropdownToggle>
+												<div>
+													<div className="w-32 rounded-lg p-1 border border-gray-300">
+														{stringPlacements.at(tattoo.placement)}
 													</div>
-												))}
-											</div>
-										</DropdownMenu>
-									</Dropdown>
+
+													<div className="absolute top-1.5 right-2 text-gray-700">
+														<ChevronDown width={17} height={17} />
+													</div>
+												</div>
+											</DropdownToggle>
+											<DropdownMenu className={'top-2 left-2'}>
+												<div className="h-40 overflow-y-auto">
+													{stringPlacements.map((placement, placementIndex) => (
+														<div
+															key={placement}
+															onClick={() =>
+																setTattooState('placement', placementIndex)
+															}
+															className={`px-2 py-1 cursor-pointer hover:bg-gray-100 ${
+																tattoo.placement === placementIndex
+																	? 'bg-indigo-100'
+																	: ''
+															}`}
+														>
+															{placement}
+														</div>
+													))}
+												</div>
+											</DropdownMenu>
+										</Dropdown>
+									)}
 								</div>
 								<div className="pb-3 flex gap-1 items-center">
 									<div className="w-20">Style:</div>
@@ -467,35 +478,6 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 								</div> */}
 							</div>
 						</div>
-						{tattoo.bookingId !== '' && (
-							<div className="mt-3 border-b border-gray-300">
-								{
-									// Booking details list
-								}
-								<div className="font-semibold text-lg pb-2">
-									Ghi nhận chi phí dịch vụ
-								</div>
-
-								{tattoo.bookingDetails.map((detail, detailIndex) => (
-									<div
-										className={
-											'relative min-w-0 break-words rounded-lg mb-4 w-full bg-white dark:bg-gray-600'
-										}
-										key={detail.bookingDetailsId}
-									>
-										<div className={'py-1 px-6 flex flex-row items-center'}>
-											<div className="relative flex flex-wrap justify-between items-center w-full">
-												<div>{operationNames.at(detail.operationId)}</div>
-
-												<div className="text-base relative">
-													{formatPrice(detail.price)}
-												</div>
-											</div>
-										</div>
-									</div>
-								))}
-							</div>
-						)}
 						{
 							// Update tattoo stages and booking details
 						}
