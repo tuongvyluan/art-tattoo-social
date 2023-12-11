@@ -1,11 +1,9 @@
 import { IoMdHeartEmpty, IoIosLink, IoMdHeart } from 'react-icons/io';
-import { stringPlacements, stringSize } from 'lib/status';
 import PropTypes from 'prop-types';
-import { Link, Loading, WidgetPostCard } from 'ui';
+import { Avatar, Link, Loading, WidgetPostCard } from 'ui';
 import { useCallback, useEffect, useState } from 'react';
-import { tattooStyleMap } from 'lib/tattooStyle';
 import debounce from 'lodash.debounce';
-import { Avatar, Tooltip } from 'flowbite-react';
+import { Tooltip } from 'flowbite-react';
 import { useSession } from 'next-auth/react';
 import { randomPhoto } from 'lib/tattooPhoto';
 import { fetcherDelete, fetcherPost } from 'lib';
@@ -142,7 +140,7 @@ const TattooListUpdate = ({ url, pageSize = 20 }) => {
 														image={item.thumbnail ? item.thumbnail : randomPhoto}
 														link={`/tattoo/update/${item.id}${
 															item.booking !== null && `?booking=${item.bookingId}`
-														}`}
+														}&back=myTattoo`}
 													>
 														<div className="block">
 															<div className="flex items-start gap-1">
@@ -210,9 +208,7 @@ const TattooListUpdate = ({ url, pageSize = 20 }) => {
 																<div className="cursor-pointer font-semibold pt-2">
 																	<div className="flex gap-2">
 																		<Avatar
-																			src={
-																				item.avatar ? item.avatar : '/images/ATL.png'
-																			}
+																			src={item.avatar ? item.avatar : '/images/ATL.png'}
 																			size={20}
 																		/>
 																		<div>{item.fullName}</div>

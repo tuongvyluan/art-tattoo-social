@@ -215,7 +215,7 @@ const ArtistCustomerServices = ({ bookingDetails, showMore = false, bookingId })
 								{bookingDetail.artist && (
 									<div className="flex flex-wrap gap-1 items-center text-base font-semibold pt-3">
 										<Avatar
-											serviceSize={40}
+											size={25}
 											src={
 												bookingDetail.artist?.account?.avatar
 													? bookingDetail.artist.account.avatar

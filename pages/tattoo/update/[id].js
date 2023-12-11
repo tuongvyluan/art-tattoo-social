@@ -14,6 +14,7 @@ const TattooDetails = () => {
 	const router = useRouter();
 	const booking =
 		typeof router.query['booking'] !== 'undefined' ? router.query['booking'] : '';
+	const back = typeof router.query['back'] !== 'undefined';
 	const [id, setId] = useState(router.query.id);
 	const [artTattoo, setArtTattoo] = useState(undefined);
 
@@ -100,6 +101,7 @@ const TattooDetails = () => {
 			return (
 				<TattooDetailsPage
 					bookingId={booking}
+					myTattoo={back}
 					artTattoo={tattoo}
 					handleSubmit={handleSubmit}
 				/>
@@ -109,6 +111,7 @@ const TattooDetails = () => {
 			return (
 				<TattooDetailNoUpdatePage
 					bookingId={booking}
+					myTattoo={back}
 					artTattoo={artTattoo}
 				/>
 			);
@@ -117,6 +120,7 @@ const TattooDetails = () => {
 			<TattooDetailsPage
 				bookingId={booking}
 				artTattoo={artTattoo}
+				myTattoo={back}
 				handleSubmit={handleSubmit}
 			/>
 		)

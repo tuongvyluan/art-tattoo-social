@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { fetcher, formatTime } from 'lib';
+import { calculateTotal, fetcher, formatPrice, formatTime } from 'lib';
 import { useEffect, useState } from 'react';
 import { Avatar, Card, CardBody, Loading, Ripple } from 'ui';
 import { Search } from 'icons/outline';
@@ -250,7 +250,7 @@ function ArtistBookingPage({ artistId }) {
 											</div>
 											<div className="flex justify-between w-full pb-1">
 												<div className="text-base font-semibold py-2">
-													Các dịch vụ đã đặt (
+													Các dịch vụ được đặt (
 													{booking.bookingDetails.filter((d) => d.artistId === artistId)?.length
 														? booking.bookingDetails.filter((d) => d.artistId === artistId)?.length
 														: '0'}
@@ -259,6 +259,7 @@ function ArtistBookingPage({ artistId }) {
 											</div>
 											<ArtistCustomerServices
 												canEdit={false}
+												bookingId={booking.id}
 												bookingDetails={booking.bookingDetails.filter((d) => d.artistId === artistId)}
 											/>
 
@@ -288,6 +289,14 @@ function ArtistBookingPage({ artistId }) {
 															</span>
 														</div>
 													)}
+													{
+														<div>
+															Tổng tiền:{' '}
+															<span className="text-xl text-red-500">
+																{formatPrice(calculateTotal(booking.bookingDetails.filter((d) => d.artistId === artistId)))}
+															</span>
+														</div>
+													}
 												</div>
 											</div>
 										</div>

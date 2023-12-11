@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { fetcher, formatTime } from 'lib';
+import { calculateTotal, fetcher, formatPrice, formatTime } from 'lib';
 import { useEffect, useState } from 'react';
 import { Avatar, Card, CardBody, Loading, Ripple } from 'ui';
 import { Search } from 'icons/outline';
@@ -276,6 +276,14 @@ function CustomerBookingPage({ customerId }) {
 															</span>
 														</div>
 													)}
+													{
+														<div>
+															Tổng tiền:{' '}
+															<span className="text-xl text-red-500">
+																{formatPrice(calculateTotal(booking.bookingDetails))}
+															</span>
+														</div>
+													}
 												</div>
 											</div>
 										</div>
