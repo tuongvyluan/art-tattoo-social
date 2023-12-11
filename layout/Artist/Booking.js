@@ -7,7 +7,7 @@ import debounce from 'lodash.debounce';
 import { BOOKING_STATUS, stringBookingStatuses } from 'lib/status';
 import MyPagination from 'ui/MyPagination';
 import { BASE_URL } from 'lib/env';
-import CustomerServices from 'layout/CustomerServices';
+import ArtistCustomerServices from './ArtistCustomerServices';
 
 const ALL_TAB = '1';
 const PENDING_TAB = '2';
@@ -251,15 +251,15 @@ function ArtistBookingPage({ artistId }) {
 											<div className="flex justify-between w-full pb-1">
 												<div className="text-base font-semibold py-2">
 													Các dịch vụ đã đặt (
-													{booking.bookingDetails?.length
-														? booking.bookingDetails?.length
+													{booking.bookingDetails.filter((d) => d.artistId === artistId)?.length
+														? booking.bookingDetails.filter((d) => d.artistId === artistId)?.length
 														: '0'}
 													)
 												</div>
 											</div>
-											<CustomerServices
+											<ArtistCustomerServices
 												canEdit={false}
-												bookingDetails={booking.bookingDetails}
+												bookingDetails={booking.bookingDetails.filter((d) => d.artistId === artistId)}
 											/>
 
 											<div className="flex justify-end pt-3 items-start">

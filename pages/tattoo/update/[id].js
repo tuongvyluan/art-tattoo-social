@@ -37,24 +37,6 @@ const TattooDetails = () => {
 	// Nếu đang xem hình xăm cũ và chưa load hình xăm
 	if (id !== 'new' && !artTattoo) {
 		fetcher(`${BASE_URL}/TattooArts/Details?id=${id}`).then((data) => {
-			const stageMap = new Map(
-				data.medias.map((obj) => {
-					return [
-						obj.tattooArtStageId,
-						{
-							id: obj.tattooArtStageId,
-							stageStyle: obj.stageStyle,
-							description: obj.description ? obj.description : '',
-							medias: []
-						}
-					];
-				})
-			);
-			data.medias.map((obj) => {
-				const value = stageMap.get(obj.tattooArtStageId);
-				value.medias.push({ ...obj, saved: true }); // saved field to note that this image has been saved to db
-				stageMap.set(obj.tattooArtStageId, value);
-			});
 			const renderData = {
 				...data,
 				artist: {
@@ -62,7 +44,7 @@ const TattooDetails = () => {
 					fullName: data.fullName
 				},
 				bookingId: data.bookingId ? data.bookingId : '',
-				stages: Array.from(stageMap, ([id, value]) => value)
+				stages: data.tattooArtStages
 			};
 			setArtTattoo(renderData);
 		});

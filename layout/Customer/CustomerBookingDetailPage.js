@@ -1,17 +1,12 @@
 import { ChevronLeft } from 'icons/solid';
 import {
-	extractBookingStatusTimeline,
+	calculateTotal,
 	fetcherPut,
-	formatDate,
 	formatPrice,
-	hasBookingMeeting,
-	isFuture
 } from 'lib';
-import { BOOKING_STATUS, operationNames, stringBookingStatuses } from 'lib/status';
+import { BOOKING_STATUS, stringBookingStatuses } from 'lib/status';
 import PropTypes from 'prop-types';
-import Image from 'next/image';
 import { Alert, Card, CardBody, Link } from 'ui';
-import { WidgetOrderStatus } from 'ui/WidgetOrderStatus';
 import { useState } from 'react';
 import Button from 'components/Button';
 import { BASE_URL } from 'lib/env';
@@ -19,17 +14,6 @@ import MyModal from 'components/MyModal';
 import customerCancelReasons from 'lib/cancelReasons';
 import CustomerServices from '../CustomerServices';
 import Heading from 'components/Heading';
-
-const calculateTotal = (bookingDetails) => {
-	if (!bookingDetails) {
-		return 0;
-	}
-	let total = 0;
-	bookingDetails.forEach((a) => {
-		total += a.price;
-	});
-	return total;
-};
 
 function BookingDetailsPage({ data, studioId, setLoading }) {
 	const [renderData, setRenderData] = useState(data);
@@ -183,7 +167,7 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 											</div>
 											<div>
 												Giờ mở cửa:{' '}
-												<span className="font-semibold">
+												<span className="font-semibold text-base">
 													{renderData.studio.openTime.split(':')[0]}:
 													{renderData.studio.openTime.split(':')[1]} -{' '}
 													{renderData.studio.closeTime.split(':')[0]}:

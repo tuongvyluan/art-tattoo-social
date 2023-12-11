@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 import {
+	BOOKING_DETAIL_STATUS,
+	SERVICE_CATEGORY,
 	stringBookingDetailStatus,
 	stringBookingDetailStatusColor,
 	stringPlacements,
@@ -114,14 +116,27 @@ const ArtistCustomerServices = ({ bookingDetails, showMore = false, bookingId })
 										</Link>
 									) : (
 										<div>
-											<div className="border border-black rounded-xl w-24 h-24 cursor-default">
-												<div className="px-2 py-7 text-center">
+											<div className="border border-gray-300 rounded-xl w-24 h-24 cursor-default">
+												<div className="px-2 py-7 text-center text-gray-600">
 													Không có hình xăm
 												</div>
 											</div>
-											<div className="flex pt-1">
-												<Button onClick={() => handleCreateTattooArtFromBookingDetail(bookingDetail)}>Tạo hình xăm</Button>
-											</div>
+											{(bookingDetail.serviceCategoryId ===
+												SERVICE_CATEGORY.NEW_TATTOO ||
+												bookingDetail.serviceCategoryId ===
+													SERVICE_CATEGORY.COVER_UP) &&
+												bookingDetail.status ===
+													BOOKING_DETAIL_STATUS.IN_PROGRESS && (
+													<div className="flex pt-1">
+														<Button
+															onClick={() =>
+																handleCreateTattooArtFromBookingDetail(bookingDetail)
+															}
+														>
+															Tạo hình xăm
+														</Button>
+													</div>
+												)}
 										</div>
 									)}
 								</div>

@@ -52,7 +52,7 @@ const CustomerServices = ({ bookingDetails, canEdit = false, showMore = false })
 								<div>
 									{bookingDetail.tattooArt ? (
 										<Link
-											href={`/tattoo/${bookingDetail.tattooArt.id}?booking=${bookingDetail.tattooArt.bookingId}`}
+											href={`/tattoo/update/${bookingDetail.tattooArt.id}?booking=${bookingDetail.tattooArt.bookingId}`}
 										>
 											<div className="cursor-pointer flex justify-start gap-3 flex-wrap">
 												<div className="relative w-24 h-24">
@@ -70,8 +70,10 @@ const CustomerServices = ({ bookingDetails, canEdit = false, showMore = false })
 											</div>
 										</Link>
 									) : (
-										<div className="border border-black rounded-xl w-24 h-24 cursor-default">
-											<div className="px-2 py-7 text-center">Không có hình xăm</div>
+										<div className="border border-gray-300 rounded-xl w-24 h-24 cursor-default">
+											<div className="px-2 py-7 text-center text-gray-600">
+												Không có hình xăm
+											</div>
 										</div>
 									)}
 								</div>

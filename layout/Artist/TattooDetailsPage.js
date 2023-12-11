@@ -12,19 +12,14 @@ import {
 	Link
 } from 'ui';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Button from 'components/Button';
-import { fetcherPost, fetcherPut, formatPrice } from 'lib';
+import { fetcherPost, fetcherPut } from 'lib';
 import { CldUploadButton } from 'next-cloudinary';
 import { generateSHA1, generateSignature } from 'lib/cloudinary_signature';
 import { AiOutlineClose } from 'react-icons/ai';
 import { extractPublicId } from 'cloudinary-build-url';
-import {
-	operationNames,
-	stringPlacements,
-	stringSize,
-	stringTattooStages
-} from 'lib/status';
+import { stringPlacements, stringSize, stringTattooStages } from 'lib/status';
 import { tattooStyleById, tattooStyleList } from 'lib/tattooStyle';
 import { BASE_URL } from 'lib/env';
 import { v4 } from 'uuid';
@@ -260,7 +255,7 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 		if (hasStageChange) {
 			const stages = JSON.parse(JSON.stringify(tattoo.stages));
 			stages.forEach((stage) => {
-				stage.medias = mediaMap.get(stage.id).map((media) => {
+				stage.medias = mediaMap.get(stage.id)?.map((media) => {
 					return {
 						id: media.id,
 						url: media.url,
@@ -598,7 +593,7 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit }) {
 														//Show media section
 													}
 													<div className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-														{mediaMap.get(stage.id).map((media, mediaIndex) => (
+														{mediaMap.get(stage.id)?.map((media, mediaIndex) => (
 															<div className="relative" key={media.id}>
 																<div className="absolute top-0 left-0 flex items-center cursor-pointer gap-2">
 																	<div className="text-gray-500">Public:</div>

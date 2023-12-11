@@ -1,22 +1,11 @@
 import { ChevronLeft } from 'icons/solid';
-import { extractBookingStatusTimeline, formatPrice } from 'lib';
+import { calculateTotal, formatPrice } from 'lib';
 import { BOOKING_STATUS, stringBookingStatuses } from 'lib/status';
 import PropTypes from 'prop-types';
 import { Alert, Card, CardBody, Link } from 'ui';
 import { useState } from 'react';
 import Heading from 'components/Heading';
 import ArtistCustomerServices from './ArtistCustomerServices';
-
-const calculateTotal = (bookingDetails) => {
-	if (!bookingDetails) {
-		return 0;
-	}
-	let total = 0;
-	bookingDetails.forEach((a) => {
-		total += a.price;
-	});
-	return total;
-};
 
 function BookingDetailsPage({ data, studioId, setLoading, artistId }) {
 	const [renderData, setRenderData] = useState(data);
@@ -98,13 +87,13 @@ function BookingDetailsPage({ data, studioId, setLoading, artistId }) {
 											</div>
 											<div>
 												Số điện thoại:{' '}
-												<span className="font-semibold">
+												<span className="font-semibold text-base">
 													{renderData.customer.phoneNumber}
 												</span>
 											</div>
 											<div>
 												Email:{' '}
-												<span className="font-semibold">
+												<span className="font-semibold text-base">
 													{renderData.customer.email}
 												</span>
 											</div>
@@ -130,7 +119,7 @@ function BookingDetailsPage({ data, studioId, setLoading, artistId }) {
 												</div>
 												<div>
 													Giờ mở cửa:{' '}
-													<span className="font-semibold">
+													<span className="font-semibold text-base">
 														{renderData.studio.openTime.split(':')[0]}:
 														{renderData.studio.openTime.split(':')[1]} -{' '}
 														{renderData.studio.closeTime.split(':')[0]}:
