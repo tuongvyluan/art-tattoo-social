@@ -7,7 +7,7 @@ import {
 	stringPlacements,
 	stringSize
 } from 'lib/status';
-import { fetcherPost, formatPrice, formatTime, showTextMaxLength } from 'lib';
+import { fetcherPost, formatPrice, formatTime, hasBookingMeeting, showTextMaxLength } from 'lib';
 import { Alert, Avatar, Card } from 'ui';
 import { MdOutlineCalendarMonth } from 'react-icons/md';
 import { useState } from 'react';
@@ -195,7 +195,7 @@ const ArtistCustomerServices = ({ bookingDetails, showMore = false, bookingId })
 									{bookingDetail.bookingMeetings?.length > 0 && (
 										<div className="flex flex-wrap gap-1 items-center text-base font-semibold bg-indigo-100 px-2 rounded-full">
 											<MdOutlineCalendarMonth serviceSize={20} />
-											<div>{formatTime(new Date())}</div>
+											<div>{formatTime(hasBookingMeeting(bookingDetail.bookingMeetings))}</div>
 										</div>
 									)}
 									{

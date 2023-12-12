@@ -47,8 +47,8 @@ function ServicePage({ services, onChange }) {
 	};
 
 	useEffect(() => {
-		setServiceList(services)
-	}, [services])
+		setServiceList(services);
+	}, [services]);
 
 	return (
 		<div className="relative">
@@ -111,11 +111,15 @@ function ServicePage({ services, onChange }) {
 													{stringServiceCategories.at(service.serviceCategoryId)}
 												</td>
 												<td className="sm:px-3 sm:py-4">
-													<div className="text-base flex flex-wrap min-w-max mx-auto gap-2 items-center">
-														<div>{formatPrice(service.minPrice)}</div>
-														<span>tới</span>
-														<div>{formatPrice(service.maxPrice)}</div>
-													</div>
+													{service.maxPrice === 0 ? (
+														<div>Miễn phí</div>
+													) : (
+														<div className="text-base flex flex-wrap min-w-max mx-auto gap-2 items-center">
+															<div>{formatPrice(service.minPrice)}</div>
+															<span>tới</span>
+															<div>{formatPrice(service.maxPrice)}</div>
+														</div>
+													)}
 												</td>
 												<td className="sm:px-3 sm:py-4 flex flex-col justify-center">
 													<div className="w-20">

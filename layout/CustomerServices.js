@@ -5,7 +5,7 @@ import {
 	stringPlacements,
 	stringSize
 } from 'lib/status';
-import { formatPrice, formatTime, showTextMaxLength } from 'lib';
+import { formatPrice, formatTime, hasBookingMeeting, showTextMaxLength } from 'lib';
 import { Avatar, Card } from 'ui';
 import { MdEdit, MdOutlineCalendarMonth, MdOutlineClose } from 'react-icons/md';
 import { useState } from 'react';
@@ -132,7 +132,7 @@ const CustomerServices = ({ bookingDetails, canEdit = false, showMore = false })
 									{bookingDetail.bookingMeetings?.length > 0 && (
 										<div className="flex flex-wrap gap-1 items-center text-base font-semibold bg-indigo-100 px-2 rounded-full">
 											<MdOutlineCalendarMonth serviceSize={20} />
-											<div>{formatTime(new Date())}</div>
+											<div>{formatTime(hasBookingMeeting(bookingDetail.bookingMeetings))}</div>
 										</div>
 									)}
 									{
