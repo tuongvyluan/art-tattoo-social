@@ -241,7 +241,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 						visible ? 'fixed top-11 pt-7' : ''
 					}`}
 				>
-					<div className="flex flex-wrap justify-between gap-3">
+					<div className="flex flex-wrap justify-between gap-3 mr-12">
 						{
 							// Search tattoo
 						}
