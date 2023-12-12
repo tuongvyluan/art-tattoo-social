@@ -65,10 +65,12 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 	const [searchKey, setSearchKey] = useState(search);
 
 	const handleFilterChange = (name, value) => {
-		setFilter({
-			...filter,
-			[name]: value
-		});
+		if (filter[name] !== value) {
+			setFilter({
+				...filter,
+				[name]: value
+			});
+		}
 	};
 
 	const handleSearchChange = (e) => {
@@ -157,9 +159,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 				</div>
 			);
 		}
-		return (
-			<div></div>
-		);
+		return <div></div>;
 	};
 
 	useEffect(() => {
@@ -170,6 +170,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 		setItems([]);
 		setPage(1);
 		let newUrl = baseUrl;
+		console.log(filter);
 		if (!newUrl.includes('?', 0)) {
 			newUrl = newUrl.concat('?');
 		}
@@ -531,9 +532,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 																			}
 																			size={20}
 																		/>
-																		<div>
-																			{item.fullName}
-																		</div>
+																		<div>{item.fullName}</div>
 																	</div>
 																</div>
 															</Link>
