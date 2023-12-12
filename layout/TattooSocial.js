@@ -297,6 +297,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 											<div className="p-3 hover:bg-gray-100 cursor-pointer flex flex-wrap items-center w-max gap-2">
 												<div>
 													<Avatar
+														size={30}
 														src={
 															tattoo.doneAt.avatar
 																? tattoo.doneAt.avatar

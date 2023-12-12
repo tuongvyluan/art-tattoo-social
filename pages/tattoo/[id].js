@@ -22,6 +22,7 @@ const TattooDetails = () => {
 	useEffect(() => {
 		setLikes([]);
 		setComments([]);
+		setId(router.query.id)
 		fetcher(
 			`${BASE_URL}/TattooArts/GetTattooArtMediaById?id=${router.query.id}&isAll=false`
 		).then((data) => {
@@ -84,6 +85,7 @@ const TattooDetails = () => {
 					<TattooListPage
 						url={`${BASE_URL}/TattooArts/AllTattooArts`}
 						pageSize={12}
+						exceptId={id}
 					/>
 				</div>
 			</div>

@@ -26,10 +26,11 @@ import { fetcherDelete, fetcherPost } from 'lib';
 import { BASE_URL } from 'lib/env';
 import MyInfiniteScroll from 'ui/MyInfiniteScroll';
 
-const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
+const TattooListPage = ({ url, pageSize = 20, showFilter = true, exceptId = '' }) => {
 	const [loading, setLoading] = useState(true);
 	const [baseUrl, setBaseUrl] = useState(url);
 	const [filterUrl, setFilterUrl] = useState(url);
+	const [except, setExcept] = useState(exceptId)
 
 	const [items, setItems] = useState([]);
 	const [page, setPage] = useState(1);
@@ -170,7 +171,6 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 		setItems([]);
 		setPage(1);
 		let newUrl = baseUrl;
-		console.log(filter);
 		if (!newUrl.includes('?', 0)) {
 			newUrl = newUrl.concat('?');
 		}
@@ -188,6 +188,10 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 		}
 		setFilterUrl(newUrl);
 	}, [filter]);
+
+	useEffect(() => {
+		setExcept(exceptId)
+	}, [exceptId])
 
 	useEffect(() => {
 		//add eventlistener to window
@@ -454,8 +458,8 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true }) => {
 							>
 								{Array.from({ length: tattooCol }).map((col, colIndex) => (
 									<div key={colIndex}>
-										{items.map((item, index) => (
-											<div key={index}>
+										{items.filter((item) => item.id !== except).map((item, index) => (
+											<div key={item.id}>
 												{index % tattooCol === colIndex && (
 													<WidgetPostCard
 														image={item.thumbnail ? item.thumbnail : randomPhoto}
@@ -572,7 +576,8 @@ TattooListPage.getInitialProps = async () => ({
 TattooListPage.propTypes = {
 	url: PropTypes.string.isRequired,
 	pageSize: PropTypes.number,
-	showFilter: PropTypes.bool
+	showFilter: PropTypes.bool,
+	exceptId: PropTypes.string
 };
 
 export default TattooListPage;
