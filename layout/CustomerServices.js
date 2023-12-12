@@ -7,22 +7,50 @@ import {
 } from 'lib/status';
 import { formatPrice, formatTime, hasBookingMeeting, showTextMaxLength } from 'lib';
 import { Avatar, Card } from 'ui';
-import { MdEdit, MdOutlineCalendarMonth, MdOutlineClose } from 'react-icons/md';
-import { useState } from 'react';
+import { MdCalendarMonth, MdOutlineCalendarMonth } from 'react-icons/md';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import ScheduleBookingMeetingModal from './ScheduleBookingMeetingModal';
 
-const CustomerServices = ({ bookingDetails, canEdit = false, showMore = false }) => {
-	const [selectedBookingDetail, setSelectedBookingDetail] = useState(undefined);
+const CustomerServices = ({
+	bookingDetails,
+	canEdit = false,
+	showMore = false,
+	setLoading,
+	showDetails = false
+}) => {
+	const [scheduleModal, setScheduleModal] = useState(false);
+	const [scheduledBookingDetail, setScheduledBookingDetail] = useState(undefined);
 
-	const onSelectUpdatedService = (detailIndex) => {
-		setSelectedArtist(0);
-		setSelectedBookingDetail(bookingDetails.at(detailIndex));
-		setBookingServiceModal(true);
+	const onSelectScheduledBookingDetail = (detailIndex) => {
+		setScheduledBookingDetail(bookingDetails.at(detailIndex));
 	};
+
+	// Oprn schedule modal when scheduledBookingDetail is not null
+	useEffect(() => {
+		if (scheduledBookingDetail) {
+			setScheduleModal(true);
+		}
+	}, [scheduledBookingDetail]);
+
+	// Reset scheduledBookingDetail when scheduleModal is closed
+	useEffect(() => {
+		if (scheduleModal === false) {
+			setScheduledBookingDetail(undefined);
+		}
+	}, [scheduleModal]);
 
 	return (
 		<div className="relative">
+			{showDetails && (
+				<ScheduleBookingMeetingModal
+					setLoading={setLoading}
+					bookingDetail={scheduledBookingDetail}
+					openModal={scheduleModal}
+					setOpenModal={setScheduleModal}
+				/>
+			)}
 			<div className="block">
 				{bookingDetails.map((bookingDetail, bookingServiceIndex) => (
 					<Card
@@ -32,16 +60,15 @@ const CustomerServices = ({ bookingDetails, canEdit = false, showMore = false })
 						key={bookingDetail.id}
 					>
 						<div className="w-full flex justify-start gap-2 items-start bg-gray-50 py-5 relative">
-							{canEdit && (
+							{showDetails && (
 								<div className="absolute top-4 right-4 cursor-pointer flex flex-wrap gap-2">
 									<div
-										onClick={() => onSelectUpdatedService(bookingServiceIndex)}
+										onClick={() =>
+											onSelectScheduledBookingDetail(bookingServiceIndex)
+										}
 										className="relative"
 									>
-										<MdEdit size={20} />
-									</div>
-									<div className="relative">
-										<MdOutlineClose size={20} />
+										<MdCalendarMonth size={20} />
 									</div>
 								</div>
 							)}
@@ -107,8 +134,14 @@ const CustomerServices = ({ bookingDetails, canEdit = false, showMore = false })
 									)}
 
 									<div className="pr-1">
-										{formatPrice(bookingDetail.serviceMinPrice)} -{' '}
-										{formatPrice(bookingDetail.serviceMaxPrice)}
+										{bookingDetail.serviceMaxPrice === 0 ? (
+											<div>Miễn phí</div>
+										) : (
+											<div>
+												{formatPrice(bookingDetail.serviceMinPrice)} -{' '}
+												{formatPrice(bookingDetail.serviceMaxPrice)}
+											</div>
+										)}
 									</div>
 								</div>
 								{
@@ -132,7 +165,11 @@ const CustomerServices = ({ bookingDetails, canEdit = false, showMore = false })
 									{hasBookingMeeting(bookingDetail.bookingMeetings) && (
 										<div className="flex flex-wrap gap-1 items-center text-base font-semibold bg-indigo-100 px-2 rounded-full">
 											<MdOutlineCalendarMonth serviceSize={20} />
-											<div>{formatTime(hasBookingMeeting(bookingDetail.bookingMeetings))}</div>
+											<div>
+												{formatTime(
+													hasBookingMeeting(bookingDetail.bookingMeetings)
+												)}
+											</div>
 										</div>
 									)}
 									{
@@ -174,7 +211,9 @@ const CustomerServices = ({ bookingDetails, canEdit = false, showMore = false })
 CustomerServices.propTypes = {
 	bookingDetails: PropTypes.array,
 	canEdit: PropTypes.bool,
-	showMore: PropTypes.bool
+	showMore: PropTypes.bool,
+	setLoading: PropTypes.func,
+	showDetails: PropTypes.bool
 };
 
 export default CustomerServices;

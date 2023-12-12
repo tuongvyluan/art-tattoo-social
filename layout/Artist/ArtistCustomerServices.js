@@ -7,17 +7,31 @@ import {
 	stringPlacements,
 	stringSize
 } from 'lib/status';
-import { fetcherPost, formatPrice, formatTime, hasBookingMeeting, showTextMaxLength } from 'lib';
+import {
+	fetcherPost,
+	formatPrice,
+	formatTime,
+	hasBookingMeeting,
+	showTextMaxLength
+} from 'lib';
 import { Alert, Avatar, Card } from 'ui';
-import { MdOutlineCalendarMonth } from 'react-icons/md';
-import { useState } from 'react';
+import { MdCalendarMonth, MdOutlineCalendarMonth } from 'react-icons/md';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Button from 'components/Button';
 import { BASE_URL } from 'lib/env';
 import Router from 'next/router';
+import ScheduleBookingMeetingModal from 'layout/ScheduleBookingMeetingModal';
 
-const ArtistCustomerServices = ({ bookingDetails, showMore = false, bookingId }) => {
+const ArtistCustomerServices = ({
+	bookingDetails,
+	showMore = false,
+	bookingId,
+	canEdit = false,
+	showDetails = false,
+	setLoading
+}) => {
 	// Alert related vars
 	const [showAlert, setShowAlert] = useState(false);
 
@@ -26,6 +40,27 @@ const ArtistCustomerServices = ({ bookingDetails, showMore = false, bookingId })
 		content: '',
 		isWarn: 'blue'
 	});
+
+	const [scheduleModal, setScheduleModal] = useState(false);
+	const [scheduledBookingDetail, setScheduledBookingDetail] = useState(undefined);
+
+	const onSelectScheduledBookingDetail = (detailIndex) => {
+		setScheduledBookingDetail(bookingDetails.at(detailIndex));
+	};
+
+	// Open schedule modal when scheduledBookingDetail is not null
+	useEffect(() => {
+		if (scheduledBookingDetail) {
+			setScheduleModal(true);
+		}
+	}, [scheduledBookingDetail]);
+
+	// Reset scheduledBookingDetail when scheduleModal is closed
+	useEffect(() => {
+		if (scheduleModal === false) {
+			setScheduledBookingDetail(undefined);
+		}
+	}, [scheduleModal]);
 
 	const handleAlert = (state, title, content, isWarn = 0) => {
 		setShowAlert((prev) => state);
@@ -81,6 +116,13 @@ const ArtistCustomerServices = ({ bookingDetails, showMore = false, bookingId })
 				<strong className="font-bold mr-1">{alertContent.title}</strong>
 				<span className="block sm:inline">{alertContent.content}</span>
 			</Alert>
+
+			<ScheduleBookingMeetingModal
+				setLoading={setLoading}
+				bookingDetail={scheduledBookingDetail}
+				openModal={scheduleModal}
+				setOpenModal={setScheduleModal}
+			/>
 			<div className="block">
 				{bookingDetails.map((bookingDetail, bookingServiceIndex) => (
 					<Card
@@ -90,6 +132,18 @@ const ArtistCustomerServices = ({ bookingDetails, showMore = false, bookingId })
 						key={bookingDetail.id}
 					>
 						<div className="w-full flex justify-start gap-2 items-start bg-gray-50 py-5 relative">
+							{showDetails && (
+								<div className="absolute top-4 right-4 cursor-pointer flex flex-wrap gap-2">
+									<div
+										onClick={() =>
+											onSelectScheduledBookingDetail(bookingServiceIndex)
+										}
+										className="relative"
+									>
+										<MdCalendarMonth size={20} />
+									</div>
+								</div>
+							)}
 							{
 								// Phần hình xăm của booking service
 							}
@@ -170,8 +224,14 @@ const ArtistCustomerServices = ({ bookingDetails, showMore = false, bookingId })
 									)}
 
 									<div className="pr-1">
-										{formatPrice(bookingDetail.serviceMinPrice)} -{' '}
-										{formatPrice(bookingDetail.serviceMaxPrice)}
+										{bookingDetail.serviceMaxPrice === 0 ? (
+											<div>Miễn phí</div>
+										) : (
+											<div>
+												{formatPrice(bookingDetail.serviceMinPrice)} -{' '}
+												{formatPrice(bookingDetail.serviceMaxPrice)}
+											</div>
+										)}
 									</div>
 								</div>
 								{
@@ -195,7 +255,11 @@ const ArtistCustomerServices = ({ bookingDetails, showMore = false, bookingId })
 									{hasBookingMeeting(bookingDetail.bookingMeetings) && (
 										<div className="flex flex-wrap gap-1 items-center text-base font-semibold bg-indigo-100 px-2 rounded-full">
 											<MdOutlineCalendarMonth serviceSize={20} />
-											<div>{formatTime(hasBookingMeeting(bookingDetail.bookingMeetings))}</div>
+											<div>
+												{formatTime(
+													hasBookingMeeting(bookingDetail.bookingMeetings)
+												)}
+											</div>
 										</div>
 									)}
 									{
@@ -237,7 +301,10 @@ const ArtistCustomerServices = ({ bookingDetails, showMore = false, bookingId })
 ArtistCustomerServices.propTypes = {
 	bookingDetails: PropTypes.array,
 	bookingId: PropTypes.string.isRequired,
-	showMore: PropTypes.bool
+	showMore: PropTypes.bool,
+	canEdit: PropTypes.bool,
+	setLoading: PropTypes.func,
+	showDetails: PropTypes.bool
 };
 
 export default ArtistCustomerServices;

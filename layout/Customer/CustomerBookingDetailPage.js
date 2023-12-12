@@ -1,9 +1,5 @@
 import { ChevronLeft } from 'icons/solid';
-import {
-	calculateTotal,
-	fetcherPut,
-	formatPrice,
-} from 'lib';
+import { calculateTotal, fetcherPut, formatPrice } from 'lib';
 import { BOOKING_STATUS, stringBookingStatuses } from 'lib/status';
 import PropTypes from 'prop-types';
 import { Alert, Card, CardBody, Link } from 'ui';
@@ -209,6 +205,7 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 								</div>
 								<CustomerServices
 									showMore={true}
+									showDetails={true}
 									bookingDetails={renderData.bookingDetails}
 								/>
 							</div>

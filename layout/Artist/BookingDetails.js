@@ -153,6 +153,7 @@ function BookingDetailsPage({ data, studioId, setLoading, artistId }) {
 									</Heading>
 								</div>
 								<ArtistCustomerServices
+									showDetails={true}
 									showMore={true}
 									bookingDetails={renderData.bookingDetails}
 									bookingId={renderData.id}
