@@ -204,6 +204,7 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 									</Heading>
 								</div>
 								<CustomerServices
+									setLoading={setLoading}
 									showMore={true}
 									showDetails={true}
 									bookingDetails={renderData.bookingDetails}

@@ -2,7 +2,6 @@ import Heading from 'components/Heading';
 import MyModal from 'components/MyModal';
 import { Badge, Tooltip } from 'flowbite-react';
 import {
-	fetcherPost,
 	fetcherPut,
 	formatDateTimeForInput,
 	formatPrice,
@@ -10,7 +9,6 @@ import {
 } from 'lib';
 import { BASE_URL } from 'lib/env';
 import {
-	BOOKING_DETAIL_STATUS,
 	BOOKING_MEETING_STATUS,
 	stringBookingMeetingColors,
 	stringBookingMeetingStatus,
@@ -59,22 +57,8 @@ const ScheduleBookingMeetingModal = ({
 		});
 	};
 
-	const handleSetMeeting = (e) => {
-		setNewMeeting(formatDateTimeForInput(e.target.value));
-	};
-
-	const handleCreateMeeting = () => {
-		handleAlert(true, '', 'Đang tạo lịch hẹn', 0);
-		fetcherPost(`${BASE_URL}/booking-meetings`, {
-			bookingDetailId: bookingDetail.id,
-			meetingTime: newMeeting
-		})
-			.then(() => {
-				setLoading(true);
-			})
-			.catch(() => {
-				handleAlert(true, 'Tạo lịch hẹn thất bại', '', 2);
-			});
+	const handleCloseModal = () => {
+		setOpenModal(false)
 	};
 
 	const updateBookingMeeting = (id, status) => {
@@ -90,7 +74,8 @@ const ScheduleBookingMeetingModal = ({
 			.then(() => {
 				setLoading(true);
 			})
-			.catch(() => {
+			.catch((e) => {
+				console.log(e)
 				handleAlert(true, 'Cập nhật lịch hẹn thất bại', '', 2);
 			});
 	};
@@ -103,7 +88,7 @@ const ScheduleBookingMeetingModal = ({
 				setOpenModal={setOpenModal}
 				title={'Sắp xếp lịch hẹn'}
 				confirmTitle="Đóng"
-				onSubmit={handleCreateMeeting}
+				onSubmit={handleCloseModal}
 			>
 				<Alert
 					showAlert={showAlert}
@@ -211,7 +196,7 @@ const ScheduleBookingMeetingModal = ({
 };
 
 ScheduleBookingMeetingModal.propTypes = {
-	bookingDetail: PropTypes.object.isRequired,
+	bookingDetail: PropTypes.object,
 	openModal: PropTypes.bool.isRequired,
 	setOpenModal: PropTypes.func.isRequired,
 	setLoading: PropTypes.func
