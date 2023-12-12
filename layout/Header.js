@@ -202,7 +202,7 @@ const Header = ({ toggleOpen }) => {
 												/>
 											</div>
 											<div>
-												<div className='font-semibold'>{data?.user?.fullName}</div>
+												<div className='font-semibold'>{data?.user?.studioName ? data?.user?.studioName : data?.user?.fullName}</div>
 												<div>
 													{data?.user.role != -1 && roleString.at(data.user.role)}
 												</div>

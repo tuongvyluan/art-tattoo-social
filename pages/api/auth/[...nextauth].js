@@ -62,7 +62,8 @@ const authOptions = {
 					customerId: res.customerId,
 					artistId: res.artistId,
 					accountId: res.accountId,
-					avatar: res.avatar
+					avatar: res.avatar,
+					studioName: res.studioName
 				};
 
 				// if everything is fine
@@ -110,10 +111,11 @@ const authOptions = {
 				return {
 					fullName: profile.family_name + ' ' + profile.given_name,
 					avatar: profile.picture,
-					id: data.accountResult.accountId,
-					customerId: data.accountResult.customerId,
-					studioId: data.accountResult.studioId,
-					artistId: data.accountResult.artistId,
+					id: data.accountId,
+					customerId: data.customerId,
+					studioId: data.studioId,
+					artistId: data.artistId,
+					studioName: data.studioName,
 					role: role
 				};
 			}
@@ -128,7 +130,8 @@ const authOptions = {
 					customerId: user.customerId,
 					artistId: user.artistId,
 					accountId: user.accountId,
-					avatar: user.avatar
+					avatar: user.avatar,
+					studioName: user.studioName
 				};
 			}
 			return token;
@@ -144,6 +147,7 @@ const authOptions = {
 				session.user.artistId = token.artistId;
 				session.user.accountId = token.accountId;
 				session.user.avatar = token.avatar;
+				session.user.studioName = token.studioName;
 			}
 			return session;
 		},
@@ -201,7 +205,8 @@ const authOptions = {
 					customerId: res.customerId,
 					artistId: res.artistId,
 					accountId: res.accountId,
-					avatar: res.avatar
+					avatar: res.avatar,
+					studioName: res.studioName
 				};
 
 				// if everything is fine
