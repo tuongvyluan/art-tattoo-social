@@ -109,13 +109,13 @@ const authOptions = {
 						break;
 				}
 				return {
-					fullName: profile.family_name + ' ' + profile.given_name,
-					avatar: profile.picture,
-					id: data.accountId,
-					customerId: data.customerId,
-					studioId: data.studioId,
-					artistId: data.artistId,
-					studioName: data.studioName,
+					fullName: data?.accountResult?.fullName,
+					avatar: data?.accountResult?.avatar,
+					id: data?.accountResult?.accountId,
+					customerId: data?.accountResult?.customerId,
+					studioId: data?.accountResult?.studioId,
+					artistId: data?.accountResult?.artistId,
+					studioName: data?.accountResult?.studioName,
 					role: role
 				};
 			}
