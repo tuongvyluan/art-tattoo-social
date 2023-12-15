@@ -1,5 +1,5 @@
 import { ChevronLeft } from 'icons/solid';
-import { calculateTotal, formatPrice } from 'lib';
+import { calculateBookingTransactions, calculateTotal, formatPrice } from 'lib';
 import { BOOKING_STATUS, stringBookingStatuses } from 'lib/status';
 import PropTypes from 'prop-types';
 import { Alert, Card, CardBody, Link } from 'ui';
@@ -9,6 +9,10 @@ import ArtistCustomerServices from './ArtistCustomerServices';
 
 function BookingDetailsPage({ data, studioId, setLoading, artistId }) {
 	const [renderData, setRenderData] = useState(data);
+	const [total, setTotal] = useState(calculateTotal(renderData.bookingDetails));
+	const [paidTotal, setPaidTotal] = useState(
+		calculateBookingTransactions(renderData.transactions)
+	);
 
 	const [bookingStatus, setBookingStatus] = useState(renderData.status);
 
@@ -165,23 +169,46 @@ function BookingDetailsPage({ data, studioId, setLoading, artistId }) {
 								// Final sum
 							}
 							{(renderData.status === BOOKING_STATUS.IN_PROGRESS ||
-								renderData.status === BOOKING_STATUS.COMPLETED) && (
-								<div>
-									<table className="w-full mb-3">
-										<tbody>
-											<tr className="border-t border-gray-300">
-												<th className="py-3 text-gray-500 w-fit sm:w-1/2 md:w-2/3 border-r pr-3 border-gray-300 text-right text-sm font-normal">
-													Tổng tiền
-												</th>
-												<td className="py-3 text-right text-xl text-red-500">
-													{/* {formatPrice(renderData.total)} */}
-													{formatPrice(calculateTotal(renderData.bookingDetails))}
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							)}
+								renderData.status === BOOKING_STATUS.COMPLETED) &&
+								renderData.bookingDetails?.length > 0 && (
+									<div>
+										<table className="w-full mb-3">
+											<tbody>
+												<tr className="border-t border-gray-300">
+													<th className="py-3 text-gray-500 w-fit sm:w-1/2 md:w-2/3 border-r pr-3 border-gray-300 text-right text-sm font-normal">
+														Tổng tiền
+													</th>
+													<td className="py-3 text-right text-xl text-red-500">
+														{/* {formatPrice(renderData.total)} */}
+														{formatPrice(total)}
+													</td>
+												</tr>
+												<tr className="border-t border-gray-300">
+													<th className="py-3 text-gray-500 w-fit sm:w-1/2 md:w-2/3 border-r pr-3 border-gray-300 text-right text-sm font-normal">
+														Đã thanh toán
+													</th>
+													<td className="py-3 text-right text-xl text-green-500">
+														{formatPrice(paidTotal)}
+													</td>
+												</tr>
+												{total !== paidTotal && (
+													<tr className="border-t border-gray-300">
+														<th className="py-3 text-gray-500 w-fit sm:w-1/2 md:w-2/3 border-r pr-3 border-gray-300 text-right text-sm font-normal">
+															Còn {total > paidTotal ? 'lại' : 'thừa'}
+														</th>
+														<td className="py-3 text-right text-xl text-red-500">
+															<div>
+																{total > paidTotal
+																	? formatPrice(total - paidTotal)
+																	: formatPrice(paidTotal - total)}
+															</div>
+														</td>
+													</tr>
+												)}
+											</tbody>
+										</table>
+									</div>
+								)}
 						</div>
 					</CardBody>
 				</Card>

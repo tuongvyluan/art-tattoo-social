@@ -180,7 +180,7 @@ const ArtistCustomerServices = ({
 												bookingDetail.serviceCategoryId ===
 													SERVICE_CATEGORY.COVER_UP) &&
 												bookingDetail.status ===
-													BOOKING_DETAIL_STATUS.IN_PROGRESS && (
+													BOOKING_DETAIL_STATUS.IN_PROGRESS && showDetails && (
 													<div className="flex pt-1">
 														<Button
 															onClick={() =>

@@ -28,8 +28,8 @@ const BookingDetails = () => {
 			return (
 				<div className="absolute top-0 bottom-0 flex flex-col justify-center left-0 right-0 text-lg">
 					<div className='text-center'>{errorMessage}</div>
-					<Link href='/booking'>
-						<div className='text-center cursor-pointer text-blue-500'>Trở lại đơn hàng</div>
+					<Link href='/'>
+						<div className='text-center cursor-pointer text-blue-500'>Trở lại trang chủ</div>
 					</Link>
 				</div>
 			);
@@ -94,16 +94,16 @@ const BookingDetails = () => {
 			);
 		}
 	}
-
-	if (status === 'loading' || (loading && !error)) {
+	if (status === 'unauthenticated') {
+		Router.replace('/');
 		return (
 			<div className="flex items-center justify-center h-full">
 				<Loading />
 			</div>
 		);
 	}
-	if (status === 'unauthenticated') {
-		Router.replace('/');
+
+	if (status === 'loading' || (loading && !error)) {
 		return (
 			<div className="flex items-center justify-center h-full">
 				<Loading />

@@ -445,7 +445,7 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit, myTattoo=false 
 											</div>
 										</DropdownToggle>
 										<DropdownMenu closeOnClick={true} className={'top-2 left-2'}>
-											<div className="h-40 overflow-y-auto">
+											<div className="h-32 overflow-y-auto">
 												{tattooStyleList.map((style, styleIndex) => (
 													<div
 														key={style.id}
