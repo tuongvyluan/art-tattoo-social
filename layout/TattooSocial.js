@@ -230,8 +230,11 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 											<div className="flex flex-wrap gap-1">
 												<span>Làm việc tại: </span>
 												<Link href={`/studio/${artist.workAt.id}`}>
-													<div className="font-semibold cursor-pointer">
-														{artist.workAt.name}
+													<div>
+														<div className="font-semibold cursor-pointer">
+															{artist.workAt.name}
+														</div>
+														<div>({artist.workAt.city})</div>
 													</div>
 												</Link>
 											</div>
@@ -305,7 +308,11 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 														}
 													/>
 												</div>
-												<div className="font-semibold">{tattoo.doneAt.name}</div>
+												<div>
+													<div className="font-semibold">{tattoo.doneAt.name}</div>
+													<div>Ở {tattoo.doneAt.city}</div>
+												</div>
+												
 											</div>
 										</div>
 									</Link>

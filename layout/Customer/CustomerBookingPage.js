@@ -225,7 +225,14 @@ function CustomerBookingPage({ customerId }) {
 										<div className="cursor-pointer ">
 											<div className="flex justify-between mx-auto border-b border-gray-300 pb-3">
 												<div className="flex gap-2 items-center">
-													<Avatar size={39} src={booking.studio.owner.avatar ? booking.studio.owner.avatar : '/images/ATL.png'} />
+													<Avatar
+														size={39}
+														src={
+															booking.studio.owner.avatar
+																? booking.studio.owner.avatar
+																: '/images/ATL.png'
+														}
+													/>
 													<div className="font-semibold text-base">
 														{booking.studio.studioName}
 													</div>
@@ -244,6 +251,12 @@ function CustomerBookingPage({ customerId }) {
 														: '0'}
 													)
 												</div>
+												<div>
+													Ngày tạo đơn:{' '}
+													<span className="text-base">
+														{formatTime(booking.createdAt)}
+													</span>
+												</div>
 											</div>
 											<CustomerServices
 												canEdit={false}
@@ -252,12 +265,6 @@ function CustomerBookingPage({ customerId }) {
 
 											<div className="flex justify-end pt-3 items-start">
 												<div className="text-right">
-													<div>
-														Ngày tạo đơn:{' '}
-														<span className="text-base">
-															{formatTime(booking.createdAt)}
-														</span>
-													</div>
 													{booking.cancelledAt && (
 														<div>
 															<div>

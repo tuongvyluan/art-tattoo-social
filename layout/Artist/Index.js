@@ -3,7 +3,7 @@ import Pill from 'components/Pill';
 import { Tooltip } from 'flowbite-react';
 import { ChevronDown, ChevronUp } from 'icons/outline';
 import TattooListNotFilter from 'layout/TattooListNotFilter';
-import { fetcherPut } from 'lib';
+import { fetcherPut, formatDate } from 'lib';
 import { BASE_URL } from 'lib/env';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -59,9 +59,12 @@ const ArtistPage = ({ artist, accountId }) => {
 						<div className="pb-6 flex justify-center flex-wrap gap-2 w-full">
 							{artist.workAt && data?.user?.customerId && (
 								<div className="w-20">
-									<a target="_blank" href={`/booking/new?artist=${artist.id}`}>
+									<Link
+										target="_blank"
+										href={`/booking/new?studio=${artist.workAt?.at(0).id}`}
+									>
 										<Button>Đặt hẹn</Button>
-									</a>
+									</Link>
 								</div>
 							)}
 							<div onClick={handleFollow} className="w-24">
@@ -150,12 +153,12 @@ const ArtistPage = ({ artist, accountId }) => {
 							<div className="pb-3 flex justify-center flex-wrap gap-2 w-full min-w-max">
 								{artist.workAt && data?.user?.customerId && (
 									<div className="w-20">
-										<a
+										<Link
 											target="_blank"
-											href={`/booking/new?studio=${artist.workAt.id}`}
+											href={`/booking/new?studio=${artist.workAt?.at(0).id}`}
 										>
 											<Button>Đặt hẹn</Button>
-										</a>
+										</Link>
 									</div>
 								)}
 								<div onClick={handleFollow} className="w-24">
@@ -164,7 +167,9 @@ const ArtistPage = ({ artist, accountId }) => {
 							</div>
 						</CardBody>
 					</Card>
-					{(artist.bio || artist.workAt || artist.styles.at(0)) && (
+					{(artist.bio ||
+						artist.workAt?.length > 0 ||
+						artist.styles?.length > 0) && (
 						<Card>
 							<CardBody>
 								<div className={`block`}>
@@ -172,27 +177,37 @@ const ArtistPage = ({ artist, accountId }) => {
 										<h1 className="font-semibold text-base pb-2">Bio</h1>
 										<div>{artist.bioContent}</div>
 									</div>
-									{artist.workAt && (
+									{artist.workAt?.length > 0 && (
 										<div className="pb-5 border-b border-gray-300 pt-3">
 											<h1 className="font-semibold text-base pb-2">Tiệm xăm</h1>
-											<Link href={`/studio/${artist.workAt.id}`}>
-												<div className="flex gap-4 items-center cursor-pointer">
-													<Avatar
-														size={44}
-														src={
-															artist.workAt?.studioAvatar
-																? artist.workAt?.studioAvatar
-																: '/images/ATL.png'
-														}
-														alt="studio logo"
-													/>
-													<div>
-														<div className="font-semibold">
-															{artist.workAt?.studioName}
+											{artist.workAt.map((studioArtist) => (
+												<Link
+													href={`/studio/${artist.workAt.id}`}
+													key={studioArtist.createdAt}
+												>
+													<div className="flex flex-wrap gap-2 items-center pb-3">
+														<Avatar
+															size={50}
+															src={
+																studioArtist?.studioAvatar
+																	? studioArtist?.studioAvatar
+																	: '/images/ATL.png'
+															}
+														/>
+														<div>
+															<div className="text-base font-semibold">
+																{studioArtist?.studioName}
+															</div>
+															<div>
+																Từ {formatDate(studioArtist.createdAt)} đến{' '}
+																{studioArtist.dismissedAt
+																	? `${formatDate(studioArtist.dismissedAt)}`
+																	: 'nay'}
+															</div>
 														</div>
 													</div>
-												</div>
-											</Link>
+												</Link>
+											))}
 										</div>
 									)}
 									{artist.styles.at(0) && (

@@ -251,26 +251,32 @@ function ArtistBookingPage({ artistId }) {
 											<div className="flex justify-between w-full pb-1">
 												<div className="text-base font-semibold py-2">
 													Các dịch vụ được đặt (
-													{booking.bookingDetails.filter((d) => d.artistId === artistId)?.length
-														? booking.bookingDetails.filter((d) => d.artistId === artistId)?.length
+													{booking.bookingDetails.filter(
+														(d) => d.artistId === artistId
+													)?.length
+														? booking.bookingDetails.filter(
+																(d) => d.artistId === artistId
+														  )?.length
 														: '0'}
 													)
+												</div>
+												<div>
+													Ngày tạo đơn:{' '}
+													<span className="text-base">
+														{formatTime(booking.createdAt)}
+													</span>
 												</div>
 											</div>
 											<ArtistCustomerServices
 												canEdit={false}
 												bookingId={booking.id}
-												bookingDetails={booking.bookingDetails.filter((d) => d.artistId === artistId)}
+												bookingDetails={booking.bookingDetails.filter(
+													(d) => d.artistId === artistId
+												)}
 											/>
 
 											<div className="flex justify-end pt-3 items-start">
 												<div className="text-right">
-													<div>
-														Ngày tạo đơn:{' '}
-														<span className="text-base">
-															{formatTime(booking.createdAt)}
-														</span>
-													</div>
 													{booking.cancelledAt && (
 														<div>
 															<div>
@@ -293,7 +299,13 @@ function ArtistBookingPage({ artistId }) {
 														<div>
 															Tổng tiền:{' '}
 															<span className="text-xl text-red-500">
-																{formatPrice(calculateTotal(booking.bookingDetails.filter((d) => d.artistId === artistId)))}
+																{formatPrice(
+																	calculateTotal(
+																		booking.bookingDetails.filter(
+																			(d) => d.artistId === artistId
+																		)
+																	)
+																)}
 															</span>
 														</div>
 													}

@@ -237,7 +237,7 @@ const PaymentBooking = ({ booking }) => {
 
 									<tr>
 										<td
-											colSpan={3}
+											colSpan={2}
 											className="text-right bg-blue-50 text-gray-900 w-24 lg:w-40 px-4 py-3 dark:bg-gray-800 text-base"
 										>
 											Thành tiền

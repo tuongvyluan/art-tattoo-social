@@ -1,6 +1,7 @@
 import TattooListPage from 'layout/TattooList';
 import TattooSocial from 'layout/TattooSocial';
 import { fetcher } from 'lib';
+import { cityMap } from 'lib/city';
 import { BASE_URL } from 'lib/env';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -38,18 +39,19 @@ const TattooDetails = () => {
 				doneAt: {
 					id: data.studio.id,
 					avatar: data.studio.avatar,
-					name: data.studio.studioName
+					name: data.studio.studioName,
+					city: cityMap.get(data.studio.city)
 				}
 			});
 			setArtist({
-				...artist,
 				id: data.artistId,
 				avatar: data.avatar,
 				fullName: data.artist.fullName,
-				isVerified: data.artist?.isVerified ? data.artist.isVerified : false,
+				isVerified: true,
 				workAt: {
 					id: data.studioWorkedAtId,
-					name: data.nameStudioWorkedAtId
+					name: data.nameStudioWorkedAtId,
+					city: cityMap.get(data.cityStudioWorkedAt)
 				}
 			});
 			setLikes(data.likes);

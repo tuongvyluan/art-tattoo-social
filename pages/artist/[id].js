@@ -35,7 +35,9 @@ const Artist = () => {
 				bioContent: data.bioContent,
 				styles: data.artistStyles,
 				isVerified: data.isVerified,
-				workAt: data.studioArtists?.at(0),
+				workAt: data.studioArtists.sort(
+					(a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+				),
 				isFollow: data.isFollow
 			});
 		});
