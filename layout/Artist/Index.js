@@ -21,13 +21,15 @@ const ArtistPage = ({ artist, accountId }) => {
 			if (isFollowed) {
 				fetcherPut(
 					`${BASE_URL}/follow/unfollow-artist?accountId=${accountId}&artistId=${artist.id}`
-				);
-				setIsFollowed(false);
+				).catch(() => {
+					setIsFollowed(false);
+				});
 			} else {
 				fetcherPut(
 					`${BASE_URL}/follow/follow-artist?accountId=${accountId}&artistId=${artist.id}`
-				);
-				setIsFollowed(true);
+				).catch(() => {
+					setIsFollowed(true);
+				});
 			}
 		} else {
 			window.open('/auth/signin', 'blank');
