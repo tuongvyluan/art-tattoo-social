@@ -250,6 +250,16 @@ const PaymentBooking = ({ booking }) => {
 							</table>
 						</div>
 					</div>
+					{total > paidTotal && (
+						<div className='pt-5'>
+							<Heading>
+								Còn lại:{' '}
+								<span className="text-red-500">
+									{formatPrice(total - paidTotal)}
+								</span>
+							</Heading>
+						</div>
+					)}
 				</CardBody>
 			</Card>
 		</div>

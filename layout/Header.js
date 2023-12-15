@@ -10,6 +10,7 @@ import { Calendar } from 'icons/outline';
 import { IoMdHeartEmpty } from 'react-icons/io';
 import { GiTwirlyFlower } from 'react-icons/gi';
 import { ROLE, roleString } from 'lib/status';
+import { AiOutlineTransaction } from 'react-icons/ai';
 
 const colors = [
 	'gray',
@@ -202,7 +203,11 @@ const Header = ({ toggleOpen }) => {
 												/>
 											</div>
 											<div>
-												<div className='font-semibold'>{data?.user?.studioName ? data?.user?.studioName : data?.user?.fullName}</div>
+												<div className="font-semibold">
+													{data?.user?.studioName
+														? data?.user?.studioName
+														: data?.user?.fullName}
+												</div>
 												<div>
 													{data?.user.role != -1 && roleString.at(data.user.role)}
 												</div>
@@ -239,6 +244,14 @@ const Header = ({ toggleOpen }) => {
 																	<span className="ml-3">Hình xăm</span>
 																</div>
 															</Link>
+															{data.user.role === ROLE.CUSTOMER && (
+																<Link href="/payment">
+																	<div className="cursor-pointer flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
+																		<AiOutlineTransaction size={16} />{' '}
+																		<span className="ml-3">Giao dịch</span>
+																	</div>
+																</Link>
+															)}
 														</div>
 													)}
 												<a
