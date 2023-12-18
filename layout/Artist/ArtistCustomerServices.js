@@ -123,6 +123,7 @@ const ArtistCustomerServices = ({
 				openModal={scheduleModal}
 				setOpenModal={setScheduleModal}
 				canEdit={canEdit}
+				isCustomer={false}
 			/>
 			<div className="block">
 				{bookingDetails.map((bookingDetail, bookingServiceIndex) => (
@@ -180,8 +181,8 @@ const ArtistCustomerServices = ({
 												SERVICE_CATEGORY.NEW_TATTOO ||
 												bookingDetail.serviceCategoryId ===
 													SERVICE_CATEGORY.COVER_UP) &&
-												bookingDetail.status ===
-													BOOKING_DETAIL_STATUS.IN_PROGRESS && showDetails && (
+												bookingDetail.status === BOOKING_DETAIL_STATUS.IN_PROGRESS &&
+												showDetails && (
 													<div className="flex pt-1">
 														<Button
 															onClick={() =>

@@ -118,7 +118,9 @@ export const stringBookingDetailStatusColor = [
 export const enum BOOKING_MEETING_STATUS {
 	PENDING = 0,
 	COMPLETED = 1,
-	CANCELLED = 2
+	CUSTOMER_CANCEL = 2,
+	ARTIST_CANCEL = 3,
+	STUDIO_CANCEL = 4
 }
 
 export const stringBookingMeetingStatus = [
@@ -143,7 +145,7 @@ export const stringBookingStatuses = [
 	'Đang thực hiện',
 	'Khách hàng huỷ',
 	'Studio huỷ',
-	'Đã hoàn thành'
+	'Hoàn thành'
 ];
 
 export const operationNames = ['Khác', 'Trọn gói', 'Xoá xăm', 'Dặm lại', 'Sửa xăm'];

@@ -1,21 +1,18 @@
 import Heading from 'components/Heading';
 import MyModal from 'components/MyModal';
 import { Badge, Tooltip } from 'flowbite-react';
-import {
-	fetcherPut,
-	formatDateTimeForInput,
-	formatPrice,
-	formatTime
-} from 'lib';
+import { fetcherPut, formatDateTimeForInput, formatPrice, formatTime } from 'lib';
 import { BASE_URL } from 'lib/env';
 import {
 	BOOKING_MEETING_STATUS,
+	ROLE,
 	stringBookingMeetingColors,
 	stringBookingMeetingStatus,
 	stringPlacements,
 	stringSize
 } from 'lib/status';
 import moment from 'moment';
+import { useSession } from 'next-auth/react';
 import PropTypes from 'propTypes';
 import { useState } from 'react';
 import { BsTrash } from 'react-icons/bs';
@@ -26,7 +23,8 @@ const ScheduleBookingMeetingModal = ({
 	openModal,
 	setOpenModal,
 	setLoading,
-	canEdit
+	canEdit,
+	isCustomer = true
 }) => {
 	// Alert related vars
 	const [showAlert, setShowAlert] = useState(false);
@@ -59,24 +57,22 @@ const ScheduleBookingMeetingModal = ({
 	};
 
 	const handleCloseModal = () => {
-		setOpenModal(false)
+		setOpenModal(false);
 	};
 
 	const updateBookingMeeting = (id, status) => {
 		handleAlert(true, '', 'Đang cập nhật lịch hẹn', 0);
 		const payload = {
 			id: id,
-			status: status
+			status: status,
+			cancelAt: formatDateTimeForInput(moment().add(12, 'hours'))
 		};
-		if (status === BOOKING_MEETING_STATUS.CANCELLED) {
-			payload.cancelAt = formatDateTimeForInput(moment().add(12, 'hours'));
-		}
 		fetcherPut(`${BASE_URL}/booking-meetings`, payload)
 			.then(() => {
 				setLoading(true);
 			})
 			.catch((e) => {
-				console.log(e)
+				console.log(e);
 				handleAlert(true, 'Cập nhật lịch hẹn thất bại', '', 2);
 			});
 	};
@@ -173,7 +169,9 @@ const ScheduleBookingMeetingModal = ({
 															onClick={() =>
 																updateBookingMeeting(
 																	time.id,
-																	BOOKING_MEETING_STATUS.CANCELLED
+																	isCustomer
+																		? BOOKING_MEETING_STATUS.CUSTOMER_CANCEL
+																		: BOOKING_MEETING_STATUS.ARTIST_CANCEL
 																)
 															}
 														>
@@ -201,7 +199,8 @@ ScheduleBookingMeetingModal.propTypes = {
 	openModal: PropTypes.bool.isRequired,
 	setOpenModal: PropTypes.func.isRequired,
 	setLoading: PropTypes.func,
-	canEdit: PropTypes.bool
+	canEdit: PropTypes.bool,
+	isCustomer: PropTypes.bool
 };
 
 export default ScheduleBookingMeetingModal;
