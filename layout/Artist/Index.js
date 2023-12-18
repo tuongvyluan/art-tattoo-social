@@ -104,8 +104,8 @@ const ArtistPage = ({ artist, accountId }) => {
 									<h1 className="font-semibold text-base pb-2">Tiệm xăm</h1>
 									{artist.workAt.map((studioArtist) => (
 										<Link
-											href={`/studio/${studioArtist.id}`}
-											key={studioArtist.createdAt}
+											href={`/studio/${studioArtist?.id}`}
+											key={studioArtist?.createdAt}
 										>
 											<div className="flex flex-wrap gap-2 items-center pb-3 cursor-pointer">
 												<Avatar
@@ -121,9 +121,9 @@ const ArtistPage = ({ artist, accountId }) => {
 														{studioArtist?.studioName}
 													</div>
 													<div>
-														Từ {formatDate(studioArtist.createdAt)} đến{' '}
-														{studioArtist.dismissedAt
-															? `${formatDate(studioArtist.dismissedAt)}`
+														Từ {formatDate(studioArtist?.createdAt)} đến{' '}
+														{studioArtist?.dismissedAt
+															? `${formatDate(studioArtist?.dismissedAt)}`
 															: 'nay'}
 													</div>
 												</div>
@@ -196,8 +196,8 @@ const ArtistPage = ({ artist, accountId }) => {
 											<h1 className="font-semibold text-base pb-2">Tiệm xăm</h1>
 											{artist.workAt.map((studioArtist) => (
 												<Link
-													href={`/studio/${artist.studioArtist.id}`}
-													key={studioArtist.createdAt}
+													href={`/studio/${studioArtist?.id}`}
+													key={studioArtist?.createdAt}
 												>
 													<div className="flex flex-wrap gap-2 items-center pb-3 cursor-pointer">
 														<Avatar
@@ -213,9 +213,9 @@ const ArtistPage = ({ artist, accountId }) => {
 																{studioArtist?.studioName}
 															</div>
 															<div>
-																Từ {formatDate(studioArtist.createdAt)} đến{' '}
-																{studioArtist.dismissedAt
-																	? `${formatDate(studioArtist.dismissedAt)}`
+																Từ {formatDate(studioArtist?.createdAt)} đến{' '}
+																{studioArtist?.dismissedAt
+																	? `${formatDate(studioArtist?.dismissedAt)}`
 																	: 'nay'}
 															</div>
 														</div>
