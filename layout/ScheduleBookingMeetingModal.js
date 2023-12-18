@@ -25,7 +25,8 @@ const ScheduleBookingMeetingModal = ({
 	bookingDetail,
 	openModal,
 	setOpenModal,
-	setLoading
+	setLoading,
+	canEdit
 }) => {
 	// Alert related vars
 	const [showAlert, setShowAlert] = useState(false);
@@ -164,7 +165,7 @@ const ScheduleBookingMeetingModal = ({
 											</div>
 										</td>
 										<td scope="col" className="px-3 py-3 text-center">
-											{time.status === BOOKING_MEETING_STATUS.PENDING && (
+											{time.status === BOOKING_MEETING_STATUS.PENDING && canEdit && (
 												<div className="flex gap-3 flex-wrap">
 													<Tooltip content="Huỷ hẹn">
 														<div
@@ -199,7 +200,8 @@ ScheduleBookingMeetingModal.propTypes = {
 	bookingDetail: PropTypes.object,
 	openModal: PropTypes.bool.isRequired,
 	setOpenModal: PropTypes.func.isRequired,
-	setLoading: PropTypes.func
+	setLoading: PropTypes.func,
+	canEdit: PropTypes.bool
 };
 
 export default ScheduleBookingMeetingModal;

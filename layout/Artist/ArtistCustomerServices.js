@@ -122,6 +122,7 @@ const ArtistCustomerServices = ({
 				bookingDetail={scheduledBookingDetail}
 				openModal={scheduleModal}
 				setOpenModal={setScheduleModal}
+				canEdit={canEdit}
 			/>
 			<div className="block">
 				{bookingDetails.map((bookingDetail, bookingServiceIndex) => (

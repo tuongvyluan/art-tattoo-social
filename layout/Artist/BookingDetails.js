@@ -159,6 +159,7 @@ function BookingDetailsPage({ data, studioId, setLoading, artistId }) {
 								<ArtistCustomerServices
 									showDetails={true}
 									setLoading={setLoading}
+									canEdit={renderData.status === BOOKING_STATUS.IN_PROGRESS}
 									showMore={true}
 									bookingDetails={renderData.bookingDetails}
 									bookingId={renderData.id}

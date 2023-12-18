@@ -99,25 +99,37 @@ const ArtistPage = ({ artist, accountId }) => {
 								<h1 className="font-semibold text-base pb-2">Bio</h1>
 								<div>{artist.bioContent}</div>
 							</div>
-							{artist.workAt && (
+							{artist.workAt?.length > 0 && (
 								<div className="pb-5 border-b border-gray-300 pt-3">
 									<h1 className="font-semibold text-base pb-2">Tiệm xăm</h1>
-									<div className="flex gap-4 items-center">
-										<Avatar
-											size={44}
-											src={
-												artist.workAt?.avatar
-													? artist.workAt?.avatar
-													: '/images/ATL.png'
-											}
-											alt="studio logo"
-										/>
-										<div>
-											<div className="font-semibold">
-												{artist.workAt?.studioName}
+									{artist.workAt.map((studioArtist) => (
+										<Link
+											href={`/studio/${studioArtist.id}`}
+											key={studioArtist.createdAt}
+										>
+											<div className="flex flex-wrap gap-2 items-center pb-3 cursor-pointer">
+												<Avatar
+													size={50}
+													src={
+														studioArtist?.studioAvatar
+															? studioArtist?.studioAvatar
+															: '/images/ATL.png'
+													}
+												/>
+												<div>
+													<div className="text-base font-semibold">
+														{studioArtist?.studioName}
+													</div>
+													<div>
+														Từ {formatDate(studioArtist.createdAt)} đến{' '}
+														{studioArtist.dismissedAt
+															? `${formatDate(studioArtist.dismissedAt)}`
+															: 'nay'}
+													</div>
+												</div>
 											</div>
-										</div>
-									</div>
+										</Link>
+									))}
 								</div>
 							)}
 							{artist.styles && (
@@ -184,10 +196,10 @@ const ArtistPage = ({ artist, accountId }) => {
 											<h1 className="font-semibold text-base pb-2">Tiệm xăm</h1>
 											{artist.workAt.map((studioArtist) => (
 												<Link
-													href={`/studio/${artist.workAt.id}`}
+													href={`/studio/${artist.studioArtist.id}`}
 													key={studioArtist.createdAt}
 												>
-													<div className="flex flex-wrap gap-2 items-center pb-3">
+													<div className="flex flex-wrap gap-2 items-center pb-3 cursor-pointer">
 														<Avatar
 															size={50}
 															src={

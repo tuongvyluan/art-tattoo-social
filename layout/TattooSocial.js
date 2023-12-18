@@ -241,7 +241,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 										)}
 									</div>
 								</div>
-								{artist.workAt.id && data?.user?.customerId && (
+								{artist.workAt?.id && data?.user?.customerId && (
 									<div className="pb-3">
 										<a
 											target="_blank"

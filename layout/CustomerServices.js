@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import {
+	BOOKING_DETAIL_STATUS,
 	stringBookingDetailStatus,
 	stringBookingDetailStatusColor,
 	stringPlacements,
@@ -49,6 +50,7 @@ const CustomerServices = ({
 					bookingDetail={scheduledBookingDetail}
 					openModal={scheduleModal}
 					setOpenModal={setScheduleModal}
+					canEdit={canEdit && (scheduledBookingDetail?.status === BOOKING_DETAIL_STATUS.IN_PROGRESS || scheduledBookingDetail?.status === BOOKING_DETAIL_STATUS.PENDING)}
 				/>
 			)}
 			<div className="block">

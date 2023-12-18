@@ -214,6 +214,7 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 								</div>
 								<CustomerServices
 									setLoading={setLoading}
+									canEdit={renderData.status === BOOKING_STATUS.IN_PROGRESS}
 									showMore={true}
 									showDetails={true}
 									bookingDetails={renderData.bookingDetails}
