@@ -7,12 +7,15 @@ import { IoIosWarning } from 'react-icons/io';
 const MyModal = ({
 	title,
 	children,
+	openModal,
+	setOpenModal,
+	onSubmit,
 	confirmTitle = 'Xác nhận',
 	cancelTitle = 'Huỷ',
 	warn = false,
-	openModal,
-	setOpenModal,
-	onSubmit
+	size = 'lg',
+	noFooter = false,
+	canConfirm = true
 }) => {
 	const initialFocus = useRef(null);
 	return (
@@ -20,6 +23,7 @@ const MyModal = ({
 			initialFocus={initialFocus}
 			show={openModal}
 			onClose={() => setOpenModal(false)}
+			size={size}
 		>
 			<Modal.Header>
 				<div className="flex flex-wrap items-center gap-2">
@@ -28,14 +32,16 @@ const MyModal = ({
 				</div>
 			</Modal.Header>
 			<Modal.Body>{children}</Modal.Body>
-			<Modal.Footer>
-				<Button ref={initialFocus} outline onClick={() => setOpenModal(false)}>
-					{cancelTitle}
-				</Button>
-				<Button warn={warn} onClick={onSubmit}>
-					{confirmTitle}
-				</Button>
-			</Modal.Footer>
+			{!noFooter && (
+				<Modal.Footer>
+					<Button ref={initialFocus} outline onClick={() => setOpenModal(false)}>
+						{cancelTitle}
+					</Button>
+					{canConfirm && (<Button warn={warn} onClick={onSubmit}>
+						{confirmTitle}
+					</Button>)}
+				</Modal.Footer>
+			)}
 		</Modal>
 	);
 };
@@ -48,7 +54,10 @@ MyModal.propTypes = {
 	warn: PropTypes.bool,
 	openModal: PropTypes.bool.isRequired,
 	setOpenModal: PropTypes.func.isRequired,
-	onSubmit: PropTypes.func
+	onSubmit: PropTypes.func,
+	size: PropTypes.string,
+	noFooter: PropTypes.bool,
+	canConfirm: PropTypes.bool
 };
 
 export default MyModal;

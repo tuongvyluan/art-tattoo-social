@@ -5,14 +5,12 @@ import { fetcherPut, formatDateTimeForInput, formatPrice, formatTime } from 'lib
 import { BASE_URL } from 'lib/env';
 import {
 	BOOKING_MEETING_STATUS,
-	ROLE,
 	stringBookingMeetingColors,
 	stringBookingMeetingStatus,
 	stringPlacements,
 	stringSize
 } from 'lib/status';
 import moment from 'moment';
-import { useSession } from 'next-auth/react';
 import PropTypes from 'propTypes';
 import { useState } from 'react';
 import { BsTrash } from 'react-icons/bs';
@@ -84,7 +82,8 @@ const ScheduleBookingMeetingModal = ({
 				openModal={openModal}
 				setOpenModal={setOpenModal}
 				title={'Sắp xếp lịch hẹn'}
-				confirmTitle="Đóng"
+				cancelTitle='Đóng'
+				canConfirm={false}
 				onSubmit={handleCloseModal}
 			>
 				<Alert

@@ -122,7 +122,11 @@ const ArtistCustomerServices = ({
 				bookingDetail={scheduledBookingDetail}
 				openModal={scheduleModal}
 				setOpenModal={setScheduleModal}
-				canEdit={canEdit}
+				canEdit={
+					canEdit &&
+					(scheduledBookingDetail?.status === BOOKING_DETAIL_STATUS.PENDING ||
+						scheduledBookingDetail?.status === BOOKING_DETAIL_STATUS.IN_PROGRESS)
+				}
 				isCustomer={false}
 			/>
 			<div className="block">

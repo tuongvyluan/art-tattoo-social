@@ -184,28 +184,6 @@ function BookingDetailsPage({ data, studioId, setLoading, artistId }) {
 														{formatPrice(total)}
 													</td>
 												</tr>
-												<tr className="border-t border-gray-300">
-													<th className="py-3 text-gray-500 w-fit sm:w-1/2 md:w-2/3 border-r pr-3 border-gray-300 text-right text-sm font-normal">
-														Đã thanh toán
-													</th>
-													<td className="py-3 text-right text-xl text-green-500">
-														{formatPrice(paidTotal)}
-													</td>
-												</tr>
-												{total !== paidTotal && (
-													<tr className="border-t border-gray-300">
-														<th className="py-3 text-gray-500 w-fit sm:w-1/2 md:w-2/3 border-r pr-3 border-gray-300 text-right text-sm font-normal">
-															Còn {total > paidTotal ? 'lại' : 'thừa'}
-														</th>
-														<td className="py-3 text-right text-xl text-red-500">
-															<div>
-																{total > paidTotal
-																	? formatPrice(total - paidTotal)
-																	: formatPrice(paidTotal - total)}
-															</div>
-														</td>
-													</tr>
-												)}
 											</tbody>
 										</table>
 									</div>
