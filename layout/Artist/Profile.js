@@ -11,8 +11,7 @@ import { useState } from 'react';
 import { Avatar, Card, CardBody } from 'ui';
 import UpdateArtistInfo from './UpdateProfile';
 import Heading from 'components/Heading';
-
-const ENCRYPT_SECRET = 'qo7r0q3yrwfdngposdgv';
+import { GOOGLE_CLIENT_SECRET } from 'lib/env';
 
 function ArtistInfo({ account, onReload }) {
 	const { data } = useSession();
@@ -33,7 +32,7 @@ function ArtistInfo({ account, onReload }) {
 			key: time
 		};
 		navigator.clipboard.writeText(
-			CryptoJS.AES.encrypt(JSON.stringify(key), ENCRYPT_SECRET).toString()
+			CryptoJS.AES.encrypt(JSON.stringify(key), GOOGLE_CLIENT_SECRET).toString()
 		);
 	};
 
