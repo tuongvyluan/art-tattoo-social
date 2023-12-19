@@ -23,7 +23,7 @@ const Studio = () => {
 	}
 
 	if (!studio) {
-		fetcher(`${BASE_URL}/studios/${id}?accountId=${data?.user?.id}`).then((data) => {
+		fetcher(`${BASE_URL}/studios/studio-details?id=${id}&accountId=${data?.user?.id}`).then((data) => {
 			setStudio({
 				name: data.studioName,
 				address: data.address,
