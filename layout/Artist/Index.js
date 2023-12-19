@@ -1,6 +1,5 @@
 import Button from 'components/Button';
 import Pill from 'components/Pill';
-import { Tooltip } from 'flowbite-react';
 import { ChevronDown, ChevronUp } from 'icons/outline';
 import TattooListNotFilter from 'layout/TattooListNotFilter';
 import { fetcherPut, formatDate } from 'lib';
@@ -17,22 +16,18 @@ const ArtistPage = ({ artist, accountId }) => {
 	const [isFollowed, setIsFollowed] = useState(artist.isFollow);
 
 	const handleFollow = () => {
-		if (accountId) {
-			if (isFollowed) {
-				fetcherPut(
-					`${BASE_URL}/follow/unfollow-artist?accountId=${accountId}&artistId=${artist.id}`
-				).catch(() => {
-					setIsFollowed(false);
-				});
-			} else {
-				fetcherPut(
-					`${BASE_URL}/follow/follow-artist?accountId=${accountId}&artistId=${artist.id}`
-				).catch(() => {
-					setIsFollowed(true);
-				});
-			}
+		if (isFollowed) {
+			fetcherPut(
+				`${BASE_URL}/follow/unfollow-artist?accountId=${accountId}&artistId=${artist.id}`
+			).catch(() => {
+				setIsFollowed(false);
+			});
 		} else {
-			window.open('/auth/signin', 'blank');
+			fetcherPut(
+				`${BASE_URL}/follow/follow-artist?accountId=${accountId}&artistId=${artist.id}`
+			).catch(() => {
+				setIsFollowed(true);
+			});
 		}
 	};
 
@@ -69,9 +64,11 @@ const ArtistPage = ({ artist, accountId }) => {
 									</Link>
 								</div>
 							)}
-							<div onClick={handleFollow} className="w-24">
-								<Button outline>{isFollowed ? 'Bỏ theo dõi' : 'Theo dõi'}</Button>
-							</div>
+							{data?.user?.id && (
+								<div onClick={handleFollow} className="w-24">
+									<Button outline>{isFollowed ? 'Bỏ theo dõi' : 'Theo dõi'}</Button>
+								</div>
+							)}
 						</div>
 						{
 							// Show more info
@@ -175,9 +172,13 @@ const ArtistPage = ({ artist, accountId }) => {
 										</Link>
 									</div>
 								)}
-								<div onClick={handleFollow} className="w-24">
-									<Button outline>{isFollowed ? 'Bỏ theo dõi' : 'Theo dõi'}</Button>
-								</div>
+								{data?.user?.id && (
+									<div onClick={handleFollow} className="w-24">
+										<Button outline>
+											{isFollowed ? 'Bỏ theo dõi' : 'Theo dõi'}
+										</Button>
+									</div>
+								)}
 							</div>
 						</CardBody>
 					</Card>

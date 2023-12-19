@@ -1,7 +1,7 @@
 import Button from 'components/Button';
 import { ChevronDown, ChevronUp } from 'icons/outline';
 import TattooListNotFilter from 'layout/TattooListNotFilter';
-import { formatPhoneNumber } from 'lib';
+import { fetcherPut, formatPhoneNumber } from 'lib';
 import { BASE_URL } from 'lib/env';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -14,6 +14,23 @@ import { TattooArtCarousel } from 'ui/TattooArtCarousel';
 const StudioPage = ({ studio }) => {
 	const { data } = useSession();
 	const [showMoreInfo, setShowMoreInfo] = useState(false);
+	const [isFollowed, setIsFollowed] = useState(studio.isFollow);
+
+	const handleFollow = () => {
+		if (isFollowed) {
+			fetcherPut(
+				`${BASE_URL}/follow/unfollow-studio?accountId=${data?.user?.id}&studioId=${studio.id}`
+			).catch(() => {
+				setIsFollowed(false);
+			});
+		} else {
+			fetcherPut(
+				`${BASE_URL}/follow/follow-studio?accountId=${data?.user?.id}&studioId=${studio.id}`
+			).catch(() => {
+				setIsFollowed(true);
+			});
+		}
+	};
 
 	return (
 		<div className="relative">
@@ -45,9 +62,11 @@ const StudioPage = ({ studio }) => {
 									</a>
 								</div>
 							)}
-							<div className="w-20">
-								<Button outline>Theo dõi</Button>
-							</div>
+							{data?.user?.id && (
+								<div onClick={handleFollow} className="w-24">
+									<Button outline>{isFollowed ? 'Bỏ theo dõi' : 'Theo dõi'}</Button>
+								</div>
+							)}
 						</div>
 						{
 							// Show more info
@@ -100,9 +119,13 @@ const StudioPage = ({ studio }) => {
 										</a>
 									</div>
 								)}
-								<div className="w-20">
-									<Button outline>Theo dõi</Button>
-								</div>
+								{data?.user?.id && (
+									<div onClick={handleFollow} className="w-24">
+										<Button outline>
+											{isFollowed ? 'Bỏ theo dõi' : 'Theo dõi'}
+										</Button>
+									</div>
+								)}
 							</div>
 						</CardBody>
 					</Card>

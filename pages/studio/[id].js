@@ -26,7 +26,8 @@ const Studio = () => {
 				isAuthorized: data.isAuthorized,
 				isPrioritized: data.isPrioritized,
         artists: data.studioArtists?.filter((a) => a.dismissedAt === null),
-				interiors: data.interiors.map((i) => i.url)
+				interiors: data.interiors.map((i) => i.url),
+				isFollow: data.isFollow ? data.isFollow : false
 			});
 		});
 		return (
