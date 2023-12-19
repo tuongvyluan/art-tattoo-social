@@ -21,7 +21,7 @@ import { ChevronDown } from 'icons/solid';
 import Button from 'components/Button';
 import { Tooltip } from 'flowbite-react';
 import { useSession } from 'next-auth/react';
-import { randomPhoto } from 'lib/tattooPhoto';
+import { noImageAvailable } from 'lib/tattooPhoto';
 import { fetcherDelete, fetcherPost } from 'lib';
 import { BASE_URL } from 'lib/env';
 import MyInfiniteScroll from 'ui/MyInfiniteScroll';
@@ -462,7 +462,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true, exceptId = '' }
 											<div key={item.id}>
 												{index % tattooCol === colIndex && (
 													<WidgetPostCard
-														image={item.thumbnail ? item.thumbnail : randomPhoto}
+														image={item.thumbnail ? item.thumbnail : noImageAvailable}
 														link={`/tattoo/${item.id}`}
 													>
 														<div className="block">

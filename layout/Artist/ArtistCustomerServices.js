@@ -23,6 +23,7 @@ import Button from 'components/Button';
 import { BASE_URL } from 'lib/env';
 import Router from 'next/router';
 import ScheduleBookingMeetingModal from 'layout/ScheduleBookingMeetingModal';
+import { noImageAvailable } from 'lib/tattooPhoto';
 
 const ArtistCustomerServices = ({
 	bookingDetails,
@@ -166,7 +167,7 @@ const ArtistCustomerServices = ({
 														src={
 															bookingDetail.tattooArt.thumbnail
 																? bookingDetail.tattooArt.thumbnail
-																: '/images/ATL.png'
+																: noImageAvailable
 														}
 														alt={'a'}
 														className="object-contain rounded-2xl"

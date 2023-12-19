@@ -21,14 +21,9 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { extractPublicId } from 'cloudinary-build-url';
 import { stringPlacements, stringSize, stringTattooStages } from 'lib/status';
 import { tattooStyleById, tattooStyleList } from 'lib/tattooStyle';
-import { BASE_URL } from 'lib/env';
+import { API_KEY, API_SECRET, BASE_URL, CLOUD_NAME, UPLOAD_PRESET } from 'lib/env';
 import { v4 } from 'uuid';
 import CldButton from 'components/CldButton';
-
-const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
-const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-const API_KEY = process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY;
-const API_SECRET = process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET;
 
 const stageMapMedia = (stages) => {
 	return new Map(
@@ -42,7 +37,12 @@ const deepCopyMap = (map) => {
 	return new Map(JSON.parse(JSON.stringify(Array.from(map))));
 };
 
-function TattooDetailsPage({ bookingId, artTattoo, handleSubmit, myTattoo=false }) {
+function TattooDetailsPage({
+	bookingId,
+	artTattoo,
+	handleSubmit,
+	myTattoo = false
+}) {
 	const [defaultTattoo, setDefaultTattoo] = useState(
 		JSON.parse(JSON.stringify(artTattoo))
 	);
@@ -55,15 +55,27 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit, myTattoo=false 
 	const [alertContent, setAlertContent] = useState({
 		title: '',
 		content: '',
-		isWarn: false
+		isWarn: 'blue'
 	});
 
-	const handleAlert = (state, title, content, isWarn = false) => {
+	const handleAlert = (state, title, content, isWarn = 0) => {
 		setShowAlert((prev) => state);
+		let color;
+		switch (isWarn) {
+			case 1:
+				color = 'green';
+				break;
+			case 2:
+				color = 'red';
+				break;
+			default:
+				color = 'blue';
+				break;
+		}
 		setAlertContent({
 			title: title,
 			content: content,
-			isWarn: isWarn
+			isWarn: color
 		});
 	};
 
@@ -106,6 +118,7 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit, myTattoo=false 
 		const image = tattooImages.at(mediaIndex);
 		// If this image was recently added and its link hasn't been saved to db, completely remove it from cloudinary
 		if (!image.saved) {
+			console.log(1, imgUrl);
 			deleteCloudinaryImage(imgUrl);
 		}
 		tattooImages.splice(mediaIndex, 1);
@@ -174,7 +187,14 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit, myTattoo=false 
 	};
 
 	const setTattooState = (key, newValue) => {
-		if (tattoo[key] !== newValue) {
+		if (key === 'isPublicized' && thumbnail === '' && !tattoo.isPublicized) {
+			handleAlert(
+				true,
+				'Public hình xăm không thành công.',
+				'Hình xăm phải có ảnh thumbnail mới được public.',
+				2
+			);
+		} else if (tattoo[key] !== newValue) {
 			setTattoo({ ...tattoo, [key]: newValue });
 		}
 	};
@@ -189,6 +209,7 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit, myTattoo=false 
 			tattooImages = stages.at(i).tattooImages;
 			for (j = 0; j < tattooImages.length; j++) {
 				if (!tattooImages.at(j).saved) {
+					console.log(2, tattooImages.at(j).url);
 					deleteCloudinaryImage(tattooImages.at(j).url);
 				}
 			}
@@ -216,7 +237,7 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit, myTattoo=false 
 			size: tattoo.size,
 			placement: tattoo.placement,
 			thumbnail: thumbnail,
-			isPublicized: tattoo.isPublicized
+			isPublicized: tattoo.isPublicized && thumbnail !== ''
 		};
 		console.log(tattooStyleById(tattoo.styleId), tattoo.styleId);
 		fetcherPost(`${BASE_URL}/TattooArts/CreateTattoo`, newTattoo)
@@ -237,7 +258,7 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit, myTattoo=false 
 				size: tattoo.size,
 				placement: tattoo.placement,
 				thumbnail: thumbnail,
-				isPublicized: tattoo.isPublicized
+				isPublicized: tattoo.isPublicized && thumbnail !== ''
 			};
 			fetcherPut(`${BASE_URL}/TattooArts/UpdateTattoo`, newTattoo)
 				.then(() => {
@@ -285,11 +306,11 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit, myTattoo=false 
 	};
 
 	return (
-		<div className="relative">
+		<div className="relative min-h-body">
 			<Alert
 				showAlert={showAlert}
 				setShowAlert={setShowAlert}
-				color={alertContent.isWarn ? 'red' : 'blue'}
+				color={alertContent.isWarn}
 				className="bottom-2 right-2 fixed max-w-md z-50"
 			>
 				<strong className="font-bold mr-1">{alertContent.title}</strong>
@@ -299,7 +320,13 @@ function TattooDetailsPage({ bookingId, artTattoo, handleSubmit, myTattoo=false 
 				<Card>
 					<CardBody>
 						<div className="flex justify-between border-b border-gray-300 pb-3">
-							<Link href={(bookingId === '' || myTattoo) ? '/myTattoo' : `/booking/${bookingId}`}>
+							<Link
+								href={
+									bookingId === '' || myTattoo
+										? '/myTattoo'
+										: `/booking/${bookingId}`
+								}
+							>
 								<div className="cursor-pointer flex gap-1 text-gray-500 hover:text-indigo-500">
 									<ChevronLeft width={20} heigh={20} /> TRỞ LẠI
 								</div>

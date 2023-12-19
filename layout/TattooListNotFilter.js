@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import debounce from 'lodash.debounce';
 import { Tooltip } from 'flowbite-react';
 import { useSession } from 'next-auth/react';
-import { randomPhoto } from 'lib/tattooPhoto';
+import { noImageAvailable } from 'lib/tattooPhoto';
 import { fetcherDelete, fetcherPost } from 'lib';
 import { BASE_URL } from 'lib/env';
 import MyInfiniteScroll from 'ui/MyInfiniteScroll';
@@ -139,7 +139,11 @@ const TattooListNotFilter = ({ url, pageSize = 20 }) => {
 											<div key={index}>
 												{index % tattooCol === colIndex && (
 													<WidgetPostCard
-														image={item.thumbnail ? item.thumbnail : randomPhoto}
+														image={
+															item.thumbnail
+																? item.thumbnail
+																: noImageAvailable
+														}
 														link={`/tattoo/${item.id}`}
 													>
 														<div className="block">
