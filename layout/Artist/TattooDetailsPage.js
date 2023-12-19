@@ -2,7 +2,6 @@ import { ChevronDown, ChevronLeft } from 'icons/solid';
 import { MdUpload } from 'react-icons/md';
 import {
 	Alert,
-	Avatar,
 	BackgroundImg,
 	Card,
 	CardBody,
@@ -24,6 +23,8 @@ import { tattooStyleById, tattooStyleList } from 'lib/tattooStyle';
 import { API_KEY, API_SECRET, BASE_URL, CLOUD_NAME, UPLOAD_PRESET } from 'lib/env';
 import { v4 } from 'uuid';
 import CldButton from 'components/CldButton';
+import { noImageAvailable } from 'lib/tattooPhoto';
+import Image from 'next/future/image';
 
 const stageMapMedia = (stages) => {
 	return new Map(
@@ -246,7 +247,7 @@ function TattooDetailsPage({
 				handleCreateUpdateStage();
 			})
 			.catch((e) => {
-				handleAlert(true, 'Tạo hình xăm thất bại', '', true);
+				handleAlert(true, 'Tạo hình xăm thất bại', '', 2);
 			});
 	};
 
@@ -263,11 +264,11 @@ function TattooDetailsPage({
 			fetcherPut(`${BASE_URL}/TattooArts/UpdateTattoo`, newTattoo)
 				.then(() => {
 					if (!hasStageChange) {
-						handleAlert(true, 'Cập nhật hình xăm thành công');
+						handleAlert(true, 'Cập nhật hình xăm thành công', '', 1);
 					}
 				})
 				.catch((e) => {
-					handleAlert(true, 'Cập nhật hình xăm thất bại', '', true);
+					handleAlert(true, 'Cập nhật hình xăm thất bại', '', 2);
 				});
 		}
 	};
@@ -357,12 +358,15 @@ function TattooDetailsPage({
 						<div className="py-3 border-b border-gray-300 flex gap-5 flex-wrap">
 							<div className="w-full min-w-min sm:w-1/2 md:w-1/3 lg:w-1/4">
 								<div className="flex justify-center">
-									<div key={thumbnail}>
-										<Avatar
-											circular={false}
-											src={thumbnail ? thumbnail : '/images/upload-img.png'}
-											alt={'Thumbnail'}
-											size={150}
+									<div className="w-36 pb-3" key={thumbnail}>
+										<Image
+											width={0}
+											height={0}
+											sizes="100vw"
+											priority
+											src={thumbnail?.length > 0 ? thumbnail : noImageAvailable}
+											alt={'a'}
+											className="relative w-full h-auto rounded-lg"
 										/>
 									</div>
 								</div>
@@ -655,11 +659,15 @@ function TattooDetailsPage({
 																		size={16}
 																	/>
 																</button>
-																<BackgroundImg
+																<Image
+																	width={0}
+																	height={0}
+																	sizes="100vw"
 																	key={media.id}
-																	className="relative w-full bg-center bg-cover bg-fallback mt-1"
-																	image={media.url}
-																	height={150}
+																	priority
+																	src={media.url}
+																	alt={'a'}
+																	className="relative w-full h-auto rounded-lg"
 																/>
 															</div>
 														))}
