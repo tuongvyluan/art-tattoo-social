@@ -143,42 +143,44 @@ const StudioPage = ({ studio }) => {
 			{
 				// Artist
 			}
-			<div>
-				<div className="hidden md:block pb-5 pt-0 text-center text-3xl text-gray-700">
-					Nghệ sĩ xăm
-				</div>
-				<div className="w-full lg:px-20 xl:px-44 2xl:px-56">
-					<Card>
-						<CardBody>
-							<div className="overflow-x-auto">
-								<div className="flex justify-center gap-2 items-center">
-									{studio.artists?.map((artist) => (
-										<div className="w-40" key={artist.id}>
-											<Link href={`/artist/${artist.artist.id}`}>
-												<div className="mx-auto w-max cursor-pointer">
-													<div className="flex justify-center">
-														<Avatar
-															size={80}
-															src={
-																artist?.artist?.avatar
-																	? artist.artist.avatar
-																	: '/images/ATL.png'
-															}
-														/>
+			{studio.artists?.length > 0 && (
+				<div>
+					<div className="hidden md:block pb-5 pt-0 text-center text-3xl text-gray-700">
+						Nghệ sĩ xăm
+					</div>
+					<div className="w-full lg:px-20 xl:px-44 2xl:px-56">
+						<Card>
+							<CardBody>
+								<div className="overflow-x-auto">
+									<div className="flex justify-center gap-2 items-center">
+										{studio.artists?.map((artist) => (
+											<div className="w-40" key={artist.id}>
+												<Link href={`/artist/${artist.artist.id}`}>
+													<div className="mx-auto w-max cursor-pointer">
+														<div className="flex justify-center">
+															<Avatar
+																size={80}
+																src={
+																	artist?.artist?.avatar
+																		? artist.artist.avatar
+																		: '/images/ATL.png'
+																}
+															/>
+														</div>
+														<div className="text-center pt-2">
+															{artist?.artist?.fullName}
+														</div>
 													</div>
-													<div className="text-center pt-2">
-														{artist?.artist?.fullName}
-													</div>
-												</div>
-											</Link>
-										</div>
-									))}
+												</Link>
+											</div>
+										))}
+									</div>
 								</div>
-							</div>
-						</CardBody>
-					</Card>
+							</CardBody>
+						</Card>
+					</div>
 				</div>
-			</div>
+			)}
 			{studio.interiors?.length > 0 && (
 				<div className="xl:px-32 pb-5">
 					<div className="hidden md:block pb-5 pt-0 text-center text-3xl text-gray-700">
