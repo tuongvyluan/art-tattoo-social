@@ -7,7 +7,7 @@ import {
 } from 'lib';
 import { BOOKING_STATUS, stringBookingStatuses } from 'lib/status';
 import PropTypes from 'prop-types';
-import { Alert, Card, CardBody, Link } from 'ui';
+import { Alert, Card, CardBody } from 'ui';
 import { useState } from 'react';
 import Button from 'components/Button';
 import { BASE_URL } from 'lib/env';
@@ -15,6 +15,7 @@ import MyModal from 'components/MyModal';
 import customerCancelReasons from 'lib/cancelReasons';
 import CustomerServices from '../CustomerServices';
 import Heading from 'components/Heading';
+import Link from 'next/link';
 
 function BookingDetailsPage({ data, studioId, setLoading }) {
 	const [renderData, setRenderData] = useState(data);
@@ -161,9 +162,11 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 									<div className="w-full md:pr-1 md:w-1/2 md:border-r mb-5 md:mb-0 md:border-b-0 border-b border-gray-300">
 										<div>
 											<Heading>Thông tin tiệm xăm</Heading>
-											<div className="text-lg font-semibold">
-												{renderData.studio.studioName}
-											</div>
+											<Link href={`/studio/${renderData.studioId}`}>
+												<div className="text-lg font-semibold cursor-pointer">
+													{renderData.studio.studioName}
+												</div>
+											</Link>
 											<div className="flex gap-1 flex-wrap w-full">
 												<div>Địa chỉ: </div>
 												<div className="font-semibold flex-grow w-min">

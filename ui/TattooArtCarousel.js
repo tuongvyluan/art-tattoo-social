@@ -3,6 +3,10 @@ import { Carousel, CarouselIndicators, CarouselSlide } from './Carousel';
 import { BackgroundImg } from './BackgroundImg';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { optimizeImage } from 'lib';
+import { CldImage, CldOgImage } from 'next-cloudinary';
+import Image from 'next/future/image';
+import { height } from 'tailwindcss/defaultTheme';
 
 export const TattooArtCarousel = ({ images, imageHeight }) => {
 	const [activeIndex, setActiveIndex] = useState(0);
@@ -26,7 +30,7 @@ export const TattooArtCarousel = ({ images, imageHeight }) => {
 	};
 
 	return (
-		<div className="relative min-w-0 break-words rounded-lg overflow-hidden shadow-sm w-full bg-white dark:bg-gray-600">
+		<div className="relative min-w-max break-words rounded-lg overflow-hidden shadow-sm w-full bg-white dark:bg-gray-600">
 			<div className="relative w-full">
 				<Carousel
 					next={next}
@@ -38,11 +42,17 @@ export const TattooArtCarousel = ({ images, imageHeight }) => {
 				>
 					{images.map((image, index) => (
 						<CarouselSlide key={index} index={index} activeIndex={activeIndex}>
-							<BackgroundImg
-								className="relative w-full bg-center bg-cover bg-fallback"
-								image={image}
-								height={imageHeight}
-							/>
+							<div style={{height: imageHeight}} className='bg-black flex flex-col justify-center'>
+								<Image
+									className="relative w-max h-auto mx-auto"
+									src={image}
+									width={0}
+									sizes="100vw"
+									height={imageHeight}
+									priority
+									alt="image"
+								/>
+							</div>
 						</CarouselSlide>
 					))}
 					<CarouselIndicators

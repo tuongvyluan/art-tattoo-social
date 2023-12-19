@@ -196,16 +196,16 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 					className="absolute cursor-pointer left-2 top-3 z-20"
 				/>
 			</Link>
-			<div className="w-full max-w-xl lg:max-w-3xl xl:max-w-4xl mx-auto">
+			<div className="w-full max-w-max mx-auto">
 				<div className="relative min-w-0 break-words rounded-lg overflow-hidden shadow-sm w-full bg-white dark:bg-gray-600">
-					<div className="block lg:flex lg:flex-wrap w-full md:items-start">
+					<div className="block lg:flex w-full md:items-start">
 						{
 							// Tattoo image
 						}
-						<div className="w-full lg:w-1/2">
+						<div className="w-max flex-grow">
 							<TattooArtCarousel imageHeight={600} images={images} />
 						</div>
-						<div className="w-full lg:w-1/2 pt-3 pb-3 h-full max-h-152 overflow-y-auto overflow-x-hidden">
+						<div className="w-full lg:w-96 pt-3 pb-3 h-full max-h-152 overflow-y-auto overflow-x-hidden">
 							{
 								// Artist info
 							}

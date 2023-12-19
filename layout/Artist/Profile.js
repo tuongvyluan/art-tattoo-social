@@ -13,6 +13,8 @@ import { useEffect, useState } from 'react';
 import { MdUpload } from 'react-icons/md';
 import { Alert, Avatar, Card, CardBody } from 'ui';
 import MyInput from 'components/MyInput';
+import UpdateArtistInfo from './UpdateProfile';
+import Heading from 'components/Heading';
 
 const ENCRYPT_SECRET = 'qo7r0q3yrwfdngposdgv';
 
@@ -26,13 +28,7 @@ function ArtistInfo({ account, onReload }) {
 	);
 	const [studios, setStudios] = useState(account.studios);
 	const [avatarKey, setAvatarKey] = useState(account.avatar);
-	const [showAlert, setShowAlert] = useState(false);
-
-	const [alertContent, setAlertContent] = useState({
-		title: '',
-		content: '',
-		isWarn: false
-	});
+	const [isEdit, setIsEdit] = useState(false);
 
 	const copyKey = () => {
 		const id = account.id;
@@ -46,302 +42,139 @@ function ArtistInfo({ account, onReload }) {
 		);
 	};
 
-	const handleAlert = (state, title, content, isWarn = false) => {
-		setShowAlert((prev) => state);
-		let color;
-		switch (isWarn) {
-			case 1:
-				color = 'green';
-				break;
-			case 2:
-				color = 'red';
-				break;
-			default:
-				color = 'blue';
-				break;
-		}
-		setAlertContent({
-			title: title,
-			content: content,
-			isWarn: color
-		});
-	};
-
 	const styles = tattooStyleList;
-
-	const handleSelectStyle = (styleId) => {
-		const newStyle = JSON.parse(JSON.stringify(artistStyles));
-		const index = newStyle.findIndex((style) => style === styleId);
-		if (index < 0) {
-			newStyle.push(styleId);
-		} else {
-			newStyle.splice(index, 1);
-		}
-		setArtistStyles(newStyle);
-	};
-
-	const handleFormChange = (e) => {
-		setProfile({ ...profile, [e.target.name]: e.target.value });
-	};
-
-	const handleUpdateArtist = (newProfile, artistStyles) => {
-		if (JSON.stringify(profile.styles) !== JSON.stringify(artistStyles)) {
-			fetcherPut(`${BASE_URL}/artists/${newProfile.id}/artist-style`, artistStyles);
-		}
-		fetcherPut(`${BASE_URL}/artist-profile`, newProfile).then(() => {
-			if (newProfile.avatar !== account.avatar) {
-				update({
-					...data,
-					user: {
-						...data?.user,
-						avatar: newProfile.avatar
-					}
-				});
-				onReload();
-			}
-		});
-	};
-
-	const handleCreateArtist = (newProfile, artistStyles) => {
-		fetcherPost(`${BASE_URL}/Auth/CreateArtist`, {
-			id: account.id,
-			bioContent: newProfile.bioContent,
-			status: 0,
-			fullName: newProfile.fullName,
-			avatar: newProfile.avatar
-		})
-			.then(() => {
-				update({
-					...data,
-					user: {
-						...data?.user,
-						artistId: account.id,
-						avatar: newProfile.avatar
-					}
-				});
-				if (JSON.stringify(profile.styles) !== JSON.stringify(artistStyles)) {
-					fetcherPut(
-						`${BASE_URL}/artists/${newProfile.id}/artist-style`,
-						artistStyles
-					).then(() => {
-						onReload();
-					});
-				} else {
-					onReload();
-				}
-			})
-			.catch((e) => {
-				console.log(e);
-			});
-	};
-
-	const handleSubmit = (newProfile, artistStyles, artistStudios) => {
-		if (data.user.artistId) {
-			handleUpdateArtist(newProfile, artistStyles);
-		} else {
-			handleCreateArtist(newProfile, artistStyles);
-		}
-	};
-
-	const handleFormSubmit = () => {
-		handleSubmit(profile, artistStyles, studios);
-		setDefaultAccount({
-			...profile,
-			styles: artistStyles.map((style) => {
-				return {
-					id: style
-				};
-			}),
-			studio: studios
-		});
-		handleAlert(true, 'Cập nhật thông tin cá nhân thành công', '', 1);
-	};
-
-	const handleFormReset = () => {
-		setProfile(JSON.parse(JSON.stringify(defaultAccount)));
-		setArtistStyles(
-			JSON.parse(JSON.stringify(defaultAccount.styles.map((style) => style.id)))
-		);
-		setStudios(JSON.parse(JSON.stringify(defaultAccount.studios)));
-	};
-
-	useEffect(() => {
-		setAvatarKey(profile.avatar);
-	}, [profile]);
 
 	return (
 		<div className="relative">
-			<Alert
-				showAlert={showAlert}
-				setShowAlert={setShowAlert}
-				color={alertContent.isWarn}
-				className="bottom-2 right-2 fixed max-w-md z-50"
-			>
-				<strong className="font-bold mr-1">{alertContent.title}</strong>
-				<span className="block sm:inline">{alertContent.content}</span>
-			</Alert>
-			<div className="sm:px-12 md:px-16 lg:px-32 xl:px-56 flex justify-center">
-				<Card className={'w-full max-w-2xl'}>
-					<CardBody>
-						<div method="post" className="pt-3">
-							<div>
-								<h1 className="border-b border-gray-300 pb-3 text-base">
-									Thông tin cá nhân
-								</h1>
-								<div className="w-full min-w-min py-3">
-									<div className="flex justify-center">
-										<div key={avatarKey}>
-											<Avatar
-												circular={true}
-												src={profile.avatar ? profile.avatar : '/images/avatar.png'}
-												alt={'Avatar'}
-												size={150}
-											/>
+			{isEdit ? (
+				<UpdateArtistInfo
+					account={account}
+					onReload={onReload}
+					setIsEdit={() => setIsEdit(false)}
+				/>
+			) : (
+				<div className="sm:px-12 md:px-16 lg:px-32 xl:px-56 flex justify-center">
+					<Card className={'w-full max-w-2xl'}>
+						<CardBody>
+							<div method="post" className="pt-3">
+								<div>
+									<div className="border-b border-gray-300 text-base">
+										<Heading>Thông tin cá nhân</Heading>
+									</div>
+									<div className="w-full min-w-min py-3">
+										<div className="flex justify-center">
+											<div key={avatarKey}>
+												<Avatar
+													circular={true}
+													src={
+														profile.avatar ? profile.avatar : '/images/avatar.png'
+													}
+													alt={'Avatar'}
+													size={150}
+												/>
+											</div>
 										</div>
 									</div>
-									<div className="flex flex-wrap items-center mt-3">
-										<div className="mx-auto">
-											<CldUploadButton
-												onSuccess={(result, options) =>
-													handleFormChange({
-														target: { name: 'avatar', value: result.info?.url }
-													})
-												}
-												uploadPreset={UPLOAD_PRESET}
-												className="text-gray-800 bg-white ring-1 ring-gray-300 hover:text-white hover:bg-gray-700 font-medium rounded-lg text-sm py-2 px-2 w-full"
-											>
-												<div className="flex gap-1 items-center">
-													<MdUpload size={16} />
-													<div>Thay avatar</div>
-												</div>
-											</CldUploadButton>
-										</div>
+									<div className="w-full mb-3 flex flex-wrap gap-1 items-end">
+										<label className="w-7">{'Tên:'}</label>
+										<div className="text-base">{profile.fullName}</div>
 									</div>
-								</div>
-								<div className="w-full mb-3">
-									<label>{'Tên'}</label>
-									<MyInput
-										aria-label={'fullName'}
-										name="fullName"
-										type="text"
-										value={profile.fullName}
-										onChange={handleFormChange}
-										required
-										placeholder={'Tên'}
-									/>
-								</div>
 
-								{account.role === ROLE.ARTIST && (
-									<div className="block mb-3">
-										<label>{'Bio'}</label>
-										<textarea
-											aria-label={'bioContent'}
-											name="bioContent"
-											type="text"
-											value={profile.bioContent}
-											onChange={handleFormChange}
-											required
-											rows={5}
-											className="appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-base leading-none"
-											placeholder={'Nhập bio cho tài khoản'}
-										/>
-									</div>
-								)}
-							</div>
-							{
-								// Artist styles
-							}
-							{isArtist && (
-								<div className="pb-5">
-									<div>
-										<h1 className="border-b border-gray-300 pb-3 text-base mb-3">
-											Tiệm xăm
-										</h1>
-										{studios ? (
-											<div>
-												{studios.map((studioArtist) => (
-													<div
-														key={studioArtist.createdAt}
-														className="flex flex-wrap gap-2 items-center pb-3"
-													>
-														<Avatar
-															size={50}
-															src={
-																studioArtist?.studioAvatar
-																	? studioArtist?.studioAvatar
-																	: '/images/ATL.png'
-															}
-														/>
-														<div>
-															<div className="text-base font-semibold">
-																{studioArtist?.studioName}
-															</div>
+									{account.role === ROLE.ARTIST && (
+										<div className="w-full mb-3 flex flex-wrap gap-1 items-end">
+											<label className="w-7">{'Bio:'}</label>
+											<div className="text-base">{profile.bioContent}</div>
+										</div>
+									)}
+								</div>
+								{
+									// Artist styles
+								}
+								{isArtist && (
+									<div className="pb-5">
+										<div>
+											<h1 className="border-b border-gray-300 pb-3 text-base mb-3">
+												Tiệm xăm
+											</h1>
+											{studios ? (
+												<div>
+													{studios.map((studioArtist) => (
+														<div
+															key={studioArtist.createdAt}
+															className="flex flex-wrap gap-2 items-center pb-3"
+														>
+															<Avatar
+																size={50}
+																src={
+																	studioArtist?.studioAvatar
+																		? studioArtist?.studioAvatar
+																		: '/images/ATL.png'
+																}
+															/>
 															<div>
-																Từ {formatDate(studioArtist.createdAt)} đến{' '}
-																{studioArtist.dismissedAt
-																	? `${formatDate(studioArtist.dismissedAt)}`
-																	: 'nay'}
+																<div className="text-base font-semibold">
+																	{studioArtist?.studioName}
+																</div>
+																<div>
+																	Từ {formatDate(studioArtist.createdAt)} đến{' '}
+																	{studioArtist.dismissedAt
+																		? `${formatDate(studioArtist.dismissedAt)}`
+																		: 'nay'}
+																</div>
 															</div>
 														</div>
+													))}
+												</div>
+											) : (
+												<div>Bạn không làm việc cho tiệm xăm nào</div>
+											)}
+										</div>
+										<div className="py-5">
+											<h1 className="border-b border-gray-300 pb-3 text-base">
+												Style
+											</h1>
+											<div className="py-2 flex flex-wrap gap-2">
+												{styles.map((style, index) => (
+													<div className="cursor-pointer" key={style.id}>
+														<Pill
+															canHover={false}
+															selected={
+																artistStyles.findIndex(
+																	(item) => item === style.id
+																) >= 0
+															}
+														>
+															{style.name}
+														</Pill>
 													</div>
 												))}
 											</div>
-										) : (
-											<div>Bạn không làm việc cho tiệm xăm nào</div>
-										)}
+										</div>
 									</div>
-									<div className="py-5">
-										<h1 className="border-b border-gray-300 pb-3 text-base">
-											Style
-										</h1>
-										<div className="py-2 flex flex-wrap gap-2">
-											{styles.map((style, index) => (
-												<div
-													className="cursor-pointer"
-													onClick={() => handleSelectStyle(style.id)}
-													key={style.id}
-												>
-													<Pill
-														selected={
-															artistStyles.findIndex((item) => item === style.id) >=
-															0
-														}
-													>
-														{style.name}
-													</Pill>
-												</div>
-											))}
+								)}
+								<div className="flex justify-between w-full">
+									{isArtist &&
+									data?.user?.artistId &&
+									account.studios?.at(0)?.dismissedAt !== null ? (
+										<div>
+											<Tooltip content="Copy key gửi tiệm xăm để gia nhập tiệm xăm">
+												<Button onClick={() => copyKey()}>Lấy key</Button>
+											</Tooltip>
+										</div>
+									) : (
+										<div></div>
+									)}
+									<div className="flex justify-end gap-2">
+										<div className="w-16">
+											<Button onClick={() => setIsEdit(true)}>Sửa</Button>
 										</div>
 									</div>
 								</div>
-							)}
-							<div className="flex justify-between w-full">
-								{isArtist &&
-								data?.user?.artistId &&
-								account.studios?.at(0)?.dismissedAt !== null ? (
-									<div>
-										<Tooltip content="Copy key gửi tiệm xăm để gia nhập tiệm xăm">
-											<Button onClick={() => copyKey()}>Lấy key</Button>
-										</Tooltip>
-									</div>
-								) : (
-									<div></div>
-								)}
-								<div className="flex justify-end gap-2">
-									<div className="w-16">
-										<Button reset={true} onClick={handleFormReset} outline>
-											Reset
-										</Button>
-									</div>
-									<div className="w-16">
-										<Button onClick={handleFormSubmit}>Lưu</Button>
-									</div>
-								</div>
 							</div>
-						</div>
-					</CardBody>
-				</Card>
-			</div>
+						</CardBody>
+					</Card>
+				</div>
+			)}
 		</div>
 	);
 }

@@ -246,7 +246,7 @@ const ArtistPage = ({ artist, accountId }) => {
 				Tác phẩm
 			</div>
 			<TattooListNotFilter
-				url={`${BASE_URL}/TattooArts/TattooUser?artistId=${artist.id}`}
+				url={`${BASE_URL}/TattooArts/TattooUser?artistId=${artist.id}&accountId=${data?.user?.accountId}`}
 				pageSize={12}
 			/>
 		</div>

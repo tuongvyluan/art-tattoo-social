@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 
-const Pill = ({ children, onClick, selected = false }) => {
+const Pill = ({ children, onClick, selected = false, canHover = true }) => {
 	return !selected ? (
 		<div
 			onClick={onClick}
-			className="text-gray-800 text-center bg-white border border-gray-700 hover:text-white hover:bg-gray-700 rounded-lg text-sm py-1 px-2 w-full"
+			className={`text-gray-800 text-center bg-white border border-gray-700 rounded-lg text-sm py-1 px-2 w-full ${canHover ? 'hover:text-white hover:bg-gray-700' : ''}`}
 		>
 			{children}
 		</div>
@@ -21,7 +21,8 @@ const Pill = ({ children, onClick, selected = false }) => {
 Pill.propTypes = {
 	children: PropTypes.node.isRequired,
 	onClick: PropTypes.func,
-	selected: PropTypes.bool
+	selected: PropTypes.bool,
+	canHover: PropTypes.bool
 };
 
 export default Pill;

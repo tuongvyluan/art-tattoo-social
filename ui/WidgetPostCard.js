@@ -4,6 +4,7 @@ import { BackgroundImg } from './BackgroundImg';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import Image from 'next/future/image';
+import { optimizeImage } from 'lib';
 
 export const WidgetPostCard = ({ children, image, imageHeight, link = '#' }) => {
 	return (
@@ -19,10 +20,11 @@ export const WidgetPostCard = ({ children, image, imageHeight, link = '#' }) => 
 					) : (
 						<Image
 							className="relative w-full h-auto"
-							src={image}
+							src={optimizeImage(image)}
 							width={0}
 							height={0}
 							sizes='100vw'
+							priority
 							alt="image"
 						/>
 					)}
