@@ -1,7 +1,16 @@
 import PropTypes from 'prop-types';
 import { calculateTotal, fetcher, formatPrice, formatTime } from 'lib';
 import { useEffect, useState } from 'react';
-import { Avatar, Card, CardBody, Dropdown, DropdownMenu, DropdownToggle, Loading, Ripple } from 'ui';
+import {
+	Avatar,
+	Card,
+	CardBody,
+	Dropdown,
+	DropdownMenu,
+	DropdownToggle,
+	Loading,
+	Ripple
+} from 'ui';
 import { Search } from 'icons/outline';
 import debounce from 'lodash.debounce';
 import { BOOKING_STATUS, stringBookingStatuses } from 'lib/status';
@@ -19,7 +28,7 @@ const CANCELLED_TAB = '5';
 function ArtistBookingPage({ artistId }) {
 	const [data, setData] = useState([]);
 	const [studioList, setStudioList] = useState([]);
-	const [currentStudio, setCurrentStudio] = useState(null)
+	const [currentStudio, setCurrentStudio] = useState(null);
 	const [activeTab, setActiveTab] = useState('1');
 	const [searchKey, setSearchKey] = useState('');
 	const [page, setPage] = useState(1);
@@ -53,9 +62,7 @@ function ArtistBookingPage({ artistId }) {
 		setLoading(true);
 		setError(false);
 
-		fetcher(
-			`${BASE_URL}/bookings/bookings-filter-artist?${getQueryParam()}`
-		)
+		fetcher(`${BASE_URL}/bookings/bookings-filter-artist?${getQueryParam()}`)
 			.then((data) => {
 				setData(data.data);
 				setTotal(Math.ceil(data.total / pageSize));
@@ -67,7 +74,7 @@ function ArtistBookingPage({ artistId }) {
 				setError(true);
 				setLoading(false);
 			});
-	}, [filter, page]);
+	}, [filter, page, currentStudio]);
 
 	const getQueryParam = () => {
 		return `artistId=${artistId}&page=${page}&pageSize=${pageSize}${
@@ -102,17 +109,19 @@ function ArtistBookingPage({ artistId }) {
 
 	useEffect(() => {
 		fetcher(`${BASE_URL}/artists/${artistId}/artist-details`).then((response) => {
-			setStudioList(
-				[{ id: null, studioName: 'Tất cả tiệm xăm' }].concat(
-					response?.studioArtists
-						?.map((a) => {
-							return {
-								id: a.id,
-								studioName: a.studioName
-							};
-						})
-				)
-			);
+			const list = [{ id: null, studioName: 'Tất cả tiệm xăm' }];
+			const map = new Map();
+			map.set(null, 'Tất cả tiệm xăm');
+			response?.studioArtists?.forEach((a) => {
+				if (!map.has(a.id)) {
+					list.push({
+						id: a.id,
+						studioName: a.studioName
+					});
+					map.set(a.id, a.studioName);
+				}
+			});
+			setStudioList(list);
 		});
 	}, []);
 
@@ -220,7 +229,10 @@ function ArtistBookingPage({ artistId }) {
 					<Dropdown className={'relative'}>
 						<DropdownToggle>
 							<div className="w-44 rounded-lg px-3 py-3 border border-gray-600 bg-white">
-								{studioList?.filter((a) => a.id === currentStudio)?.at(0)?.studioName}
+								{
+									studioList?.filter((a) => a.id === currentStudio)?.at(0)
+										?.studioName
+								}
 							</div>
 							<div className="absolute top-4 right-2">
 								<ChevronDown width={16} height={16} />
