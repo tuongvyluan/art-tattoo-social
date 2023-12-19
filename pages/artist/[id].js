@@ -48,7 +48,7 @@ const Artist = () => {
 		);
 	}
 
-	return <ArtistPage accountId={data?.user?.id} artist={artist} />;
+	return <ArtistPage account={data?.user} artist={artist} />;
 };
 
 export default Artist;

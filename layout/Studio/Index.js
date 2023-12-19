@@ -3,7 +3,6 @@ import { ChevronDown, ChevronUp } from 'icons/outline';
 import TattooListNotFilter from 'layout/TattooListNotFilter';
 import { fetcherPut, formatPhoneNumber } from 'lib';
 import { BASE_URL } from 'lib/env';
-import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
@@ -11,21 +10,20 @@ import { FiClock, FiHome, FiPhone } from 'react-icons/fi';
 import { Avatar, Card, CardBody } from 'ui';
 import { TattooArtCarousel } from 'ui/TattooArtCarousel';
 
-const StudioPage = ({ studio }) => {
-	const { data } = useSession();
+const StudioPage = ({ studio, account }) => {
 	const [showMoreInfo, setShowMoreInfo] = useState(false);
 	const [isFollowed, setIsFollowed] = useState(studio.isFollow);
 
 	const handleFollow = () => {
 		if (isFollowed) {
 			fetcherPut(
-				`${BASE_URL}/follow/unfollow-studio?accountId=${data?.user?.id}&studioId=${studio.id}`
+				`${BASE_URL}/follow/unfollow-studio?accountId=${account?.id}&studioId=${studio.id}`
 			).catch(() => {
 				setIsFollowed(false);
 			});
 		} else {
 			fetcherPut(
-				`${BASE_URL}/follow/follow-studio?accountId=${data?.user?.id}&studioId=${studio.id}`
+				`${BASE_URL}/follow/follow-studio?accountId=${account?.id}&studioId=${studio.id}`
 			).catch(() => {
 				setIsFollowed(true);
 			});
@@ -55,14 +53,14 @@ const StudioPage = ({ studio }) => {
 							</div>
 						</div>
 						<div className="pb-6 flex justify-center flex-wrap gap-2 w-full">
-							{data?.user?.customerId && (
+							{account?.customerId && (
 								<div className="w-20">
 									<a target="_blank" href={`/booking/new?studio=${studio.id}`}>
 										<Button>Đặt hẹn</Button>
 									</a>
 								</div>
 							)}
-							{data?.user?.id && (
+							{account?.id && (
 								<div onClick={handleFollow} className="w-24">
 									<Button outline>{isFollowed ? 'Bỏ theo dõi' : 'Theo dõi'}</Button>
 								</div>
@@ -112,14 +110,14 @@ const StudioPage = ({ studio }) => {
 								</div>
 							</div>
 							<div className="pb-3 flex justify-center flex-wrap gap-2 w-full min-w-max">
-								{data?.user?.customerId && (
+								{account?.customerId && (
 									<div className="w-20">
 										<a target="_blank" href={`/booking/new?studio=${studio.id}`}>
 											<Button>Đặt hẹn</Button>
 										</a>
 									</div>
 								)}
-								{data?.user?.id && (
+								{account?.id && (
 									<div onClick={handleFollow} className="w-24">
 										<Button outline>
 											{isFollowed ? 'Bỏ theo dõi' : 'Theo dõi'}
@@ -225,7 +223,8 @@ const StudioPage = ({ studio }) => {
 };
 
 StudioPage.propTypes = {
-	studio: PropTypes.object.isRequired
+	studio: PropTypes.object.isRequired,
+	account: PropTypes.object
 };
 
 export default StudioPage;

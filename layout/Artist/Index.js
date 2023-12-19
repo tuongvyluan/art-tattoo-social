@@ -4,27 +4,25 @@ import { ChevronDown, ChevronUp } from 'icons/outline';
 import TattooListNotFilter from 'layout/TattooListNotFilter';
 import { fetcherPut, formatDate } from 'lib';
 import { BASE_URL } from 'lib/env';
-import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Avatar, Card, CardBody } from 'ui';
 
-const ArtistPage = ({ artist, accountId }) => {
-	const { data } = useSession();
+const ArtistPage = ({ artist, account }) => {
 	const [showMoreInfo, setShowMoreInfo] = useState(false);
 	const [isFollowed, setIsFollowed] = useState(artist.isFollow);
 
 	const handleFollow = () => {
 		if (isFollowed) {
 			fetcherPut(
-				`${BASE_URL}/follow/unfollow-artist?accountId=${accountId}&artistId=${artist.id}`
+				`${BASE_URL}/follow/unfollow-artist?accountId=${account?.id}&artistId=${artist.id}`
 			).catch(() => {
 				setIsFollowed(false);
 			});
 		} else {
 			fetcherPut(
-				`${BASE_URL}/follow/follow-artist?accountId=${accountId}&artistId=${artist.id}`
+				`${BASE_URL}/follow/follow-artist?accountId=${account?.id}&artistId=${artist.id}`
 			).catch(() => {
 				setIsFollowed(true);
 			});
@@ -54,7 +52,7 @@ const ArtistPage = ({ artist, accountId }) => {
 							</div>
 						</div>
 						<div className="pb-6 flex justify-center flex-wrap gap-2 w-full">
-							{artist.workAt && data?.user?.customerId && (
+							{artist.workAt && account?.customerId && (
 								<div className="w-20">
 									<Link
 										target="_blank"
@@ -64,7 +62,7 @@ const ArtistPage = ({ artist, accountId }) => {
 									</Link>
 								</div>
 							)}
-							{data?.user?.id && (
+							{account?.id && (
 								<div onClick={handleFollow} className="w-24">
 									<Button outline>{isFollowed ? 'Bỏ theo dõi' : 'Theo dõi'}</Button>
 								</div>
@@ -162,7 +160,7 @@ const ArtistPage = ({ artist, accountId }) => {
 								</div>
 							</div>
 							<div className="pb-3 flex justify-center flex-wrap gap-2 w-full min-w-max">
-								{artist.workAt && data?.user?.customerId && (
+								{artist.workAt && account?.customerId && (
 									<div className="w-20">
 										<Link
 											target="_blank"
@@ -172,7 +170,7 @@ const ArtistPage = ({ artist, accountId }) => {
 										</Link>
 									</div>
 								)}
-								{data?.user?.id && (
+								{account?.id && (
 									<div onClick={handleFollow} className="w-24">
 										<Button outline>
 											{isFollowed ? 'Bỏ theo dõi' : 'Theo dõi'}
@@ -247,7 +245,7 @@ const ArtistPage = ({ artist, accountId }) => {
 				Tác phẩm
 			</div>
 			<TattooListNotFilter
-				url={`${BASE_URL}/TattooArts/TattooUser?artistId=${artist.id}&accountId=${data?.user?.accountId}`}
+				url={`${BASE_URL}/TattooArts/TattooUser?artistId=${artist.id}&accountId=${account?.id}`}
 				pageSize={12}
 			/>
 		</div>
@@ -256,7 +254,7 @@ const ArtistPage = ({ artist, accountId }) => {
 
 ArtistPage.propTypes = {
 	artist: PropTypes.object.isRequired,
-	accountId: PropTypes.string
+	account: PropTypes.object
 };
 
 export default ArtistPage;
