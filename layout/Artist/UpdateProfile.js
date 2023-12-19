@@ -78,18 +78,7 @@ function UpdateArtistInfo({ account, onReload, setIsEdit }) {
 			);
 		}
 		promises.push(
-			fetcherPut(`${BASE_URL}/artist-profile`, newProfile).then(() => {
-				if (newProfile.avatar !== account.avatar) {
-					update({
-						...data,
-						user: {
-							...data?.user,
-							avatar: newProfile.avatar
-						}
-					});
-					onReload();
-				}
-			})
+			fetcherPut(`${BASE_URL}/artist-profile`, newProfile)
 		);
 		await Promise.all(promises);
 	};
@@ -103,14 +92,6 @@ function UpdateArtistInfo({ account, onReload, setIsEdit }) {
 			avatar: newProfile.avatar
 		})
 			.then(() => {
-				update({
-					...data,
-					user: {
-						...data?.user,
-						artistId: account.id,
-						avatar: newProfile.avatar
-					}
-				});
 				if (JSON.stringify(profile.styles) !== JSON.stringify(artistStyles)) {
 					fetcherPut(
 						`${BASE_URL}/artists/${newProfile.id}/artist-style`,
@@ -134,16 +115,16 @@ function UpdateArtistInfo({ account, onReload, setIsEdit }) {
 	const handleFormSubmit = () => {
 		handleAlert(true, '', 'Đang cập nhật thông tin cá nhân', 0);
 		handleSubmit(profile, artistStyles, studios).then(() => {
-			setDefaultAccount({
-				...profile,
-				styles: artistStyles.map((style) => {
-					return {
-						id: style
-					};
-				}),
-				studio: studios
+			update({
+				...data,
+				user: {
+					...data?.user,
+					artistId: profile.id,
+					fullName: profile.fullName,
+					avatar: profile.avatar
+				}
 			});
-			handleAlert(true, 'Cập nhật thông tin cá nhân thành công', '', 1);
+			onReload();
 		});
 	};
 
@@ -314,7 +295,7 @@ function UpdateArtistInfo({ account, onReload, setIsEdit }) {
 									</div>
 								</div>
 							)}
-							<div className="flex justify-between w-full">
+							<div className="flex justify-end w-full">
 								<div className="flex justify-end gap-2">
 									<div className="w-16">
 										<Button reset={true} onClick={handleFormReset} outline>

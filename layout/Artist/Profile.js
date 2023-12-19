@@ -2,25 +2,20 @@ import CryptoJS from 'crypto-js';
 import Button from 'components/Button';
 import Pill from 'components/Pill';
 import { Tooltip } from 'flowbite-react';
-import { fetcherPost, fetcherPut, formatDate } from 'lib';
-import { BASE_URL, UPLOAD_PRESET } from 'lib/env';
+import { formatDate } from 'lib';
 import { ROLE } from 'lib/status';
 import { tattooStyleList } from 'lib/tattooStyle';
 import { useSession } from 'next-auth/react';
-import { CldUploadButton } from 'next-cloudinary';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
-import { MdUpload } from 'react-icons/md';
-import { Alert, Avatar, Card, CardBody } from 'ui';
-import MyInput from 'components/MyInput';
+import { useState } from 'react';
+import { Avatar, Card, CardBody } from 'ui';
 import UpdateArtistInfo from './UpdateProfile';
 import Heading from 'components/Heading';
 
 const ENCRYPT_SECRET = 'qo7r0q3yrwfdngposdgv';
 
 function ArtistInfo({ account, onReload }) {
-	const { update, data } = useSession();
-	const [defaultAccount, setDefaultAccount] = useState(account);
+	const { data } = useSession();
 	const [profile, setProfile] = useState(JSON.parse(JSON.stringify(account)));
 	const [isArtist, setIsArtist] = useState(account.styles);
 	const [artistStyles, setArtistStyles] = useState(
