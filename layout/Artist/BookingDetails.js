@@ -89,12 +89,14 @@ function BookingDetailsPage({ data, studioId, setLoading, artistId }) {
 											<div className="text-lg font-semibold">
 												{renderData.customer.fullName}
 											</div>
-											<div>
-												Số điện thoại:{' '}
-												<span className="font-semibold text-base">
-													{renderData.customer.phoneNumber}
-												</span>
-											</div>
+											{renderData.customer.phoneNumber?.length > 0 && (
+												<div>
+													Số điện thoại:{' '}
+													<span className="font-semibold text-base">
+														{renderData.customer.phoneNumber}
+													</span>
+												</div>
+											)}
 											<div>
 												Email:{' '}
 												<span className="font-semibold text-base">

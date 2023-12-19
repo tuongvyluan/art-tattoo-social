@@ -1,13 +1,14 @@
 import PropTypes from 'prop-types';
 import { calculateTotal, fetcher, formatPrice, formatTime } from 'lib';
 import { useEffect, useState } from 'react';
-import { Avatar, Card, CardBody, Loading, Ripple } from 'ui';
+import { Avatar, Card, CardBody, Dropdown, DropdownMenu, DropdownToggle, Loading, Ripple } from 'ui';
 import { Search } from 'icons/outline';
 import debounce from 'lodash.debounce';
 import { BOOKING_STATUS, stringBookingStatuses } from 'lib/status';
 import MyPagination from 'ui/MyPagination';
 import { BASE_URL } from 'lib/env';
 import ArtistCustomerServices from './ArtistCustomerServices';
+import { ChevronDown } from 'icons/solid';
 
 const ALL_TAB = '1';
 const PENDING_TAB = '2';
@@ -17,6 +18,8 @@ const CANCELLED_TAB = '5';
 
 function ArtistBookingPage({ artistId }) {
 	const [data, setData] = useState([]);
+	const [studioList, setStudioList] = useState([]);
+	const [currentStudio, setCurrentStudio] = useState(null)
 	const [activeTab, setActiveTab] = useState('1');
 	const [searchKey, setSearchKey] = useState('');
 	const [page, setPage] = useState(1);
@@ -51,9 +54,7 @@ function ArtistBookingPage({ artistId }) {
 		setError(false);
 
 		fetcher(
-			`${BASE_URL}/bookings/get-all-bookings?artistId=${artistId}&page=${page}&pageSize=${pageSize}${
-				filter >= 0 ? `&status=${filter}` : ''
-			}`
+			`${BASE_URL}/bookings/bookings-filter-artist?${getQueryParam()}`
 		)
 			.then((data) => {
 				setData(data.data);
@@ -67,6 +68,12 @@ function ArtistBookingPage({ artistId }) {
 				setLoading(false);
 			});
 	}, [filter, page]);
+
+	const getQueryParam = () => {
+		return `artistId=${artistId}&page=${page}&pageSize=${pageSize}${
+			filter >= 0 ? `&status=${filter}` : ''
+		}${currentStudio !== null ? '&studioId=' + currentStudio : ''}`;
+	};
 
 	useEffect(() => {
 		switch (activeTab) {
@@ -92,6 +99,22 @@ function ArtistBookingPage({ artistId }) {
 				break;
 		}
 	}, [activeTab]);
+
+	useEffect(() => {
+		fetcher(`${BASE_URL}/artists/${artistId}/artist-details`).then((response) => {
+			setStudioList(
+				[{ id: null, studioName: 'Tất cả tiệm xăm' }].concat(
+					response?.studioArtists
+						?.map((a) => {
+							return {
+								id: a.id,
+								studioName: a.studioName
+							};
+						})
+				)
+			);
+		});
+	}, []);
 
 	return (
 		<div className="sm:px-8 md:px-1 lg:px-6 xl:px-56">
@@ -191,18 +214,49 @@ function ArtistBookingPage({ artistId }) {
 					</ul>
 				</div>
 			</div>
-			<div className="my-3">
-				<div className="relative bg-gray-200 p-2 flex items-center px-3">
-					<span className="block">
-						<Search width={18} height={18} />
-					</span>
-					<input
-						value={searchKey}
-						onChange={onSearch}
-						onKeyDown={onKeyDown}
-						className="my-2 appearance-none relative block w-full pl-3 pr-3 border-0 border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 leading-none h-5 bg-transparent"
-						placeholder="Bạn có thể tìm theo tên hình xăm, tên khách hàng, hoặc ID đơn hàng"
-					/>
+			<div className="my-3 flex flex-wrap gap-2 items-center">
+				<div className="min-w-max">
+					<label className="block font-semibold text-sm">Chọn tiệm xăm</label>
+					<Dropdown className={'relative'}>
+						<DropdownToggle>
+							<div className="w-44 rounded-lg px-3 py-3 border border-gray-600 bg-white">
+								{studioList?.filter((a) => a.id === currentStudio)?.at(0)?.studioName}
+							</div>
+							<div className="absolute top-4 right-2">
+								<ChevronDown width={16} height={16} />
+							</div>
+						</DropdownToggle>
+						<DropdownMenu className={'max-h-24 overflow-auto w-40 bg-white'}>
+							<div className="w-44">
+								{studioList.map((studio, index) => (
+									<div
+										key={studio.id}
+										onClick={() => setCurrentStudio(studio.id)}
+										className={`px-3 py-1 cursor-pointer hover:bg-gray-100 ${
+											studio.id === currentStudio ? 'bg-indigo-100' : ''
+										}`}
+									>
+										{studio.studioName}
+									</div>
+								))}
+							</div>
+						</DropdownMenu>
+					</Dropdown>
+				</div>
+				<div className="flex-grow">
+					<label className="block font-semibold text-sm">Tìm kiếm</label>
+					<div className="relative bg-gray-200 rounded-lg p-1.5 flex items-center px-3">
+						<span className="block">
+							<Search width={18} height={18} />
+						</span>
+						<input
+							value={searchKey}
+							onChange={onSearch}
+							onKeyDown={onKeyDown}
+							className="my-2 appearance-none relative block w-full pl-3 pr-3 border-0 border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 leading-none h-5 bg-transparent"
+							placeholder="Bạn có thể tìm theo tên hình xăm, tên khách hàng, hoặc ID lịch hẹn"
+						/>
+					</div>
 				</div>
 			</div>
 			{error && (
