@@ -9,12 +9,11 @@ const VerifyPage = () => {
 	const token = router.query.token;
 	const [loading, setLoading] = useState(true);
 	const [isSuccess, setIsSuccess] = useState(false);
+	const [errorMessage, setErrorMessage] = useState('Yêu cầu xác thực không hợp lệ.');
 
 	if (!token) {
 		return (
-			<div className="flex items-center justify-center h-screen">
-				Yêu cầu xác thực không hợp lệ.
-			</div>
+			<div className="flex items-center justify-center h-screen">{errorMessage}</div>
 		);
 	}
 	if (!isSuccess && loading) {
@@ -22,7 +21,12 @@ const VerifyPage = () => {
 			.then(() => {
 				setIsSuccess(true);
 			})
-			.catch(() => {
+			.catch((e) => {
+				let mesageTitle = 'Yêu cầu xác thực không hợp lệ.';
+				if (e.message.includes('already verified')) {
+					mesageTitle = 'Tài khoản này đã được xác thực.';
+				}
+				setErrorMessage(mesageTitle);
 				setLoading(false);
 			});
 		return (
@@ -33,15 +37,13 @@ const VerifyPage = () => {
 	}
 	if (isSuccess) {
 		return (
-			<div className="flex items-center justify-center h-screen">
+			<div className="flex items-center justify-center h-body">
 				<div className="text-center">Bạn đã xác thực tài khoản thành công.</div>
 			</div>
 		);
 	}
 	return (
-		<div className="flex items-center justify-center h-screen">
-			Yêu cầu xác thực không hợp lệ.
-		</div>
+		<div className="flex items-center justify-center h-body">{errorMessage}</div>
 	);
 };
 

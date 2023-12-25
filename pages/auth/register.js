@@ -71,9 +71,14 @@ const RegisterPage = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (user.cpassword !== user.password) {
-			handleModal(true, '', 'Mật khẩu xác nhận không trùng khớp.', true);
+			handleModal(
+				true,
+				'Đăng ký tài khoản thất bại',
+				'Mật khẩu xác nhận không trùng khớp.',
+				2
+			);
 		} else {
-			handleModal(true, '', 'Đang đăng ký tài khoản...');
+			handleModal(true, 'Đang đăng ký tài khoản...', '');
 
 			try {
 				fetcherPost(`${BASE_URL}/Auth/Register`, {
@@ -90,12 +95,15 @@ const RegisterPage = () => {
 						);
 					})
 					.catch((e) => {
-						console.log(e);
-						handleModal(true, 'Đăng ký tài khoản thất bại', '', 2);
+						let mesageTitle = 'Đăng ký tài khoản thất bại';
+						let messageContent = '';
+						if (e.message.includes('already an account')) {
+							messageContent = 'Email hoặc số điện thoại này đã tồn tại.';
+						}
+						handleModal(true, mesageTitle, messageContent, 2);
 					});
 			} catch (e) {
-				console.log(e);
-				let mesageTitle = 'Đăng ký tài khoản không thành công.';
+				let mesageTitle = 'Đăng ký tài khoản thất bại';
 				let messageContent = '';
 				if (e.message.includes('already an account')) {
 					messageContent = 'Email hoặc số điện thoại này đã tồn tại.';
@@ -116,8 +124,8 @@ const RegisterPage = () => {
 			>
 				<div className="flex justify-center">
 					<div className="text-center">
-						<div className="flex flex-wrap  gap-2 items-center pb-4">
-							<div>{getModalIcon()}</div>
+						<div className="flex flex-wrap gap-2 items-center pb-4">
+							<div className="w-max">{getModalIcon()}</div>
 							<div className="text-2xl">{modalContent?.title}</div>
 						</div>
 						<div className="text-base">{modalContent?.content}</div>
