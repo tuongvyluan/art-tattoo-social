@@ -301,7 +301,7 @@ function ArtistBookingPage({ artistId }) {
 									<button
 										key={studio.id}
 										onClick={() => setCurrentStudio(studio.id)}
-										className={`px-3 py-1 cursor-pointer hover:bg-gray-100 ${
+										className={`block w-full px-3 py-1 cursor-pointer hover:bg-gray-100 ${
 											studio.id === currentStudio ? 'bg-indigo-100' : ''
 										}`}
 									>
