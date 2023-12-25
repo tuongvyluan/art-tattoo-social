@@ -54,6 +54,13 @@ const CustomerServices = ({
 					canEdit={canEdit && (scheduledBookingDetail?.status === BOOKING_DETAIL_STATUS.IN_PROGRESS || scheduledBookingDetail?.status === BOOKING_DETAIL_STATUS.PENDING)}
 				/>
 			)}
+			{
+				!showMore && bookingDetails?.length > 3 && (
+					<div className='absolute left-0 right-0 -bottom-10 underline text-center text-base z-100'>
+						Xem thêm
+					</div>
+				)
+			}
 			<div className="block">
 				{bookingDetails.map((bookingDetail, bookingServiceIndex) => (
 					<Card

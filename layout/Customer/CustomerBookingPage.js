@@ -8,18 +8,25 @@ import { BOOKING_STATUS, stringBookingStatuses } from 'lib/status';
 import MyPagination from 'ui/MyPagination';
 import { BASE_URL } from 'lib/env';
 import CustomerServices from 'layout/CustomerServices';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
-const ALL_TAB = '1';
-const PENDING_TAB = '2';
-const IN_PROGRESS_TAB = '3';
+const ALL_TAB = '-1';
+const PENDING_TAB = '0';
+const IN_PROGRESS_TAB = '1';
+const CUSTOMER_CANCELLED_TAB = '2';
+const STUDIO_CANCELLED_TAB = '3';
 const COMPLETE_TAB = '4';
-const CANCELLED_TAB = '5';
+const NOT_COMPLETE_TAB = '5';
 
 function CustomerBookingPage({ customerId }) {
 	const [data, setData] = useState([]);
-	const [activeTab, setActiveTab] = useState('1');
+	const router = useRouter();
+	const [activeTab, setActiveTab] = useState(
+		router.query.active ? router.query.active : ALL_TAB
+	);
 	const [searchKey, setSearchKey] = useState('');
-	const [page, setPage] = useState(1);
+	const [page, setPage] = useState(router.query.page ? router.query.page : 1);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
 	const [filter, setFilter] = useState(undefined);
@@ -65,6 +72,9 @@ function CustomerBookingPage({ customerId }) {
 				setTotal(0);
 				setError(true);
 				setLoading(false);
+			})
+			.finally(() => {
+				router.push(`/booking?active=${filter}&page=${page}`);
 			});
 	}, [filter, page]);
 
@@ -82,9 +92,17 @@ function CustomerBookingPage({ customerId }) {
 				setPage(1);
 				setFilter(BOOKING_STATUS.COMPLETED);
 				break;
-			case CANCELLED_TAB:
+			case STUDIO_CANCELLED_TAB:
+				setPage(1);
+				setFilter(BOOKING_STATUS.STUDIO_CANCEL);
+				break;
+			case CUSTOMER_CANCELLED_TAB:
 				setPage(1);
 				setFilter(BOOKING_STATUS.CUSTOMER_CANCEL);
+				break;
+			case NOT_COMPLETE_TAB:
+				setPage(1);
+				setFilter(BOOKING_STATUS.NOT_COMPLETED);
 				break;
 			default:
 				setPage(1);
@@ -96,6 +114,9 @@ function CustomerBookingPage({ customerId }) {
 	return (
 		<div className="sm:px-8 md:px-1 lg:px-6 xl:px-56">
 			<div className="mx-auto ring-1 ring-black ring-opacity-5 bg-white">
+				{
+					// Filter by status
+				}
 				<div className="flex flex-row w-0 min-w-full">
 					<ul className="list-none grid col-span-4 grid-flow-col place-items-center overflow-x-auto w-0 min-w-full -mb-10 pb-10">
 						<li
@@ -105,16 +126,15 @@ function CustomerBookingPage({ customerId }) {
 									: ''
 							}`}
 						>
-							<a
+							<button
 								onClick={() => {
 									toggle(ALL_TAB);
 								}}
-								href="#"
 								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
 							>
 								Tất cả
 								<Ripple color="black" />
-							</a>
+							</button>
 						</li>
 						<li
 							className={`text-center cursor-pointer ${
@@ -123,16 +143,15 @@ function CustomerBookingPage({ customerId }) {
 									: ''
 							}`}
 						>
-							<a
+							<button
 								onClick={() => {
 									toggle(PENDING_TAB);
 								}}
-								href="#"
 								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
 							>
 								Chờ xác nhận
 								<Ripple color="black" />
-							</a>
+							</button>
 						</li>
 						<li
 							className={`text-center cursor-pointer ${
@@ -141,16 +160,15 @@ function CustomerBookingPage({ customerId }) {
 									: ''
 							}`}
 						>
-							<a
+							<button
 								onClick={() => {
 									toggle(IN_PROGRESS_TAB);
 								}}
-								href="#"
 								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
 							>
 								Đang thực hiện
 								<Ripple color="black" />
-							</a>
+							</button>
 						</li>
 						<li
 							className={`text-center cursor-pointer ${
@@ -159,8 +177,7 @@ function CustomerBookingPage({ customerId }) {
 									: ''
 							}`}
 						>
-							<a
-								href="#"
+							<button
 								onClick={() => {
 									toggle(COMPLETE_TAB);
 								}}
@@ -168,25 +185,58 @@ function CustomerBookingPage({ customerId }) {
 							>
 								Hoàn thành
 								<Ripple color="black" />
-							</a>
+							</button>
 						</li>
 						<li
 							className={`text-center cursor-pointer ${
-								activeTab === CANCELLED_TAB
+								activeTab === CUSTOMER_CANCELLED_TAB
 									? 'border-b-2 border-solid border-gray-700'
 									: ''
 							}`}
 						>
-							<a
-								href="#"
+							<button
 								onClick={() => {
-									toggle(CANCELLED_TAB);
+									toggle(CUSTOMER_CANCELLED_TAB);
 								}}
 								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
 							>
-								Đã huỷ
+								Khách hàng huỷ
 								<Ripple color="black" />
-							</a>
+							</button>
+						</li>
+						<li
+							className={`text-center cursor-pointer ${
+								activeTab === STUDIO_CANCELLED_TAB
+									? 'border-b-2 border-solid border-gray-700'
+									: ''
+							}`}
+						>
+							<button
+								onClick={() => {
+									toggle(STUDIO_CANCELLED_TAB);
+								}}
+								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
+							>
+								Tiệm xăm huỷ
+								<Ripple color="black" />
+							</button>
+						</li>
+						<li
+							className={`text-center cursor-pointer ${
+								activeTab === NOT_COMPLETE_TAB
+									? 'border-b-2 border-solid border-gray-700'
+									: ''
+							}`}
+						>
+							<button
+								onClick={() => {
+									toggle(NOT_COMPLETE_TAB);
+								}}
+								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
+							>
+								Đã dừng
+								<Ripple color="black" />
+							</button>
 						</li>
 					</ul>
 				</div>
@@ -221,9 +271,12 @@ function CustomerBookingPage({ customerId }) {
 						{data.map((booking, index) => (
 							<Card key={booking.id}>
 								<CardBody>
-									<a className="text-black" href={`/booking/${booking.id}`}>
+									<Link className="text-black" href={`/booking/${booking.id}`}>
 										<div className="cursor-pointer ">
-											<div className="flex justify-between mx-auto border-b border-gray-300 pb-3">
+											{
+												// Booking header
+											}
+											<div className="flex justify-between items-center mx-auto border-b border-gray-300 pb-3">
 												<div className="flex gap-2 items-center">
 													<Avatar
 														size={39}
@@ -243,6 +296,9 @@ function CustomerBookingPage({ customerId }) {
 													</div>
 												</div>
 											</div>
+											{
+												//Booking detail list
+											}
 											<div className="flex justify-between w-full pb-1">
 												<div className="text-base font-semibold py-2">
 													Các dịch vụ đã đặt (
@@ -294,7 +350,7 @@ function CustomerBookingPage({ customerId }) {
 												</div>
 											</div>
 										</div>
-									</a>
+									</Link>
 								</CardBody>
 							</Card>
 						))}
