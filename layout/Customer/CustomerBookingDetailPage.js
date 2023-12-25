@@ -296,6 +296,19 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 													<Button outline>Xem thanh toán</Button>
 												</div>
 											</Link>
+											{renderData.status === BOOKING_STATUS.COMPLETED && (
+												<div className="flex justify-end">
+													<div className="w-max">
+														<a
+															target="_blank"
+															href={`/feedback/${renderData.id}`}
+															className="block text-center text-white bg-gray-800 hover:bg-gray-700 font-medium rounded-lg text-sm py-2 px-5 w-full"
+														>
+															Đánh giá
+														</a>
+													</div>
+												</div>
+											)}
 										</div>
 									</div>
 								)}

@@ -10,6 +10,7 @@ import { BASE_URL } from 'lib/env';
 import CustomerServices from 'layout/CustomerServices';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import Button from 'components/Button';
 
 const ALL_TAB = '-1';
 const PENDING_TAB = '0';
@@ -319,7 +320,7 @@ function CustomerBookingPage({ customerId }) {
 												bookingDetails={booking.bookingDetails}
 											/>
 
-											<div className="flex justify-end pt-3 items-start">
+											<div className="flex justify-end pt-5 items-start">
 												<div className="text-right">
 													{booking.cancelledAt && (
 														<div>
@@ -351,6 +352,19 @@ function CustomerBookingPage({ customerId }) {
 											</div>
 										</div>
 									</Link>
+									{booking.status === BOOKING_STATUS.COMPLETED && (
+										<div className="flex justify-end pt-3">
+											<div className='w-max'>
+												<a
+													target="_blank"
+													href={`/feedback/${booking.id}`}
+													className="block text-center text-white bg-gray-800 hover:bg-gray-700 font-medium rounded-lg text-sm py-2 px-5 w-full"
+												>
+													Đánh giá
+												</a>
+											</div>
+										</div>
+									)}
 								</CardBody>
 							</Card>
 						))}

@@ -6,9 +6,9 @@ import Header from './Header';
 import NProgress from 'nprogress';
 import Router from 'next/router';
 import SidebarMenu from './SidebarMenu';
-import { capitalize } from 'lib';
 import { useAppState } from 'components/AppProvider';
 import { useRouter } from 'next/router';
+import getPageName from 'lib/pageNames';
 
 const NonDashboardRoutes = [
 	'/auth/signin',
@@ -87,13 +87,13 @@ const Page = ({ children }) => {
 		contentClass: 'min-h-screen'
 	};
 
-	const pageName = asPath.split('/').reverse()[1];
+	const pageName = asPath.split('/').at(1).split('?').at(0);
 
 	return (
 		<>
 			<Head>
 				<title>
-					{pageName ? capitalize(pageName) + ' | ATL' : 'Art Tattoo Lover'}
+					{getPageName(pageName) ? getPageName(pageName) + ' | ATL' : 'Art Tattoo Lover'}
 				</title>
 			</Head>
 
