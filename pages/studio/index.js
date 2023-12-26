@@ -3,7 +3,9 @@ import AdminStudioPage from "layout/Admin/Studio";
 const StudioPage = () => {
 
   return (
-    <AdminStudioPage />
+    <div className='min-h-body'>
+      <AdminStudioPage />
+    </div>
   )
 }
 

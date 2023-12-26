@@ -205,7 +205,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 						<div className="w-max flex-grow">
 							<TattooArtCarousel imageHeight={600} images={images} />
 						</div>
-						<div className="w-full lg:w-96 pt-3 pb-3 h-full max-h-152 overflow-y-auto overflow-x-hidden">
+						<div className="w-full lg:w-96 pt-3 pb-5 h-full max-h-152 overflow-y-auto overflow-x-hidden">
 							{
 								// Artist info
 							}
@@ -271,19 +271,19 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 												</DropdownToggle>
 												<DropdownMenu className={'top-2 left-2'}>
 													{tattoo.artistId === data.user.id ? (
-														<div
+														<button
 															onClick={handleOpenHideTattooModal}
-															className="px-2 py-1.5 cursor-pointer hover:bg-gray-100 font-semibold"
+															className="block w-full px-2 py-1.5 cursor-pointer hover:bg-gray-100 font-semibold"
 														>
 															Ẩn bài đăng
-														</div>
+														</button>
 													) : (
-														<div
+														<button
 															onClick={() => handleOpenReportModal(undefined)}
-															className="px-2 py-1.5 cursor-pointer hover:bg-gray-100 font-semibold"
+															className="block w-full px-2 py-1.5 cursor-pointer hover:bg-gray-100 font-semibold"
 														>
 															Báo cáo bài đăng
-														</div>
+														</button>
 													)}
 												</DropdownMenu>
 											</Dropdown>
@@ -312,7 +312,6 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 													<div className="font-semibold">{tattoo.doneAt.name}</div>
 													<div>Ở {tattoo.doneAt.city}</div>
 												</div>
-												
 											</div>
 										</div>
 									</Link>
@@ -360,9 +359,9 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 										content={shareTooltipContent}
 										placement="bottom"
 									>
-										<div
+										<button
 											onClick={handleCopyLink}
-											className="flex gap-1 items-center cursor-pointer"
+											className="w-full flex gap-1 items-center cursor-pointer"
 										>
 											<div>
 												<IoIosLink
@@ -373,7 +372,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 											<div className="text-left text-xs font-semibold w-14">
 												Chia sẻ
 											</div>
-										</div>
+										</button>
 									</Tooltip>
 								</div>
 							</div>
@@ -440,21 +439,21 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 														</DropdownToggle>
 														<DropdownMenu className={'top-2 left-2'}>
 															{cmt.accountId === data.user.id ? (
-																<div
+																<button
 																	onClick={() =>
 																		handleOpenDeleteCommentModal(cmt.id)
 																	}
-																	className="px-2 py-1.5 cursor-pointer hover:bg-gray-100 font-semibold"
+																	className="block w-full px-2 py-1.5 cursor-pointer hover:bg-gray-100 font-semibold"
 																>
 																	Xoá bình luận
-																</div>
+																</button>
 															) : (
-																<div
+																<button
 																	onClick={() => handleOpenReportModal(cmt.id)}
-																	className="px-2 py-1.5 cursor-pointer hover:bg-gray-100 font-semibold"
+																	className="block w-full px-2 py-1.5 cursor-pointer hover:bg-gray-100 font-semibold"
 																>
 																	Báo cáo bình luận
-																</div>
+																</button>
 															)}
 														</DropdownMenu>
 													</Dropdown>

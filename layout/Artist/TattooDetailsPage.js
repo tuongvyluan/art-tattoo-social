@@ -119,7 +119,6 @@ function TattooDetailsPage({
 		const image = tattooImages.at(mediaIndex);
 		// If this image was recently added and its link hasn't been saved to db, completely remove it from cloudinary
 		if (!image.saved) {
-			console.log(1, imgUrl);
 			deleteCloudinaryImage(imgUrl);
 		}
 		tattooImages.splice(mediaIndex, 1);
@@ -210,7 +209,6 @@ function TattooDetailsPage({
 			tattooImages = stages.at(i).tattooImages;
 			for (j = 0; j < tattooImages.length; j++) {
 				if (!tattooImages.at(j).saved) {
-					console.log(2, tattooImages.at(j).url);
 					deleteCloudinaryImage(tattooImages.at(j).url);
 				}
 			}
@@ -240,7 +238,6 @@ function TattooDetailsPage({
 			thumbnail: thumbnail,
 			isPublicized: tattoo.isPublicized && thumbnail !== ''
 		};
-		console.log(tattooStyleById(tattoo.styleId), tattoo.styleId);
 		fetcherPost(`${BASE_URL}/TattooArts/CreateTattoo`, newTattoo)
 			.then((data) => {
 				tattoo.id = data.id;

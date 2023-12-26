@@ -4,7 +4,7 @@ import { BASE_URL } from 'lib/env';
 
 const TattooList = () => {
 	return (
-		<div>
+		<div className='min-h-body'>
 			<TattooStudioTabs />
 			<TattooListPage url={`${BASE_URL}/TattooArts/AllTattooArts`} pageSize={12} />
 		</div>

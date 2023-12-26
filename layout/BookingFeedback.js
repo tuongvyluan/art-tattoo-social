@@ -42,7 +42,6 @@ const BookingFeedback = ({ booking, accountId, canFeedback = false }) => {
 		};
 
 		feedbacks[index] = newFeedback;
-		console.log(feedbacks);
 		setFeedbacks([...feedbacks]);
 	};
 

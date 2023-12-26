@@ -23,9 +23,9 @@ const NonDashboardRoutes = [
 ];
 
 const FooterHidden = [
-	'/',
-	'/tattoo',
-	'/tattoo/[id]',
+	// '/',
+	// '/tattoo',
+	// '/tattoo/[id]',
 	'/artist/[id]',
   '/booking/new',
 	'/messages',
