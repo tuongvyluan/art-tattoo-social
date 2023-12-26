@@ -28,6 +28,7 @@ const Studio = () => {
 				name: data.studioName,
 				address: data.address,
         phoneNumber: data.owner.phoneNumber,
+				rating: data.rating,
 				id: data.id,
 				avatar: data.avatar,
 				bioContent: data.bioContent,

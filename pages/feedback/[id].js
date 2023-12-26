@@ -80,7 +80,7 @@ const BookingFeedbackPage = () => {
 			<BookingFeedback
 				booking={bookingData}
 				accountId={data.user.customerId}
-				canFeedback={data.user.role === ROLE.CUSTOMER}
+				canFeedback={data.user.role === ROLE.CUSTOMER && bookingData?.bookingDetails?.at(0)?.feedback === null}
 			/>
 		);
 	}

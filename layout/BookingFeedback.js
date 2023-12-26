@@ -25,7 +25,7 @@ const getFeedbackList = (bookingDetails) => {
 				...emptyFeedback,
 				bookingDetailId: element.id
 			};
-			list.push(element?.feedbacks?.at(0) ? element?.feedbacks?.at(0) : fb);
+			list.push(element?.feedback !== null ? element?.feedback : fb);
 		});
 	}
 	return list;

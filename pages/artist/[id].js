@@ -35,6 +35,7 @@ const Artist = () => {
 				bioContent: data.bioContent,
 				styles: data.artistStyles,
 				isVerified: data.isVerified,
+				rating: data.rating,
 				workAt: data.studioArtists.sort(
 					(a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
 				),

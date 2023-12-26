@@ -1,4 +1,5 @@
 import Button from 'components/Button';
+import MyRating from 'components/MyRating';
 import Pill from 'components/Pill';
 import { ChevronDown, ChevronUp } from 'icons/outline';
 import TattooListNotFilter from 'layout/TattooListNotFilter';
@@ -49,6 +50,15 @@ const ArtistPage = ({ artist, account }) => {
 							</div>
 							<div className="cursor-pointer">
 								<div className="font-semibold text-base">{artist.fullName}</div>
+								<div className="flex flex-wrap justify-center gap-2 items-center text-base">
+									<MyRating
+										readonly={true}
+										rating={artist.rating !== null ? artist.rating : 0}
+									/>
+									<div>
+										{artist.rating ? `Đánh giá: ${artist.rating}/5` : 'Chưa có đánh giá'}
+									</div>
+								</div>
 							</div>
 						</div>
 						<div className="pb-6 flex justify-center flex-wrap gap-2 w-full">
@@ -56,7 +66,7 @@ const ArtistPage = ({ artist, account }) => {
 								<div className="w-20">
 									<Link
 										target="_blank"
-										href={`/booking/new?studio=${artist.workAt?.at(0).id}`}
+										href={`/booking/new?studio=${artist.workAt?.at(0)?.id}`}
 									>
 										<Button>Đặt hẹn</Button>
 									</Link>
@@ -91,8 +101,12 @@ const ArtistPage = ({ artist, account }) => {
 
 						<div className={`${showMoreInfo ? 'block' : 'hidden'}`}>
 							<div className="pb-5 border-b border-gray-300">
-								<h1 className="font-semibold text-base pb-2">Bio</h1>
-								<div>{artist.bioContent}</div>
+								<h1 className="font-semibold text-base pb-2">Giới thiệu</h1>
+								<div>
+									{artist.bioContent?.trim().length > 0
+										? artist.bioContent?.trim()
+										: 'Chưa có giới thiệu'}
+								</div>
 							</div>
 							{artist.workAt?.length > 0 && (
 								<div className="pb-5 border-b border-gray-300 pt-3">
@@ -137,7 +151,7 @@ const ArtistPage = ({ artist, account }) => {
 					</CardBody>
 				</Card>
 				<div
-					className={`hidden md:flex gap-3 ${
+					className={`hidden md:flex md:justify-center gap-3 ${
 						artist.bio || artist.workAt || artist.styles.at(0)
 							? ''
 							: 'justify-center'
@@ -156,7 +170,18 @@ const ArtistPage = ({ artist, account }) => {
 									</div>
 								</div>
 								<div className="cursor-pointer">
-									<div className="font-semibold text-lg pt-4">{artist.fullName}</div>
+									<div className="font-semibold text-base">{artist.fullName}</div>
+									<div className="flex flex-wrap justify-center gap-2 items-center text-base">
+										<MyRating
+											readonly={true}
+											rating={artist.rating ? artist.rating : 0}
+										/>
+										<div>
+											{artist.rating !== null
+												? `Đánh giá: ${artist.rating}/5`
+												: 'Chưa có đánh giá'}
+										</div>
+									</div>
 								</div>
 							</div>
 							<div className="pb-3 flex justify-center flex-wrap gap-2 w-full min-w-max">
@@ -164,7 +189,7 @@ const ArtistPage = ({ artist, account }) => {
 									<div className="w-20">
 										<Link
 											target="_blank"
-											href={`/booking/new?studio=${artist.workAt?.at(0).id}`}
+											href={`/booking/new?studio=${artist.workAt?.at(0)?.id}`}
 										>
 											<Button>Đặt hẹn</Button>
 										</Link>
@@ -187,8 +212,12 @@ const ArtistPage = ({ artist, account }) => {
 							<CardBody>
 								<div className={`block`}>
 									<div className="pb-5 border-b border-gray-300">
-										<h1 className="font-semibold text-base pb-2">Bio</h1>
-										<div>{artist.bioContent}</div>
+										<h1 className="font-semibold text-base pb-2">Giới thiệu</h1>
+										<div>
+											{artist.bioContent?.trim().length > 0
+												? artist.bioContent?.trim()
+												: 'Chưa có giới thiệu'}
+										</div>
 									</div>
 									{artist.workAt?.length > 0 && (
 										<div className="pb-5 border-b border-gray-300 pt-3">

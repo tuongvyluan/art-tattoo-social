@@ -354,15 +354,27 @@ function CustomerBookingPage({ customerId }) {
 									</Link>
 									{booking.status === BOOKING_STATUS.COMPLETED && (
 										<div className="flex justify-end pt-3">
-											<div className='w-max'>
-												<a
-													target="_blank"
-													href={`/feedback/${booking.id}`}
-													className="block text-center text-white bg-gray-800 hover:bg-gray-700 font-medium rounded-lg text-sm py-2 px-5 w-full"
-												>
-													Đánh giá
-												</a>
-											</div>
+											{booking?.bookingDetails?.at(0)?.feedback === null ? (
+												<div className="w-max">
+													<a
+														target="_blank"
+														href={`/feedback/${booking.id}`}
+														className="block text-center text-white bg-gray-800 hover:bg-gray-700 font-medium rounded-lg text-sm py-2 px-5 w-full"
+													>
+														Đánh giá
+													</a>
+												</div>
+											) : (
+												<div className="w-max">
+													<a
+														target="_blank"
+														href={`/feedback/${booking.id}`}
+														className="block text-center text-white bg-gray-800 hover:bg-gray-700 font-medium rounded-lg text-sm py-2 px-5 w-full"
+													>
+														Xem đánh giá
+													</a>
+												</div>
+											)}
 										</div>
 									)}
 								</CardBody>

@@ -1,4 +1,5 @@
 import Button from 'components/Button';
+import MyRating from 'components/MyRating';
 import { ChevronDown, ChevronUp } from 'icons/outline';
 import TattooListNotFilter from 'layout/TattooListNotFilter';
 import { fetcherPut, formatPhoneNumber } from 'lib';
@@ -49,7 +50,18 @@ const StudioPage = ({ studio, account }) => {
 								</div>
 							</div>
 							<div className="cursor-pointer">
-								<div className="font-semibold text-base">{studio.name}</div>
+								<div className="font-semibold text-lg">{studio.name}</div>
+									<div className="flex justify-center flex-wrap gap-2 items-center text-base">
+										<MyRating
+											readonly={true}
+											rating={studio.rating ? studio.rating : 0}
+										/>
+										<div>
+											{studio.rating !== null
+												? `Đánh giá: ${studio.rating}/5`
+												: 'Chưa có đánh giá'}
+										</div>
+									</div>
 							</div>
 						</div>
 						<div className="pb-6 flex justify-center flex-wrap gap-2 w-full">
@@ -86,13 +98,17 @@ const StudioPage = ({ studio, account }) => {
 						</div>
 						<div className={`${showMoreInfo ? 'block' : 'hidden'}`}>
 							<div className="pb-5 border-b border-gray-300">
-								<h1 className="font-semibold text-base pb-2">Bio</h1>
-								<div>{studio.bioContent}</div>
+								<h1 className="font-semibold text-base pb-2">Giới thiệu</h1>
+								<div>
+									{studio.bioContent?.trim().length > 0
+										? studio.bioContent?.trim()
+										: 'Chưa có giới thiệu'}
+								</div>
 							</div>
 						</div>
 					</CardBody>
 				</Card>
-				<div className="hidden md:flex gap-7">
+				<div className="hidden md:flex gap-3">
 					<Card className={'max-w-min'}>
 						<CardBody className={'px-4 lg:px-10 xl:px-20'}>
 							<div className="mx-auto text-center pb-4">
@@ -153,8 +169,26 @@ const StudioPage = ({ studio, account }) => {
 											{studio.closeTime.split(':')[1]}
 										</div>
 									</div>
-									<h1 className="font-semibold text-base pb-2">Bio</h1>
-									<div>{studio.bioContent}</div>
+									<h1 className="font-semibold text-base pb-2">Giới thiệu</h1>
+									<div>
+										{studio.bioContent?.trim().length > 0
+											? studio.bioContent?.trim()
+											: 'Chưa có giới thiệu'}
+									</div>
+
+									<h1 className="font-semibold text-base pt-3 pb-2">Đánh giá</h1>
+
+									<div className="flex flex-wrap gap-2 items-center text-base">
+										<MyRating
+											readonly={true}
+											rating={studio.rating ? studio.rating : 0}
+										/>
+										<div>
+											{studio.rating !== null
+												? `Đánh giá: ${studio.rating}/5`
+												: 'Chưa có đánh giá'}
+										</div>
+									</div>
 								</div>
 							</div>
 						</CardBody>
