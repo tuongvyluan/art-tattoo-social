@@ -84,87 +84,9 @@ const PaymentBooking = ({ booking }) => {
 						</div>
 					</div>
 					{
-						// Transaction list
-					}
-					{booking.transactions?.length > 0 && (
-						<div className="border-b border-gray-300 pb-6 mb-3">
-							<Heading>Lịch sử thanh toán</Heading>
-							<div className="min-w-min overflow-auto">
-								<table className="w-full min-w-min text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-									<thead className="text-xs text-gray-700 uppercase dark:text-gray-400">
-										<tr>
-											<th
-												scope="col"
-												className="w-28 px-4 py-3 bg-gray-50 dark:bg-gray-800"
-											>
-												Thời gian
-											</th>
-											<th
-												scope="col"
-												className="w-36 px-2 py-3 bg-gray-50 dark:bg-gray-800"
-											>
-												Phương thức thanh toán
-											</th>
-											<th
-												scope="col"
-												className="w-1/3 px-4 py-3 bg-gray-50 dark:bg-gray-800"
-											>
-												Ghi chú
-											</th>
-											<th
-												scope="col"
-												className="w-28 px-4 py-3 bg-gray-50 dark:bg-gray-800"
-											>
-												Số tiền
-											</th>
-										</tr>
-									</thead>
-									<tbody>
-										{booking.transactions.map((transaction, transactionIndex) => (
-											<tr key={transaction.id} className="text-base">
-												<td
-													scope="col"
-													className="text-left text-gray-900 px-4 py-3 bg-white dark:bg-gray-800"
-												>
-													{formatTime(transaction.createdAt)}
-												</td>
-												<td className="text-left text-gray-900 sm:w-28 px-4 py-3 bg-white dark:bg-gray-800 text-base">
-													{stringTransactionMethod.at(transaction.method)}
-												</td>
-												<td className="text-left text-gray-900 w-1/3 px-4 py-3 bg-white dark:bg-gray-800 text-base">
-													{transaction.description}
-												</td>
-												<td
-													scope="col"
-													className={`text-left ${
-														transaction.isRefund ? 'text-red-500' : 'text-gray-900'
-													} w-16 lg:w-24 px-4 py-3 bg-white dark:bg-gray-800`}
-												>
-													{transaction.isRefund && '-'}
-													{formatPrice(transaction.price)}
-												</td>
-											</tr>
-										))}
-										<tr>
-											<td
-												colSpan={3}
-												className="text-right bg-blue-50 text-gray-900 w-24 lg:w-40 px-4 py-3 dark:bg-gray-800 text-base"
-											>
-												Tổng cộng
-											</td>
-											<td className="font-semibold text-left text-gray-900 w-24 lg:w-40 px-4 py-3 bg-yellow-50 dark:bg-gray-800 text-base">
-												{formatPrice(paidTotal)}
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					)}
-					{
 						// Booking details
 					}
-					<div className="mb-3">
+					<div className="mb-6">
 						<Heading>Chi tiết đơn hàng</Heading>
 						{
 							// Tổng tiền
@@ -250,8 +172,86 @@ const PaymentBooking = ({ booking }) => {
 							</table>
 						</div>
 					</div>
+					{
+						// Transaction list
+					}
+					{booking.transactions?.length > 0 && (
+						<div className="border-t border-gray-300 pt-3">
+							<Heading>Lịch sử thanh toán</Heading>
+							<div className="min-w-min overflow-auto">
+								<table className="w-full min-w-min text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+									<thead className="text-xs text-gray-700 uppercase dark:text-gray-400">
+										<tr>
+											<th
+												scope="col"
+												className="w-28 px-4 py-3 bg-gray-50 dark:bg-gray-800"
+											>
+												Thời gian
+											</th>
+											<th
+												scope="col"
+												className="w-36 px-2 py-3 bg-gray-50 dark:bg-gray-800"
+											>
+												Phương thức thanh toán
+											</th>
+											<th
+												scope="col"
+												className="w-1/3 px-4 py-3 bg-gray-50 dark:bg-gray-800"
+											>
+												Ghi chú
+											</th>
+											<th
+												scope="col"
+												className="w-28 px-4 py-3 bg-gray-50 dark:bg-gray-800"
+											>
+												Số tiền
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										{booking.transactions.map((transaction, transactionIndex) => (
+											<tr key={transaction.id} className="text-base">
+												<td
+													scope="col"
+													className="text-left text-gray-900 px-4 py-3 bg-white dark:bg-gray-800"
+												>
+													{formatTime(transaction.createdAt)}
+												</td>
+												<td className="text-left text-gray-900 sm:w-28 px-4 py-3 bg-white dark:bg-gray-800 text-base">
+													{stringTransactionMethod.at(transaction.method)}
+												</td>
+												<td className="text-left text-gray-900 w-1/3 px-4 py-3 bg-white dark:bg-gray-800 text-base">
+													{transaction.description}
+												</td>
+												<td
+													scope="col"
+													className={`text-left ${
+														transaction.isRefund ? 'text-red-500' : 'text-gray-900'
+													} w-16 lg:w-24 px-4 py-3 bg-white dark:bg-gray-800`}
+												>
+													{transaction.isRefund && '-'}
+													{formatPrice(transaction.price)}
+												</td>
+											</tr>
+										))}
+										<tr>
+											<td
+												colSpan={3}
+												className="text-right bg-blue-50 text-gray-900 w-24 lg:w-40 px-4 py-3 dark:bg-gray-800 text-base"
+											>
+												Tổng cộng
+											</td>
+											<td className="font-semibold text-left text-gray-900 w-24 lg:w-40 px-4 py-3 bg-yellow-50 dark:bg-gray-800 text-base">
+												{formatPrice(paidTotal)}
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					)}
 					{total > paidTotal && (
-						<div className='pt-5'>
+						<div className="pt-5">
 							<Heading>
 								Còn lại:{' '}
 								<span className="text-red-500">
