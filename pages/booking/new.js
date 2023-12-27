@@ -2,6 +2,7 @@ import BookingForm from 'layout/BookingForm';
 import { fetcher } from 'lib';
 import { BASE_URL } from 'lib/env';
 import { SERVICE_STATUS } from 'lib/status';
+import { sortServiceByCategory } from 'lib/studioServiceHelper';
 import { useSession } from 'next-auth/react';
 import Router, { useRouter } from 'next/router';
 import NotFound from 'pages/404';
@@ -25,6 +26,7 @@ const BookingFormPage = () => {
 						id: studioId,
 						services: data.services
 							.filter((service) => service.status === SERVICE_STATUS.AVAILABLE)
+							?.sort(sortServiceByCategory)
 							?.map((service) => {
 								return {
 									...service,

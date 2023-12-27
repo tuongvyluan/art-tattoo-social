@@ -38,6 +38,9 @@ function ArtistBookingPage({ artistId }) {
 		router.query.active ? router.query.active : ALL_TAB
 	);
 	const [searchKey, setSearchKey] = useState('');
+	const [search, setSearch] = useState(
+		router.query.search ? router.query.search : ''
+	);
 	const [page, setPage] = useState(router.query.page ? router.query.page : 1);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
@@ -55,12 +58,15 @@ function ArtistBookingPage({ artistId }) {
 
 	const handleKeyDown = debounce((e) => {
 		if (e.keyCode === 13 || e.key === 'Enter') {
-			console.log(searchKey);
+			setSearch(searchKey);
+			setActiveTab(ALL_TAB)
 		}
 	}, 300);
 
 	const toggle = (tab) => {
 		if (activeTab !== tab) {
+			setSearch('')
+			setSearchKey('')
 			setActiveTab(tab);
 		}
 	};
@@ -82,45 +88,45 @@ function ArtistBookingPage({ artistId }) {
 				setLoading(false);
 			})
 			.finally(() => {
-				router.push(`/booking?active=${filter}&page=${page}`);
+				router.push(
+					`/booking?active=${filter}&page=${page}${
+						search?.trim()?.length > 0 ? '&search=' + search : ''
+					}`
+				);
 			});
-	}, [filter, page, currentStudio]);
+	}, [filter, page, currentStudio, search]);
 
 	const getQueryParam = () => {
 		return `artistId=${artistId}&page=${page}&pageSize=${pageSize}${
 			filter >= 0 ? `&status=${filter}` : ''
-		}${currentStudio !== null ? '&studioId=' + currentStudio : ''}`;
+		}${currentStudio !== null ? '&studioId=' + currentStudio : ''}${
+			search?.trim()?.length > 0 ? '&searchKey=' + search : ''
+		}`;
 	};
 
 	useEffect(() => {
+		setPage(1);
 		switch (activeTab) {
 			case PENDING_TAB:
-				setPage(1);
 				setFilter(BOOKING_STATUS.PENDING);
 				break;
 			case IN_PROGRESS_TAB:
-				setPage(1);
 				setFilter(BOOKING_STATUS.IN_PROGRESS);
 				break;
 			case COMPLETE_TAB:
-				setPage(1);
 				setFilter(BOOKING_STATUS.COMPLETED);
 				break;
 			case STUDIO_CANCELLED_TAB:
-				setPage(1);
 				setFilter(BOOKING_STATUS.STUDIO_CANCEL);
 				break;
 			case CUSTOMER_CANCELLED_TAB:
-				setPage(1);
 				setFilter(BOOKING_STATUS.CUSTOMER_CANCEL);
 				break;
 			case NOT_COMPLETE_TAB:
-				setPage(1);
 				setFilter(BOOKING_STATUS.NOT_COMPLETED);
 				break;
 			default:
-				setPage(1);
-				setFilter(-1);
+				setFilter(ALL_TAB);
 				break;
 		}
 	}, [activeTab]);
