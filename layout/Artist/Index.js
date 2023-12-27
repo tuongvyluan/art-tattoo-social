@@ -52,11 +52,14 @@ const ArtistPage = ({ artist, account }) => {
 								<div className="font-semibold text-base">{artist.fullName}</div>
 								<div className="flex flex-wrap justify-center gap-2 items-center text-base">
 									<MyRating
+										allowFraction={true}
 										readonly={true}
 										rating={artist.rating !== null ? artist.rating : 0}
 									/>
 									<div>
-										{artist.rating ? `Đánh giá: ${artist.rating}/5` : 'Chưa có đánh giá'}
+										{artist.rating
+											? `Đánh giá: ${artist.rating}/5`
+											: 'Chưa có đánh giá'}
 									</div>
 								</div>
 							</div>
@@ -173,6 +176,7 @@ const ArtistPage = ({ artist, account }) => {
 									<div className="font-semibold text-base">{artist.fullName}</div>
 									<div className="flex flex-wrap justify-center gap-2 items-center text-base">
 										<MyRating
+											allowFraction={true}
 											readonly={true}
 											rating={artist.rating ? artist.rating : 0}
 										/>
@@ -274,7 +278,9 @@ const ArtistPage = ({ artist, account }) => {
 				Tác phẩm
 			</div>
 			<TattooListNotFilter
-				url={`${BASE_URL}/TattooArts/TattooUser?artistId=${artist.id}&accountId=${account?.id}`}
+				url={`${BASE_URL}/TattooArts/TattooUser?artistId=${artist.id}${
+					account?.id ? '&accountId=' + account.id : ''
+				}`}
 				pageSize={12}
 			/>
 		</div>

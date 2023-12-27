@@ -23,20 +23,24 @@ const Studio = () => {
 	}
 
 	if (!studio) {
-		fetcher(`${BASE_URL}/studios/studio-details?id=${id}&accountId=${data?.user?.id}`).then((data) => {
+		fetcher(
+			`${BASE_URL}/studios/studio-details?id=${id}${
+				data?.user?.id ? '&accountId=' + data.user.id : ''
+			}`
+		).then((data) => {
 			setStudio({
 				name: data.studioName,
 				address: data.address,
-        phoneNumber: data.owner.phoneNumber,
+				phoneNumber: data.owner.phoneNumber,
 				rating: data.rating,
 				id: data.id,
 				avatar: data.avatar,
 				bioContent: data.bioContent,
-        openTime: data.openTime,
-        closeTime: data.closeTime,
+				openTime: data.openTime,
+				closeTime: data.closeTime,
 				isAuthorized: data.isAuthorized,
 				isPrioritized: data.isPrioritized,
-        artists: data.studioArtists?.filter((a) => a.dismissedAt === null),
+				artists: data.studioArtists?.filter((a) => a.dismissedAt === null),
 				interiors: data.interiors.map((i) => i.url),
 				isFollow: data.isFollow ? data.isFollow : false
 			});

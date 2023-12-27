@@ -18,13 +18,13 @@ const StudioPage = ({ studio, account }) => {
 	const handleFollow = () => {
 		if (isFollowed) {
 			fetcherPut(
-				`${BASE_URL}/follow/unfollow-studio?accountId=${account?.id}&studioId=${studio.id}`
+				`${BASE_URL}/follow/unfollow-studio?studioId=${studio.id}${account?.id ? `&accountId=${account.id}` : ''}`
 			).catch(() => {
 				setIsFollowed(false);
 			});
 		} else {
 			fetcherPut(
-				`${BASE_URL}/follow/follow-studio?accountId=${account?.id}&studioId=${studio.id}`
+				`${BASE_URL}/follow/follow-studio?studioId=${studio.id}${account?.id ? `&accountId=${account.id}` : ''}`
 			).catch(() => {
 				setIsFollowed(true);
 			});
@@ -51,17 +51,18 @@ const StudioPage = ({ studio, account }) => {
 							</div>
 							<div className="cursor-pointer">
 								<div className="font-semibold text-lg">{studio.name}</div>
-									<div className="flex justify-center flex-wrap gap-2 items-center text-base">
-										<MyRating
-											readonly={true}
-											rating={studio.rating ? studio.rating : 0}
-										/>
-										<div>
-											{studio.rating !== null
-												? `Đánh giá: ${studio.rating}/5`
-												: 'Chưa có đánh giá'}
-										</div>
+								<div className="flex justify-center flex-wrap gap-2 items-center text-base">
+									<MyRating
+										allowFraction={true}
+										readonly={true}
+										rating={studio.rating ? studio.rating : 0}
+									/>
+									<div>
+										{studio.rating !== null
+											? `Đánh giá: ${studio.rating}/5`
+											: 'Chưa có đánh giá'}
 									</div>
+								</div>
 							</div>
 						</div>
 						<div className="pb-6 flex justify-center flex-wrap gap-2 w-full">
@@ -180,6 +181,7 @@ const StudioPage = ({ studio, account }) => {
 
 									<div className="flex flex-wrap gap-2 items-center text-base">
 										<MyRating
+											allowFraction={true}
 											readonly={true}
 											rating={studio.rating ? studio.rating : 0}
 										/>

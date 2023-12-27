@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Rating } from 'react-simple-star-rating';
 
-const MyRating = ({ rating, onChange, readonly = false }) => {
+const MyRating = ({ rating, onChange, readonly = false, allowFraction = false }) => {
   const [ratingValue, setRatingValue] = useState(rating)
 
   const handleChange = (rate) => {
@@ -17,6 +17,7 @@ const MyRating = ({ rating, onChange, readonly = false }) => {
     }}
   >
 			<Rating
+        allowFraction={allowFraction}
 				className="w-full"
 				fillColorArray={['#ef4444', '#f97316', '#facc15', '#84cc16', '#22c55e']}
         transition
