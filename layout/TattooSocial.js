@@ -17,6 +17,7 @@ import { stringReports } from 'lib/reportType';
 import Router from 'next/router';
 import { Tooltip } from 'flowbite-react';
 import StylePill from 'components/StylePill';
+import MyRating from 'components/MyRating';
 
 const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 	const { status, data } = useSession();
@@ -202,7 +203,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 						{
 							// Tattoo image
 						}
-						<div className="w-max flex-grow">
+						<div className="min-w-full lg:min-w-0 w-max flex-grow">
 							<TattooArtCarousel imageHeight={600} images={images} />
 						</div>
 						<div className="w-full lg:w-96 pt-3 pb-5 h-full max-h-152 overflow-y-auto overflow-x-hidden">
@@ -242,7 +243,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 									</div>
 								</div>
 								{artist.workAt?.id && data?.user?.customerId && (
-									<div className="pb-3">
+									<div className="pb-1">
 										<a
 											target="_blank"
 											href={`/booking/new?studio=${artist.workAt.id}`}
@@ -257,7 +258,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 							}
 							<div className="px-5 py-3 border-b-2 border-t-2 border-gray-200">
 								<div className="flex justify-between">
-									<div className="flex flex-wrap gap-2 pb-3">
+									<div className="flex flex-wrap gap-2 pb-1">
 										<StylePill>{tattoo.style.name}</StylePill>
 										<StylePill>{stringSize.at(tattoo.size)}</StylePill>
 									</div>
@@ -290,10 +291,10 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 										</div>
 									)}
 								</div>
-								<div className="pb-3">{tattoo.description}</div>
+								<div className="pb-1">{tattoo.description}</div>
 								{tattoo.doneAt.id && (
 									<Link href={`/studio/${tattoo.doneAt.id}`}>
-										<div className="pb-3">
+										<div className="pb-1">
 											<div className="font-semibold text-gray-500 pb-1">
 												Thực hiện ở:
 											</div>
@@ -316,6 +317,27 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 										</div>
 									</Link>
 								)}
+								{
+									// Tattoo feedback
+								}
+								{tattoo.feedback !== null && (
+									<div className="pb-4">
+										<div className="font-semibold text-gray-500 pb-1">
+											Đánh giá của khách hàng:
+										</div>
+										<div className="break-words overflow-hidden">
+											<div>
+												<MyRating rating={tattoo.feedback?.rating} readonly={true} />
+											</div>
+											<div className="font-semibold italic">
+												{tattoo.feedback?.content}
+											</div>
+										</div>
+									</div>
+								)}
+								{
+									// Tattoo interaction
+								}
 								<div className="flex items-start gap-1">
 									<div className="flex gap-1 items-center">
 										{authen ? (
@@ -388,7 +410,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 										placement="top"
 										content="Đăng nhập để được bình luận"
 									>
-										<div className="relative flex gap-2 pb-3">
+										<div className="relative flex gap-2 pb-1">
 											<textarea
 												aria-label={'Comment'}
 												name="comment"
