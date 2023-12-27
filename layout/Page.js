@@ -13,6 +13,7 @@ import getPageName from 'lib/pageNames';
 const NonDashboardRoutes = [
 	'/auth/signin',
 	'/auth/register',
+	'/auth/verify',
 	'/forgot',
 	'/lockscreen',
 	'/_error',
