@@ -297,7 +297,7 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 												</div>
 											</Link>
 											{renderData.status ===
-												BOOKING_STATUS.COMPLETED(
+												BOOKING_STATUS.COMPLETED && (
 													<div className="flex justify-end pt-3">
 														{renderData?.bookingDetails?.at(0)?.feedback === null ? (
 															<div className="w-max">
