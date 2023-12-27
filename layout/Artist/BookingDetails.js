@@ -182,7 +182,6 @@ function BookingDetailsPage({ data, studioId, setLoading, artistId }) {
 														Tổng tiền
 													</th>
 													<td className="py-3 text-right text-xl text-red-500">
-														{/* {formatPrice(renderData.total)} */}
 														{formatPrice(total)}
 													</td>
 												</tr>
@@ -190,6 +189,24 @@ function BookingDetailsPage({ data, studioId, setLoading, artistId }) {
 										</table>
 									</div>
 								)}
+							<div className="flex justify-center flex-wrap gap-3">
+								{renderData.status ===
+									BOOKING_STATUS.COMPLETED(
+										<div className="flex justify-end pt-3">
+											{renderData?.bookingDetails?.at(0)?.feedback !== null && (
+												<div className="w-max">
+													<a
+														target="_blank"
+														href={`/feedback/${renderData.id}`}
+														className="block text-center text-white bg-gray-800 hover:bg-gray-700 font-medium rounded-lg text-sm py-2 px-5 w-full"
+													>
+														Xem đánh giá
+													</a>
+												</div>
+											)}
+										</div>
+									)}
+							</div>
 						</div>
 					</CardBody>
 				</Card>

@@ -49,7 +49,7 @@ const BookingFeedbackPage = () => {
 						data.user.role === ROLE.CUSTOMER &&
 						res.customer?.accountId !== data.user.id
 					) {
-						setErrorMessage('Bạn không có quyền xem chi tiết đơn hàng này');
+						setErrorMessage('Bạn không có quyền xem đánh giá của đơn hàng này');
 						setError(true);
 					}
 					if (data.user.role === ROLE.ARTIST) {
@@ -57,7 +57,7 @@ const BookingFeedbackPage = () => {
 							(b) => b.artist?.id === data.user.id
 						);
 						if (bookingDetails.length === 0) {
-							setErrorMessage('Bạn không có quyền xem chi tiết đơn hàng này');
+							setErrorMessage('Bạn không có quyền xem đánh giá của đơn hàng này');
 							setError(true);
 						}
 					}

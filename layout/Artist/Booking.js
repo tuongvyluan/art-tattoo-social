@@ -59,14 +59,14 @@ function ArtistBookingPage({ artistId }) {
 	const handleKeyDown = debounce((e) => {
 		if (e.keyCode === 13 || e.key === 'Enter') {
 			setSearch(searchKey);
-			setActiveTab(ALL_TAB)
+			setActiveTab(ALL_TAB);
 		}
 	}, 300);
 
 	const toggle = (tab) => {
 		if (activeTab !== tab) {
-			setSearch('')
-			setSearchKey('')
+			setSearch('');
+			setSearchKey('');
 			setActiveTab(tab);
 		}
 	};
@@ -448,6 +448,21 @@ function ArtistBookingPage({ artistId }) {
 											</div>
 										</div>
 									</Link>
+									{booking.status === BOOKING_STATUS.COMPLETED && (
+										<div className="flex justify-end pt-3">
+											{booking?.bookingDetails?.at(0)?.feedback !== null && (
+												<div className="w-max">
+													<a
+														target="_blank"
+														href={`/feedback/${booking.id}`}
+														className="block text-center text-white bg-gray-800 hover:bg-gray-700 font-medium rounded-lg text-sm py-2 px-5 w-full"
+													>
+														Xem đánh giá
+													</a>
+												</div>
+											)}
+										</div>
+									)}
 								</CardBody>
 							</Card>
 						))}

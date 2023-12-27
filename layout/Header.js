@@ -267,13 +267,11 @@ const Header = ({ toggleOpen }) => {
 									</DropdownMenu>
 								</Dropdown>
 							) : (
-								<a
-									href="#"
-									onClick={() => signIn()}
-									className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
-								>
-									<div className="ml-3">Đăng nhập</div>
-								</a>
+								<Link href="/auth/signin">
+									<div className="flex cursor-pointer items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
+										<div className="ml-3">Đăng nhập</div>
+									</div>
+								</Link>
 							)}
 						</div>
 					</div>
