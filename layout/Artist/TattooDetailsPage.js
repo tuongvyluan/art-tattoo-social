@@ -11,7 +11,7 @@ import {
 	Link
 } from 'ui';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Button from 'components/Button';
 import { fetcherPost, fetcherPut } from 'lib';
 import { CldUploadButton } from 'next-cloudinary';
@@ -51,6 +51,9 @@ function TattooDetailsPage({
 	const [thumbnail, setThumbnail] = useState(defaultTattoo.thumbnail);
 	const [mediaMap, setMediaMap] = useState(stageMapMedia(defaultTattoo.stages));
 	const [hasStageChange, setHasStageChange] = useState(false);
+
+	const mediaStateRef = useRef()
+	mediaStateRef.current = mediaMap
 	const [showAlert, setShowAlert] = useState(false);
 
 	const [alertContent, setAlertContent] = useState({
@@ -113,26 +116,27 @@ function TattooDetailsPage({
 		if (!hasStageChange) {
 			setHasStageChange(true);
 		}
-		const newMap = deepCopyMap(mediaMap);
 		const stages = tattoo.stages;
-		const tattooImages = newMap.get(stages.at(stageIndex).id);
+		const mediaMap = mediaStateRef.current
+		const tattooImages = mediaMap.get(stages.at(stageIndex).id);
 		const image = tattooImages.at(mediaIndex);
 		// If this image was recently added and its link hasn't been saved to db, completely remove it from cloudinary
 		if (!image.saved) {
 			deleteCloudinaryImage(imgUrl);
 		}
-		tattooImages.splice(mediaIndex, 1);
-		newMap.set(stages.at(stageIndex).id, tattooImages);
-		setMediaMap(newMap);
+		const newImages = tattooImages.toSpliced(mediaIndex, 1);
+		mediaMap.set(stages.at(stageIndex).id, newImages);
+
+		setMediaMap(deepCopyMap(mediaMap));
 	};
 
 	const handleUploadImage = (result, options, stageIndex) => {
 		if (!hasStageChange) {
 			setHasStageChange(true);
 		}
-		const newMap = deepCopyMap(mediaMap);
 		const stages = tattoo.stages;
-		const tattooImages = newMap.get(stages.at(stageIndex).id);
+		const mediaMap = mediaStateRef.current
+		const tattooImages = mediaMap.get(stages.at(stageIndex).id);
 		tattooImages.push({
 			id: v4(),
 			url: result.info?.url,
@@ -140,30 +144,30 @@ function TattooDetailsPage({
 			isPublicized: false,
 			saved: false
 		});
-		newMap.set(stages.at(stageIndex).id, tattooImages);
-		setMediaMap(newMap);
+
+		mediaMap.set(stages.at(stageIndex).id, tattooImages);
+		setMediaMap(deepCopyMap(mediaMap));
 	};
 
 	const handlePublicImage = (stageIndex, mediaIndex) => {
 		if (!hasStageChange) {
 			setHasStageChange(true);
 		}
-		const newMap = deepCopyMap(mediaMap);
 		const stages = tattoo.stages;
-		const tattooImages = newMap.get(stages.at(stageIndex).id);
+		const mediaMap = mediaStateRef.current
+		const tattooImages = mediaMap.get(stages.at(stageIndex).id);
 		tattooImages[mediaIndex] = {
 			...tattooImages[mediaIndex],
 			isPublicized: !tattooImages[mediaIndex].isPublicized
 		};
-		newMap.set(stages.at(stageIndex).id, tattooImages);
-		setMediaMap(newMap);
+		mediaMap.set(stages.at(stageIndex).id, tattooImages);
+		setMediaMap(deepCopyMap(mediaMap));
 	};
 
 	const handleAddStage = () => {
 		if (!hasStageChange) {
 			setHasStageChange(true);
 		}
-		const newMap = deepCopyMap(mediaMap);
 		const stages = tattoo.stages;
 		const newId = v4();
 		stages.push({
@@ -172,9 +176,9 @@ function TattooDetailsPage({
 			description: '',
 			tattooImages: []
 		});
-		newMap.set(newId, []);
+		mediaMap.set(newId, []);
 		setTattoo({ ...tattoo, stages: stages });
-		setMediaMap(newMap);
+		setMediaMap(deepCopyMap(mediaMap));
 	};
 
 	const handleRemoveStage = (stageIndex) => {
@@ -332,6 +336,7 @@ function TattooDetailsPage({
 							<div className="flex items-center cursor-pointer gap-2">
 								<div className="text-gray-500">Public:</div>
 								<div
+									role="button"
 									onClick={() =>
 										setTattooState('isPublicized', !tattoo.isPublicized)
 									}
@@ -406,6 +411,7 @@ function TattooDetailsPage({
 											<DropdownMenu>
 												{stringSize.map((size, sizeIndex) => (
 													<div
+														role="button"
 														key={size}
 														onClick={() => setTattooState('size', sizeIndex)}
 														className={`px-2 py-1 cursor-pointer hover:bg-gray-100 ${
@@ -440,6 +446,7 @@ function TattooDetailsPage({
 												<div className="h-40 overflow-y-auto">
 													{stringPlacements.map((placement, placementIndex) => (
 														<div
+															role="button"
 															key={placement}
 															onClick={() =>
 																setTattooState('placement', placementIndex)
@@ -476,6 +483,7 @@ function TattooDetailsPage({
 											<div className="h-32 overflow-y-auto">
 												{tattooStyleList.map((style, styleIndex) => (
 													<div
+														role="button"
 														key={style.id}
 														onClick={() => setTattooState('styleId', style.id)}
 														className={`px-2 py-1 cursor-pointer hover:bg-gray-100 ${
@@ -552,6 +560,7 @@ function TattooDetailsPage({
 																{stringTattooStages.map(
 																	(stageStyle, stageStyleIndex) => (
 																		<div
+																			role="button"
 																			key={stageStyleIndex}
 																			onClick={() =>
 																				handleStageChange(
@@ -591,9 +600,9 @@ function TattooDetailsPage({
 														// Add media section
 													}
 													<div>
-														<label className="pt-2 block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-															Thêm ảnh/video cho hình xăm
-														</label>
+														<div className="pt-2 block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+															Thêm ảnh cho hình xăm
+														</div>
 														<div className="flex">
 															<div>
 																<CldUploadButton
@@ -626,6 +635,7 @@ function TattooDetailsPage({
 																<div className="absolute top-0 left-0 flex items-center cursor-pointer gap-2">
 																	<div className="text-gray-500">Public:</div>
 																	<div
+																		role="button"
 																		onClick={() =>
 																			handlePublicImage(stageIndex, mediaIndex)
 																		}
