@@ -21,11 +21,13 @@ import {
 import { BASE_URL } from 'lib/env';
 import Router from 'next/router';
 import { v4 } from 'uuid';
-import { stringServiceCategories } from 'lib/status';
+import { ROLE, stringServiceCategories } from 'lib/status';
 import { BsTrash } from 'react-icons/bs';
 import MyInput from 'components/MyInput';
 import { ChevronDown } from 'icons/outline';
 import moment from 'moment';
+import { Tooltip } from 'flowbite-react';
+import { cityMap } from 'lib/city';
 
 const estimeDate = [
 	`Trong vòng 7 ngày tới (từ ${formatDate(moment())} tới ${formatDate(
@@ -43,11 +45,7 @@ const estimeDate = [
 	'Lúc nào cũng được'
 ];
 
-const BookingForm = ({
-	studio,
-	hasLogin = true,
-	customerId
-}) => {
+const BookingForm = ({ studio, hasLogin = true, customerId, role }) => {
 	const [serviceList, setServiceList] = useState(studio.services);
 	const [description, setDescription] = useState('');
 	const [time, setTime] = useState(0);
@@ -205,20 +203,24 @@ const BookingForm = ({
 												<div className="flex items-center">
 													<div>
 														<Avatar
-															size={50}
+															size={70}
 															src={studio.avatar ? studio.avatar : '/images/ATL.png'}
 															alt={`avatar`}
 														/>
 													</div>
-													<div className="flex flex-row ltr:ml-6 rtl:mr-6 ">
-														<div className="sm:inline-block text-base flex flex-row  font-medium ml-2">
-															<p className="ltr:mr-2 rtl:ml-2 font-bold">
+													<div className="">
+														<div className="sm:inline-block text-base ml-2">
+															<p className="font-bold">
 																{studio.name}
 															</p>
+															<p className="text-sm">
+																{studio.address}, {cityMap.get(studio.city)}
+															</p>
+															<p className="text-sm">
+																{formatTimeWithoutSecond(studio.openTime)} -{' '}
+																{formatTimeWithoutSecond(studio.closeTime)}
+															</p>
 														</div>
-														<p className="mt-2 font-hairline text-sm">
-															{/* 123,456 {t("followers")} */}
-														</p>
 													</div>
 												</div>
 											</div>
@@ -271,6 +273,7 @@ const BookingForm = ({
 																	<DropdownMenu>
 																		{artists.map((a, aIndex) => (
 																			<div
+																				role="button"
 																				key={a.id}
 																				onClick={() =>
 																					handleChangeBookingDetail(
@@ -294,6 +297,7 @@ const BookingForm = ({
 															<div className="flex justify-between items-center gap-2">
 																<MyInput
 																	name="description"
+																	placeholder="Ghi chú mong muốn cho dịch vụ này"
 																	value={detail.description}
 																	onChange={(e) =>
 																		handleChangeBookingDetail(
@@ -303,21 +307,24 @@ const BookingForm = ({
 																		)
 																	}
 																/>
-																<div
-																	className="cursor-pointer"
-																	onClick={() =>
-																		handleRemoveBookingDetail(detailIndex)
-																	}
-																>
-																	<BsTrash size={25} />
-																</div>
+																<Tooltip content="Xoá dịch vụ">
+																	<div
+																		role="button"
+																		className="cursor-pointer"
+																		onClick={() =>
+																			handleRemoveBookingDetail(detailIndex)
+																		}
+																	>
+																		<BsTrash size={25} />
+																	</div>
+																</Tooltip>
 															</div>
 														</div>
 													))}
 												</div>
 
-												<h2 className="text-lg font-semibold mb-4">
-													Bạn có thể đến xăm vào lúc?
+												<h2 className="text-lg font-semibold mt-5 mb-4 border-t-2 border-gray-300 pt-5">
+													Bạn có thể đến tiệm xăm vào lúc?
 												</h2>
 												<div className="flex flex-wrap items-center gap-2 mb-4">
 													<div>
@@ -338,6 +345,7 @@ const BookingForm = ({
 																<div>
 																	{estimeDate.map((date, index) => (
 																		<div
+																			role="button"
 																			className={`px-2 py-1 cursor-pointer hover:bg-gray-100 ${
 																				index === time && 'bg-blue-50'
 																			}`}
@@ -381,10 +389,17 @@ const BookingForm = ({
 								) : (
 									<div className="flex items-center justify-center h-full">
 										<div>
-											<div className="text-center">
-												Bạn hãy kiểm tra hộp thư và xác thực email để thực hiện đặt
-												hẹn nhé!
-											</div>
+											{role === ROLE.CUSTOMER ? (
+												<div className="text-center">
+													Bạn hãy kiểm tra hộp thư và xác thực email để thực hiện đặt
+													hẹn nhé!
+												</div>
+											) : (
+												<div className="text-center">
+													Bạn hãy đăng nhập bằng tài khoản khách hàng để thực hiện
+													đặt hẹn nhé!
+												</div>
+											)}
 										</div>
 									</div>
 								)}
@@ -423,10 +438,9 @@ const BookingForm = ({
 };
 
 BookingForm.propTypes = {
-	isArtist: PropTypes.bool,
-	artist: PropTypes.object,
 	studio: PropTypes.object,
 	hasLogin: PropTypes.bool,
-	customerId: PropTypes.string
+	customerId: PropTypes.string,
+	role: PropTypes.number.isRequired
 };
 export default BookingForm;

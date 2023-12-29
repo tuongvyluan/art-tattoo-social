@@ -18,7 +18,7 @@ const BookingFormPage = () => {
 		router.query.studio ? router.query.studio : ''
 	);
 
-	if (loading && (status === 'loading' || !studio)) {
+	if (loading || status === 'loading' || !studio) {
 		if (studioId !== '' && !studio) {
 			fetcher(`${BASE_URL}/studios/${studioId}/services-for-create-booking`)
 				.then((data) => {
@@ -37,7 +37,9 @@ const BookingFormPage = () => {
 						avatar: data.owner.avatar,
 						artists: data.artists,
 						openTime: data.openTime,
-						closeTime: data.closeTime
+						closeTime: data.closeTime,
+						address: data.address,
+						city: data.city
 					};
 					setStudio(newStudio);
 				})
@@ -69,6 +71,7 @@ const BookingFormPage = () => {
 			hasLogin={status === 'authenticated'}
 			studio={studio}
 			customerId={data?.user?.customerId}
+			role={data?.user?.role}
 		/>
 	);
 };
