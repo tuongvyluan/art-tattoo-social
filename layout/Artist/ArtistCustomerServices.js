@@ -8,7 +8,9 @@ import {
 	stringSize
 } from 'lib/status';
 import {
+	extractServiceFromBookingDetail,
 	fetcherPost,
+	fetcherPut,
 	formatPrice,
 	formatTime,
 	hasBookingMeeting,
@@ -16,6 +18,7 @@ import {
 } from 'lib';
 import { Alert, Avatar, Card } from 'ui';
 import { MdCalendarMonth, MdOutlineCalendarMonth } from 'react-icons/md';
+import { TbProgressCheck } from 'react-icons/tb';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -24,6 +27,8 @@ import { BASE_URL } from 'lib/env';
 import Router from 'next/router';
 import ScheduleBookingMeetingModal from 'layout/ScheduleBookingMeetingModal';
 import { noImageAvailable } from 'lib/tattooPhoto';
+import MyModal from 'components/MyModal';
+import { Tooltip } from 'flowbite-react';
 
 const ArtistCustomerServices = ({
 	bookingDetails,
@@ -44,6 +49,12 @@ const ArtistCustomerServices = ({
 
 	const [scheduleModal, setScheduleModal] = useState(false);
 	const [scheduledBookingDetail, setScheduledBookingDetail] = useState(undefined);
+	const [progressModal, setProgressModal] = useState(false);
+	const [progressBookingDetail, setProgressBookingDetail] = useState(undefined);
+
+	const onProgressBookingDetail = (detailIndex) => {
+		setProgressBookingDetail(bookingDetails.at(detailIndex));
+	};
 
 	const onSelectScheduledBookingDetail = (detailIndex) => {
 		setScheduledBookingDetail(bookingDetails.at(detailIndex));
@@ -62,6 +73,20 @@ const ArtistCustomerServices = ({
 			setScheduledBookingDetail(undefined);
 		}
 	}, [scheduleModal]);
+
+	// Open progress modal when progressBookingDetail is not null
+	useEffect(() => {
+		if (progressBookingDetail) {
+			setProgressModal(true);
+		}
+	}, [progressBookingDetail]);
+
+	// Reset progressBookingDetail when progressModal is closed
+	useEffect(() => {
+		if (progressModal === false) {
+			setProgressBookingDetail(undefined);
+		}
+	}, [progressModal]);
 
 	const handleAlert = (state, title, content, isWarn = 0) => {
 		setShowAlert((prev) => state);
@@ -83,6 +108,20 @@ const ArtistCustomerServices = ({
 			isWarn: color
 		});
 	};
+
+	// Change booking detail status from pending to in progress
+	const handleStartProgress = () => {
+		const detail = progressBookingDetail;
+		detail.status = BOOKING_DETAIL_STATUS.IN_PROGRESS;
+		fetcherPut(`${BASE_URL}/booking-details/${detail.id}`, detail)
+			.then(() => {
+				setLoading(true);
+			})
+			.catch(() => {
+				handleAlert(true, 'Bắt đầu thực hiện dịch vụ thất bại', '', 2);
+			});
+	};
+
 	const handleCreateTattooArtFromBookingDetail = (detail) => {
 		const payload = {
 			artistId: detail.artistId,
@@ -118,6 +157,19 @@ const ArtistCustomerServices = ({
 				<span className="block sm:inline">{alertContent.content}</span>
 			</Alert>
 
+			<MyModal
+				setOpenModal={setProgressModal}
+				openModal={progressModal}
+				title="Bắt đầu thực hiện"
+				confirmTitle="Bắt đầu"
+				onSubmit={handleStartProgress}
+			>
+				<div>
+					Bạn muốn bắt đầu thực hiện dịch vụ{' '}
+					<span>{extractServiceFromBookingDetail(progressBookingDetail)}</span> chứ?
+				</div>
+			</MyModal>
+
 			<ScheduleBookingMeetingModal
 				setLoading={setLoading}
 				bookingDetail={scheduledBookingDetail}
@@ -131,26 +183,46 @@ const ArtistCustomerServices = ({
 				isCustomer={false}
 			/>
 			<div className="block">
-				{bookingDetails.map((bookingDetail, bookingServiceIndex) => (
+				{bookingDetails.map((bookingDetail, bookingDetailIndex) => (
 					<Card
 						className={`shadow-lg ${
-							!showMore && bookingServiceIndex > 2 ? 'hidden' : ''
+							!showMore && bookingDetailIndex > 2 ? 'hidden' : ''
 						}`}
 						key={bookingDetail.id}
 					>
-						<div className="w-full flex justify-start gap-2 items-start bg-gray-50 py-5 relative">
-							{showDetails && (
-								<div className="absolute top-4 right-4 cursor-pointer flex flex-wrap gap-2">
-									<div
-										onClick={() =>
-											onSelectScheduledBookingDetail(bookingServiceIndex)
-										}
-										className="relative"
-									>
-										<MdCalendarMonth size={20} />
+						<div className=" w-full flex justify-start gap-2 items-start bg-gray-50 py-5 relative">
+							<div className="absolute top-4 right-4 flex flex-wrap justify-end gap-2 items-start">
+								{showDetails && (
+									<div className="cursor-pointer">
+										<Tooltip content='Xem lịch hẹn' className='w-max'>
+											<div
+												role="button"
+												onClick={() =>
+													onSelectScheduledBookingDetail(bookingDetailIndex)
+												}
+												className="relative"
+											>
+												<MdCalendarMonth size={20} />
+											</div>
+										</Tooltip>
 									</div>
-								</div>
-							)}
+								)}
+								{showDetails &&
+									canEdit &&
+									bookingDetail.status === BOOKING_DETAIL_STATUS.PENDING && (
+										<div className="cursor-pointer">
+											<Tooltip content='Bắt đầu thực hiện' className='w-max'>
+												<div
+													role="button"
+													onClick={() => onProgressBookingDetail(bookingDetailIndex)}
+													className="relative"
+												>
+													<TbProgressCheck size={20} />
+												</div>
+											</Tooltip>
+										</div>
+									)}
+							</div>
 							{
 								// Phần hình xăm của booking service
 							}
@@ -210,7 +282,7 @@ const ArtistCustomerServices = ({
 									key={bookingDetail.id}
 									className="pb-1 flex flex-wrap text-base"
 								>
-									<div>{bookingServiceIndex + 1}</div>
+									<div>{bookingDetailIndex + 1}</div>
 									<div className="pr-1">
 										. {stringSize.at(bookingDetail.serviceSize)},
 									</div>

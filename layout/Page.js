@@ -109,7 +109,7 @@ const Page = ({ children }) => {
 						<Header toggleOpen={toggleOpen} />
 
 						<div
-							className={`w-full flex-1 relative pt-4 pr-4 pl-4 mx-auto min-h-body ${
+							className={`w-full flex-1 relative mt-4 pr-4 pl-4 mx-auto min-h-body ${
 								pathname === '/messages' ? 'p-0' : ''
 							}`}
 						>
