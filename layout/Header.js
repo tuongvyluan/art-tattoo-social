@@ -11,6 +11,7 @@ import { IoMdHeartEmpty } from 'react-icons/io';
 import { GiTwirlyFlower } from 'react-icons/gi';
 import { ROLE, roleString } from 'lib/status';
 import { AiOutlineTransaction } from 'react-icons/ai';
+import { MdCalendarMonth } from 'react-icons/md';
 
 const colors = [
 	'gray',
@@ -242,6 +243,12 @@ const Header = ({ toggleOpen }) => {
 																<div className="cursor-pointer flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
 																	<GiTwirlyFlower size={16} />{' '}
 																	<span className="ml-3">Hình xăm</span>
+																</div>
+															</Link>
+															<Link href="/meeting">
+																<div className="cursor-pointer flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
+																	<MdCalendarMonth size={16} />
+																	<span className="ml-3">Lịch hẹn</span>
 																</div>
 															</Link>
 															{data.user.role === ROLE.CUSTOMER && (

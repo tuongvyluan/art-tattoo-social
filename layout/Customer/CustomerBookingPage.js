@@ -10,7 +10,6 @@ import { BASE_URL } from 'lib/env';
 import CustomerServices from 'layout/CustomerServices';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import Button from 'components/Button';
 
 const ALL_TAB = '-1';
 const PENDING_TAB = '0';

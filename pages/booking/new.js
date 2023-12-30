@@ -4,7 +4,7 @@ import { BASE_URL } from 'lib/env';
 import { SERVICE_STATUS } from 'lib/status';
 import { sortServiceByCategory } from 'lib/studioServiceHelper';
 import { useSession } from 'next-auth/react';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import NotFound from 'pages/404';
 import { useState } from 'react';
 import { Loading } from 'ui';

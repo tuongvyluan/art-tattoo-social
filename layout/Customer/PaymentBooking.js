@@ -91,33 +91,33 @@ const PaymentBooking = ({ booking }) => {
 						{
 							// Tổng tiền
 						}
-						<div className="relative shadow-md sm:rounded-lg min-w-max overflow-x-auto">
-							<table className="w-full min-w-max text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-								<thead className="text-xs text-gray-700 uppercase dark:text-gray-400">
-									<tr>
-										<th
-											scope="col"
-											className="w-1/2 px-4 py-3 bg-gray-50 dark:bg-gray-800"
-										>
-											Dịch vụ
-										</th>
-										<th
-											scope="col"
-											className="px-4 py-3 w-40 bg-gray-50 dark:bg-gray-800"
-										>
-											Trạng thái
-										</th>
-										<th
-											scope="col"
-											className="px-4 py-3 bg-gray-50 dark:bg-gray-800"
-										>
-											Giá
-										</th>
-									</tr>
-								</thead>
-								<tbody>
-									{bookingDetails?.length > 0 ? (
-										bookingDetails.map((detail, detailIndex) => (
+						{bookingDetails?.length > 0 ? (
+							<div className="relative shadow-md sm:rounded-lg min-w-max overflow-x-auto">
+								<table className="w-full min-w-max text-sm text-left text-gray-500">
+									<thead className="text-xs text-gray-700 uppercase dark:text-gray-400">
+										<tr>
+											<th
+												scope="col"
+												className="w-1/2 px-4 py-3 bg-gray-50 dark:bg-gray-800"
+											>
+												Dịch vụ
+											</th>
+											<th
+												scope="col"
+												className="px-4 py-3 w-40 bg-gray-50 dark:bg-gray-800"
+											>
+												Trạng thái
+											</th>
+											<th
+												scope="col"
+												className="px-4 py-3 bg-gray-50 dark:bg-gray-800"
+											>
+												Giá
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										{bookingDetails.map((detail, detailIndex) => (
 											<tr key={detail.id} className="text-base">
 												<td
 													scope="col"
@@ -152,25 +152,25 @@ const PaymentBooking = ({ booking }) => {
 													</div>
 												</td>
 											</tr>
-										))
-									) : (
-										<div>Đơn hàng còn trống</div>
-									)}
+										))}
 
-									<tr>
-										<td
-											colSpan={2}
-											className="text-right bg-blue-50 text-gray-900 w-24 lg:w-40 px-4 py-3 dark:bg-gray-800 text-base"
-										>
-											Thành tiền
-										</td>
-										<td className="font-semibold text-left text-gray-900 w-24 lg:w-40 px-4 py-3 bg-yellow-50 dark:bg-gray-800 text-base">
-											{formatPrice(total)}
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
+										<tr>
+											<td
+												colSpan={2}
+												className="text-right bg-blue-50 text-gray-900 w-24 lg:w-40 px-4 py-3 dark:bg-gray-800 text-base"
+											>
+												Thành tiền
+											</td>
+											<td className="font-semibold text-left text-gray-900 w-24 lg:w-40 px-4 py-3 bg-yellow-50 dark:bg-gray-800 text-base">
+												{formatPrice(total)}
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						) : (
+							<div>Đơn hàng còn trống</div>
+						)}
 					</div>
 					{
 						// Transaction list
