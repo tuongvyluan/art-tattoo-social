@@ -123,24 +123,6 @@ const AppProvider = (props) => {
     language: "en",
   });
 
-  useEffect(() => {
-    phone = window.matchMedia(`(min-width: 768px)`);
-    phone.addListener(mediaQueryChanged);
-    dispatch({ type: "initialSetup" });
-    return () => {
-      phone.removeListener(mediaQueryChanged);
-    };
-  }, []);
-
-  useEffect(() => {
-    if(state.darkMode) document.body.classList.add("dark");
-    else document.body.classList.remove("dark");
-  }, [state.darkMode])
-
-  const mediaQueryChanged = () => {
-    dispatch({ type: "setMobile" });
-  };
-
   return <Provider value={[state, dispatch]}>{props.children}</Provider>;
 };
 
