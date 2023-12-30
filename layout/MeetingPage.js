@@ -41,7 +41,7 @@ const statusList = [
 const MeetingSchedule = ({ role, id }) => {
 	const [meetings, setMeetings] = useState([]);
 	const [timeRange, setTimeRange] = useState({
-		from: new Date(moment().add(12, 'hours')),
+		from: new Date(moment()),
 		to: new Date(moment().add(12, 'hours').add(7, 'days'))
 	});
 	const [status, setStatus] = useState(-1);
@@ -103,7 +103,7 @@ const MeetingSchedule = ({ role, id }) => {
 	return (
 		<div className="relative min-h-body sm:px-8 md:px-1 lg:px-6 xl:px-56 flex flex-col">
 			<div className="flex-grow relative min-w-0 p-6 rounded-lg shadow-sm mb-4 w-full bg-white dark:bg-gray-600">
-				<Heading>Lịch làm việc</Heading>
+				<Heading>Lịch hẹn</Heading>
 				{
 					// filters
 				}
