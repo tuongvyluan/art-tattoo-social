@@ -52,6 +52,8 @@ const ProfilePage = () => {
 								id: data.id,
 								fullName: data.fullName,
 								role: ROLE.ARTIST,
+								phoneNumber: data.phoneNumber,
+								email: data.email,
 								bioContent: data.bioContent ? data.bioContent : '',
 								avatar: data.avatar ? data.avatar : '/images/avatar.png',
 								styles: data.artistStyles,
