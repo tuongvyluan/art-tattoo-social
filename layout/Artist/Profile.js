@@ -14,6 +14,7 @@ import Heading from 'components/Heading';
 import { API_SECRET, BASE_URL } from 'lib/env';
 import ChartComponent from 'layout/ChartComponent';
 import { sharedOptions, gridOptions, colors } from 'lib/chartHelper';
+import UpdateCustomerInfo from 'layout/Customer/UpdateProfile';
 
 function ArtistInfo({ account, onReload }) {
 	const { data } = useSession();
@@ -43,19 +44,21 @@ function ArtistInfo({ account, onReload }) {
 	const styles = tattooStyleList;
 
 	useEffect(() => {
-		fetcher(`${BASE_URL}/dashboard/tattoo?artistId=${account.id}`).then(
-			(response) => {
-				setDataSet([
-					{
-						label: 'Tổng số hình xăm',
-						type: 'bar',
-						data: response.sta?.map((s) => s.noOfTattoo),
-						...colors[0]
-					}
-				]);
-				setLabels(response.sta?.map((s) => formatMonthYear(s.month)));
-			}
-		);
+		if (isArtist) {
+			fetcher(`${BASE_URL}/dashboard/tattoo?artistId=${account.id}`).then(
+				(response) => {
+					setDataSet([
+						{
+							label: 'Tổng số hình xăm',
+							type: 'bar',
+							data: response.sta?.map((s) => s.noOfTattoo),
+							...colors[0]
+						}
+					]);
+					setLabels(response.sta?.map((s) => formatMonthYear(s.month)));
+				}
+			);
+		}
 	}, []);
 
 	return (
@@ -69,13 +72,17 @@ function ArtistInfo({ account, onReload }) {
 							setIsEdit={() => setIsEdit(false)}
 						/>
 					) : (
-						<div></div>
+						<UpdateCustomerInfo
+							account={account}
+							onReload={onReload}
+							setIsEdit={() => setIsEdit(false)}
+						/>
 					)}
 				</div>
 			) : (
 				<div className="sm:px-12 md:px-16 lg:px-20 flex justify-center">
 					<div className={isArtist ? 'grid grid-cols-1 lg:grid-cols-2 gap-4' : ''}>
-						<Card className={'w-full'}>
+						<Card className={isArtist ? 'w-full' : 'min-w-md md:min-w-xl lg:min-w-3xl'}>
 							<CardBody>
 								<div className="">
 									<div>
@@ -102,7 +109,9 @@ function ArtistInfo({ account, onReload }) {
 										</div>
 										<div className="w-full mb-3 flex flex-wrap gap-1 items-end">
 											<label className="w-24">{'Số điện thoại:'}</label>
-											<div className="text-base">{formatPhoneNumber(profile.phoneNumber)}</div>
+											<div className="text-base">
+												{formatPhoneNumber(profile.phoneNumber)}
+											</div>
 										</div>
 										<div className="w-full mb-3 flex flex-wrap gap-1 items-end">
 											<label className="w-24">{'Email:'}</label>

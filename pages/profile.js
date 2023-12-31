@@ -67,11 +67,22 @@ const ProfilePage = () => {
 						.catch((e) => {
 							console.log(e);
 						});
-				} else {
-					setProfile(myProfile);
 				}
-			} else {
-				setProfile(myProfile);
+			} else if (data.user.role === ROLE.CUSTOMER) {
+				fetcher(`${BASE_URL}/customers/${data.user.customerId}`)
+					.then((response) => {
+						myProfile = {
+							...myProfile,
+							id: data.user.id,
+							customerId: data.user.customerId,
+							email: response.email,
+							phoneNumber: response.phoneNumber
+						};
+						setProfile(myProfile);
+					})
+					.catch((e) => {
+						console.log(e);
+					});
 			}
 
 			return (
