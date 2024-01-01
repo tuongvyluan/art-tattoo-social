@@ -16,28 +16,6 @@ function ServicePage({ services, onChange }) {
 		isWarn: 'blue'
 	});
 
-	const handleAlert = (state, title, content, isWarn = 0) => {
-		setShowAlert((prev) => state);
-		let color;
-
-		switch (isWarn) {
-			case 1:
-				color = 'green';
-				break;
-			case 2:
-				color = 'red';
-				break;
-			default:
-				color = 'blue';
-				break;
-		}
-		setAlertContent({
-			title: title,
-			content: content,
-			isWarn: color
-		});
-	};
-
 	const onSelectService = (index) => {
 		const services = [...serviceList];
 		services[index]['quantity'] = services[index]['quantity'] + 1;

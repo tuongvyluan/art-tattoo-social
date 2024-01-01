@@ -2,7 +2,7 @@ import Button from 'components/Button';
 import MyRating from 'components/MyRating';
 import { ChevronDown, ChevronUp } from 'icons/outline';
 import TattooListNotFilter from 'layout/TattooListNotFilter';
-import { fetcherPut, formatPhoneNumber } from 'lib';
+import { fetcherPut, formatPhoneNumber, formatTimeWithoutSecond } from 'lib';
 import { BASE_URL } from 'lib/env';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
@@ -18,13 +18,17 @@ const StudioPage = ({ studio, account }) => {
 	const handleFollow = () => {
 		if (isFollowed) {
 			fetcherPut(
-				`${BASE_URL}/follow/unfollow-studio?studioId=${studio.id}${account?.id ? `&accountId=${account.id}` : ''}`
+				`${BASE_URL}/follow/unfollow-studio?studioId=${studio.id}${
+					account?.id ? `&accountId=${account.id}` : ''
+				}`
 			).catch(() => {
 				setIsFollowed(false);
 			});
 		} else {
 			fetcherPut(
-				`${BASE_URL}/follow/follow-studio?studioId=${studio.id}${account?.id ? `&accountId=${account.id}` : ''}`
+				`${BASE_URL}/follow/follow-studio?studioId=${studio.id}${
+					account?.id ? `&accountId=${account.id}` : ''
+				}`
 			).catch(() => {
 				setIsFollowed(true);
 			});
@@ -74,7 +78,7 @@ const StudioPage = ({ studio, account }) => {
 								</div>
 							)}
 							{account?.id && (
-								<div onClick={handleFollow} className="w-24">
+								<div role="button" onClick={handleFollow} className="w-24">
 									<Button outline>{isFollowed ? 'Bỏ theo dõi' : 'Theo dõi'}</Button>
 								</div>
 							)}
@@ -83,6 +87,7 @@ const StudioPage = ({ studio, account }) => {
 							// Show more info
 						}
 						<div
+							role="button"
 							onClick={() => setShowMoreInfo(!showMoreInfo)}
 							className="block text-center"
 						>
@@ -135,7 +140,7 @@ const StudioPage = ({ studio, account }) => {
 									</div>
 								)}
 								{account?.id && (
-									<div onClick={handleFollow} className="w-24">
+									<div role="button" onClick={handleFollow} className="w-24">
 										<Button outline>
 											{isFollowed ? 'Bỏ theo dõi' : 'Theo dõi'}
 										</Button>
@@ -165,9 +170,8 @@ const StudioPage = ({ studio, account }) => {
 											<FiClock size={20} />
 										</div>
 										<div>
-											{studio.openTime.split(':')[0]}:{studio.openTime.split(':')[1]}{' '}
-											- {studio.closeTime.split(':')[0]}:
-											{studio.closeTime.split(':')[1]}
+											{formatTimeWithoutSecond(studio.openTime)} -{' '}
+											{formatTimeWithoutSecond(studio.closeTime)}
 										</div>
 									</div>
 									<h1 className="font-semibold text-base pb-2">Giới thiệu</h1>
