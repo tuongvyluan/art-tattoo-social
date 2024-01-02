@@ -2,7 +2,6 @@ import { ChevronDown, ChevronLeft } from 'icons/solid';
 import { MdUpload } from 'react-icons/md';
 import {
 	Alert,
-	BackgroundImg,
 	Card,
 	CardBody,
 	Dropdown,
@@ -18,7 +17,7 @@ import { CldUploadButton } from 'next-cloudinary';
 import { generateSHA1, generateSignature } from 'lib/cloudinary_signature';
 import { AiOutlineClose } from 'react-icons/ai';
 import { extractPublicId } from 'cloudinary-build-url';
-import { stringPlacements, stringSize, stringTattooStages } from 'lib/status';
+import { TATTOO_ART_STATUS, stringPlacements, stringSize, stringTattooStages } from 'lib/status';
 import { tattooStyleById, tattooStyleList } from 'lib/tattooStyle';
 import { API_KEY, API_SECRET, BASE_URL, CLOUD_NAME, UPLOAD_PRESET } from 'lib/env';
 import { v4 } from 'uuid';
@@ -268,7 +267,8 @@ function TattooDetailsPage({
 				size: tattoo.size,
 				placement: tattoo.placement,
 				thumbnail: thumbnail,
-				isPublicized: tattoo.isPublicized && thumbnail !== ''
+				isPublicized: tattoo.isPublicized && thumbnail !== '',
+				status: tattoo.status ? TATTOO_ART_STATUS.COMPLETED : TATTOO_ART_STATUS.PENDING
 			};
 			fetcherPut(`${BASE_URL}/TattooArts/UpdateTattoo`, newTattoo)
 				.then(() => {

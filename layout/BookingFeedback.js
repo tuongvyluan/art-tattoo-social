@@ -165,7 +165,7 @@ const BookingFeedback = ({ booking, accountId, canFeedback = false }) => {
 														</div>
 													</Link>
 												) : (
-													<div className="border border-gray-300 rounded-xl w-24 h-24 cursor-default">
+													<div className="border border-gray-300 rounded-xl w-28 h-28 cursor-default">
 														<div className="px-2 py-7 text-center text-gray-600">
 															Không có hình xăm
 														</div>

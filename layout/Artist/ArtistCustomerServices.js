@@ -22,7 +22,7 @@ import { MdCalendarMonth, MdOutlineCalendarMonth } from 'react-icons/md';
 import { TbProgressCheck } from 'react-icons/tb';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from 'next/future/image';
 import Button from 'components/Button';
 import { BASE_URL } from 'lib/env';
 import Router from 'next/router';
@@ -234,37 +234,40 @@ const ArtistCustomerServices = ({
 											href={`/tattoo/update/${bookingDetail.tattooArt.id}?booking=${bookingDetail.tattooArt.bookingId}`}
 										>
 											<div className="cursor-pointer">
-												<div className="relative w-28 h-28">
+												<div className="relative w-28">
 													<Image
-														layout="fill"
+														width={0}
+														height={0}
+														sizes="100vw"
+														priority
 														src={
 															bookingDetail.tattooArt.thumbnail
 																? bookingDetail.tattooArt.thumbnail
 																: noImageAvailable
 														}
 														alt={'a'}
-														className="object-contain rounded-2xl"
+														className="relative w-full h-auto rounded-2xl"
 													/>
-												</div>
-												<div className="pt-3 max-w-max mx-auto">
-													<Badge
-														color={
-															bookingDetail.tattooArt.status === 0
-																? 'warning'
-																: 'success'
-														}
-													>
-														{getTattooArtStatusString.at(
-															bookingDetail.tattooArt.status
-														)}
-													</Badge>
+													<div className="pt-3 max-w-max mx-auto">
+														<Badge
+															color={
+																bookingDetail.tattooArt.status === 0
+																	? 'warning'
+																	: 'success'
+															}
+														>
+															{getTattooArtStatusString.at(
+																bookingDetail.tattooArt.status
+															)}
+														</Badge>
+													</div>
 												</div>
 											</div>
 										</Link>
 									) : (
 										<div>
-											<div className="border border-gray-300 rounded-xl w-24 h-24 cursor-default">
-												<div className="px-2 py-7 text-center text-gray-600">
+											<div className="border border-gray-300 rounded-xl w-28 h-28 cursor-default">
+												<div className="px-2 py-10 text-center text-gray-600">
 													{bookingDetail.serviceCategoryId !==
 														SERVICE_CATEGORY.NEW_TATTOO &&
 													bookingDetail.serviceCategoryId !==
