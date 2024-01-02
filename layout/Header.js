@@ -197,10 +197,10 @@ const Header = ({ toggleOpen }) => {
 													size={32}
 													src={
 														data?.user?.avatar
-															? data.user.avatar
+															? data?.user?.avatar
 															: `/images/avatar.png`
 													}
-													alt={data ? data.user.fullName : 'Unknown'}
+													alt={data ? data?.user?.fullName : 'Unknown'}
 												/>
 											</div>
 											<div>
@@ -210,7 +210,7 @@ const Header = ({ toggleOpen }) => {
 														: data?.user?.fullName}
 												</div>
 												<div>
-													{data?.user.role != -1 && roleString.at(data.user.role)}
+													{data?.user.role != -1 && roleString.at(data?.user?.role)}
 												</div>
 											</div>
 										</div>
@@ -224,8 +224,8 @@ const Header = ({ toggleOpen }) => {
 														<span className="ml-3">Yêu thích</span>
 													</div>
 												</Link>
-												{data.user.role != ROLE.ADMIN &&
-													data.user.role != ROLE.STUDIO && (
+												{data?.user?.role != ROLE.ADMIN &&
+													data?.user?.role != ROLE.STUDIO && (
 														<div>
 															<Link href="/profile">
 																<div className="cursor-pointer flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
@@ -251,7 +251,7 @@ const Header = ({ toggleOpen }) => {
 																	<span className="ml-3">Lịch hẹn</span>
 																</div>
 															</Link>
-															{data.user.role === ROLE.CUSTOMER && (
+															{data?.user?.role === ROLE.CUSTOMER && (
 																<Link href="/payment">
 																	<div className="cursor-pointer flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
 																		<AiOutlineTransaction size={16} />{' '}

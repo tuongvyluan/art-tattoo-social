@@ -125,12 +125,13 @@ const Register = ({ user, setUser, handleSubmit }) => {
 																onChange={handleCheckbox}
 																checked={user.role !== ROLE.CUSTOMER}
 															/>
-															<label
+															<div
+																role="button"
 																className="cursor-pointer"
 																onClick={handleCheckbox}
 															>
 																Tạo tài khoản nghệ sĩ xăm
-															</label>
+															</div>
 														</div>
 													</div>
 

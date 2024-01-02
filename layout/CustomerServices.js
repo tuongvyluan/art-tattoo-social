@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import {
 	BOOKING_DETAIL_STATUS,
+	SERVICE_CATEGORY,
+	getTattooArtStatusString,
 	stringBookingDetailStatus,
 	stringBookingDetailStatusColor,
 	stringPlacements,
@@ -14,6 +16,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import ScheduleBookingMeetingModal from './ScheduleBookingMeetingModal';
 import { noImageAvailable } from 'lib/tattooPhoto';
+import { Badge } from 'flowbite-react';
 
 const CustomerServices = ({
 	bookingDetails,
@@ -51,16 +54,18 @@ const CustomerServices = ({
 					bookingDetail={scheduledBookingDetail}
 					openModal={scheduleModal}
 					setOpenModal={setScheduleModal}
-					canEdit={canEdit && (scheduledBookingDetail?.status === BOOKING_DETAIL_STATUS.IN_PROGRESS || scheduledBookingDetail?.status === BOOKING_DETAIL_STATUS.PENDING)}
+					canEdit={
+						canEdit &&
+						(scheduledBookingDetail?.status === BOOKING_DETAIL_STATUS.IN_PROGRESS ||
+							scheduledBookingDetail?.status === BOOKING_DETAIL_STATUS.PENDING)
+					}
 				/>
 			)}
-			{
-				!showMore && bookingDetails?.length > 3 && (
-					<div className='absolute left-0 right-0 -bottom-10 underline text-center text-base z-100'>
-						Xem thêm
-					</div>
-				)
-			}
+			{!showMore && bookingDetails?.length > 3 && (
+				<div className="absolute left-0 right-0 -bottom-10 underline text-center text-base z-100">
+					Xem thêm
+				</div>
+			)}
 			<div className="block">
 				{bookingDetails.map((bookingDetail, bookingServiceIndex) => (
 					<Card
@@ -91,8 +96,8 @@ const CustomerServices = ({
 										<Link
 											href={`/tattoo/update/${bookingDetail.tattooArt.id}?booking=${bookingDetail.tattooArt.bookingId}`}
 										>
-											<div className="cursor-pointer flex justify-start gap-3 flex-wrap">
-												<div className="relative w-24 h-24">
+											<div className="cursor-pointer">
+												<div className="relative w-28 h-28">
 													<Image
 														layout="fill"
 														src={
@@ -104,12 +109,29 @@ const CustomerServices = ({
 														className="object-contain rounded-2xl"
 													/>
 												</div>
+												<div className="pt-3 max-w-max mx-auto">
+													<Badge
+														color={
+															bookingDetail.tattooArt.status === 0
+																? 'warning'
+																: 'success'
+														}
+													>
+														{getTattooArtStatusString.at(
+															bookingDetail.tattooArt.status
+														)}
+													</Badge>
+												</div>
 											</div>
 										</Link>
 									) : (
 										<div className="border border-gray-300 rounded-xl w-24 h-24 cursor-default">
 											<div className="px-2 py-7 text-center text-gray-600">
-												Không có hình xăm
+												{bookingDetail.serviceCategoryId !==
+													SERVICE_CATEGORY.NEW_TATTOO &&
+												bookingDetail.serviceCategoryId !== SERVICE_CATEGORY.COVER_UP
+													? 'Không có hình xăm'
+													: 'Chưa tạo hình xăm'}
 											</div>
 										</div>
 									)}
@@ -164,11 +186,12 @@ const CustomerServices = ({
 									{
 										// Giá tiền
 									}
-									{bookingDetail.price > 0 && bookingDetail.status !== BOOKING_DETAIL_STATUS.CANCELLED && (
-										<div className="flex flex-wrap items-center text-base font-semibold bg-teal-300 px-2 rounded-full">
-											<div>{formatPrice(bookingDetail.price)}</div>
-										</div>
-									)}
+									{bookingDetail.price > 0 &&
+										bookingDetail.status !== BOOKING_DETAIL_STATUS.CANCELLED && (
+											<div className="flex flex-wrap items-center text-base font-semibold bg-teal-300 px-2 rounded-full">
+												<div>{formatPrice(bookingDetail.price)}</div>
+											</div>
+										)}
 									{
 										// Ngày hẹn
 									}

@@ -25,7 +25,7 @@ const Artist = () => {
 	if (!artist) {
 		fetcher(
 			`${BASE_URL}/artists/${id}/artist-details${
-				data?.user?.id ? `?accountId=${data.user.id}` : ''
+				data?.user?.id ? `?accountId=${data?.user?.id}` : ''
 			}`
 		).then((data) => {
 			setArtist({

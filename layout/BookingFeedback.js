@@ -150,7 +150,7 @@ const BookingFeedback = ({ booking, accountId, canFeedback = false }) => {
 														href={`/tattoo/update/${bookingDetail.tattooArt.id}?booking=${bookingDetail.tattooArt.bookingId}`}
 													>
 														<div className="cursor-pointer flex justify-start gap-3 flex-wrap">
-															<div className="relative w-24 h-24">
+															<div className="relative w-28 h-28">
 																<Image
 																	layout="fill"
 																	src={

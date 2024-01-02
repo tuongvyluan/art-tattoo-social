@@ -77,13 +77,13 @@ const TattooDetails = () => {
 				</div>
 			);
 		}
-		if (id === 'new' && data.user.role === ROLE.ARTIST && !artTattoo) {
+		if (id === 'new' && data?.user?.role === ROLE.ARTIST && !artTattoo) {
 			const tattoo = {
 				id: '',
 				bookingId: booking,
 				artist: {
-					id: data.user.id,
-					fullName: data.user.fullName
+					id: data?.user?.id,
+					fullName: data?.user?.fullName
 				},
 				styleId: 14,
 				stages: [
@@ -116,7 +116,7 @@ const TattooDetails = () => {
 				/>
 			);
 		}
-		if (data.user.role !== ROLE.ARTIST || data.user.id !== artTattoo.artist.id) {
+		if (data?.user?.role !== ROLE.ARTIST || data?.user?.id !== artTattoo.artist.id) {
 			return (
 				<TattooDetailNoUpdatePage
 					bookingId={booking}

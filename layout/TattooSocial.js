@@ -87,7 +87,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 	const sendCommend = () => {
 		if (authen && myComment.trim().length > 0) {
 			fetcherPost(`${BASE_URL}/Media/CreateComment`, {
-				accountId: data.user.id,
+				accountId: data?.user?.id,
 				tattooArtId: tattoo.id,
 				content: myComment
 			})
@@ -95,9 +95,9 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 					const newCommentList = [
 						{
 							id: response.id,
-							accountId: data.user.id,
-							avatar: data.user.avatar,
-							fullName: data.user.fullName,
+							accountId: data?.user?.id,
+							avatar: data?.user?.avatar,
+							fullName: data?.user?.fullName,
 							content: myComment
 						}
 					].concat(commentList);
@@ -114,18 +114,18 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 	}, 200);
 
 	const handleCallLikeApi = () => {
-		if (likeList.filter((like) => like.accountId === data.user.id).length > 0) {
+		if (likeList.filter((like) => like.accountId === data?.user?.id).length > 0) {
 			fetcherDelete(
-				`${BASE_URL}/Media/DeleteLikeById?userId=${data.user.id}&artTattooId=${tattoo.id}`
+				`${BASE_URL}/Media/DeleteLikeById?userId=${data?.user?.id}&artTattooId=${tattoo.id}`
 			).catch((e) => console.log(e));
-			setLikeList(likeList.filter((like) => like.accountId !== data.user.id));
+			setLikeList(likeList.filter((like) => like.accountId !== data?.user?.id));
 			setCountLike(countLike - 1);
 		} else {
 			fetcherPost(`${BASE_URL}/Media/CreateLike`, {
-				accountId: data.user.id,
+				accountId: data?.user?.id,
 				tattooArtId: tattoo.id
 			}).catch((e) => console.log(e));
-			likeList.push({ accountId: data.user.id });
+			likeList.push({ accountId: data?.user?.id });
 			setCountLike(countLike + 1);
 		}
 	};
@@ -146,7 +146,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 
 	const handleSubmitReport = () => {
 		fetcherPost(`${BASE_URL}/Media/CreateReport`, {
-			reporter: data.user.id,
+			reporter: data?.user?.id,
 			tattooArtId: tattoo.id,
 			commentId: reportedCommentId,
 			content: myReportContent,
@@ -271,7 +271,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 													</div>
 												</DropdownToggle>
 												<DropdownMenu className={'top-2 left-2'}>
-													{tattoo.artistId === data.user.id ? (
+													{tattoo.artistId === data?.user?.id ? (
 														<button
 															onClick={handleOpenHideTattooModal}
 															className="block w-full px-2 py-1.5 cursor-pointer hover:bg-gray-100 font-semibold"
@@ -342,7 +342,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 									<div className="flex gap-1 items-center">
 										{authen ? (
 											<div key={countLike} onClick={handleSetLike}>
-												{likeList.filter((like) => like.accountId === data.user.id)
+												{likeList.filter((like) => like.accountId === data?.user?.id)
 													.length > 0 ? (
 													<IoMdHeart
 														className="text-red-500 hover:text-red-600 font-semibold cursor-pointer"
@@ -460,7 +460,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 															</div>
 														</DropdownToggle>
 														<DropdownMenu className={'top-2 left-2'}>
-															{cmt.accountId === data.user.id ? (
+															{cmt.accountId === data?.user?.id ? (
 																<button
 																	onClick={() =>
 																		handleOpenDeleteCommentModal(cmt.id)

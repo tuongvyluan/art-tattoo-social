@@ -17,7 +17,7 @@ const MeetingPage = () => {
 
 	if (
 		status === 'unauthenticated' ||
-		(data.user.role !== ROLE.CUSTOMER && data.user.role !== ROLE.ARTIST)
+		(data?.user?.role !== ROLE.CUSTOMER && data?.user?.role !== ROLE.ARTIST)
 	) {
 		Router.replace('/');
 		return (
@@ -33,7 +33,7 @@ const MeetingPage = () => {
 				<MeetingSchedule
 					role={data?.user?.role}
 					id={
-						data?.user?.role === ROLE.CUSTOMER ? data.user.customerId : data.user.id
+						data?.user?.role === ROLE.CUSTOMER ? data?.user?.customerId : data?.user?.id
 					}
 				/>
 			</div>

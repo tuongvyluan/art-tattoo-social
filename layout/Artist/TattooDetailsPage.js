@@ -52,8 +52,8 @@ function TattooDetailsPage({
 	const [mediaMap, setMediaMap] = useState(stageMapMedia(defaultTattoo.stages));
 	const [hasStageChange, setHasStageChange] = useState(false);
 
-	const mediaStateRef = useRef()
-	mediaStateRef.current = mediaMap
+	const mediaStateRef = useRef();
+	mediaStateRef.current = mediaMap;
 	const [showAlert, setShowAlert] = useState(false);
 
 	const [alertContent, setAlertContent] = useState({
@@ -117,7 +117,7 @@ function TattooDetailsPage({
 			setHasStageChange(true);
 		}
 		const stages = tattoo.stages;
-		const mediaMap = mediaStateRef.current
+		const mediaMap = mediaStateRef.current;
 		const tattooImages = mediaMap.get(stages.at(stageIndex).id);
 		const image = tattooImages.at(mediaIndex);
 		// If this image was recently added and its link hasn't been saved to db, completely remove it from cloudinary
@@ -135,7 +135,7 @@ function TattooDetailsPage({
 			setHasStageChange(true);
 		}
 		const stages = tattoo.stages;
-		const mediaMap = mediaStateRef.current
+		const mediaMap = mediaStateRef.current;
 		const tattooImages = mediaMap.get(stages.at(stageIndex).id);
 		tattooImages.push({
 			id: v4(),
@@ -154,7 +154,7 @@ function TattooDetailsPage({
 			setHasStageChange(true);
 		}
 		const stages = tattoo.stages;
-		const mediaMap = mediaStateRef.current
+		const mediaMap = mediaStateRef.current;
 		const tattooImages = mediaMap.get(stages.at(stageIndex).id);
 		tattooImages[mediaIndex] = {
 			...tattooImages[mediaIndex],
@@ -198,6 +198,13 @@ function TattooDetailsPage({
 				'Hình xăm phải có ảnh thumbnail mới được public.',
 				2
 			);
+		} else if (key === 'status' && thumbnail === '' && !tattoo.status) {
+			handleAlert(
+				true,
+				'Cập nhật trạng thái không thành công.',
+				'Hình xăm phải có ảnh thumbnail mới được hoàn thành.',
+				2
+			);
 		} else if (tattoo[key] !== newValue) {
 			setTattoo({ ...tattoo, [key]: newValue });
 		}
@@ -229,7 +236,8 @@ function TattooDetailsPage({
 			defaultTattoo.size !== tattoo.size ||
 			defaultTattoo.placement !== tattoo.placement ||
 			defaultTattoo.thumbnail !== thumbnail ||
-			defaultTattoo.isPublicized !== tattoo.isPublicized
+			defaultTattoo.isPublicized !== tattoo.isPublicized ||
+			defaultTattoo.status !== tattoo.status
 		);
 	};
 
@@ -324,7 +332,7 @@ function TattooDetailsPage({
 						<div className="flex justify-between border-b border-gray-300 pb-3">
 							<Link
 								href={
-									bookingId === '' || myTattoo
+									bookingId === 'null' || myTattoo
 										? '/myTattoo'
 										: `/booking/${bookingId}`
 								}
@@ -393,7 +401,7 @@ function TattooDetailsPage({
 								</div>
 								<div className="pb-3 flex items-center gap-1">
 									<div className="w-20">Kích thước: </div>
-									{bookingId !== '' ? (
+									{bookingId !== 'null' ? (
 										<div>{stringSize.at(tattoo.size)}</div>
 									) : (
 										<Dropdown className="relative h-full flex items-center">
@@ -427,7 +435,7 @@ function TattooDetailsPage({
 								</div>
 								<div className="pb-3 flex gap-1 items-center">
 									<div className="w-20">Vị trí xăm:</div>
-									{bookingId !== '' ? (
+									{bookingId !== 'null' ? (
 										<div className="">{stringPlacements.at(tattoo.placement)}</div>
 									) : (
 										<Dropdown className="relative h-full flex items-center">
@@ -542,9 +550,9 @@ function TattooDetailsPage({
 												}
 												<div key={stage.id}>
 													<div className="flex gap-2 flex-wrap items-center">
-														<label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+														<div className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
 															Chọn giai đoạn
-														</label>
+														</div>
 														<Dropdown className={'relative'}>
 															<DropdownToggle>
 																<div className="relative">
@@ -583,9 +591,9 @@ function TattooDetailsPage({
 														</Dropdown>
 													</div>
 													<div>
-														<label className="pt-2 block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+														<div className="pt-2 block mb-2 text-sm font-medium text-gray-900 dark:text-white">
 															Thêm mô tả
-														</label>
+														</div>
 														<textarea
 															className="w-full rounded-lg p-2 text-base border border-gray-300"
 															type="text"
@@ -689,14 +697,34 @@ function TattooDetailsPage({
 						{
 							// Save or reset tattoo
 						}
-						<div className="flex justify-end flex-wrap gap-2">
-							<div className="w-16">
-								<Button outline onClick={handleResetChange}>
-									Reset
-								</Button>
+						<div className="flex justify-between flex-wrap gap-2 pt-3">
+							<div className="flex items-center cursor-pointer gap-2">
+								<div className="font-semibold">Đã hoàn thành:</div>
+								<div
+									role="button"
+									onClick={() => setTattooState('status', !tattoo.status)}
+									className="relative"
+								>
+									<input
+										checked={tattoo.status}
+										type="checkbox"
+										readOnly
+										className="hidden"
+										disabled={false}
+									/>
+									<div className="toggle__bar h-4 bg-gray-400 rounded-full shadow-inner"></div>
+									<div className="toggle__handle absolute bg-white rounded-full shadow-sm transform transition duration-150 ease-in-out"></div>
+								</div>
 							</div>
-							<div className="w-16">
-								<Button onClick={handleSaveChange}>Lưu</Button>
+							<div className="flex justify-end flex-wrap gap-2">
+								<div className="w-16">
+									<Button outline onClick={handleResetChange}>
+										Reset
+									</Button>
+								</div>
+								<div className="w-16">
+									<Button onClick={handleSaveChange}>Lưu</Button>
+								</div>
 							</div>
 						</div>
 					</CardBody>

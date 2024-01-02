@@ -25,7 +25,7 @@ const Booking = () => {
 		);
 	}
 	if (status === 'authenticated') {
-		if (data.user.role === ROLE.CUSTOMER) {
+		if (data?.user?.role === ROLE.CUSTOMER) {
 			if (!data.user?.customerId) {
 				return (
 					<div className="flex items-center justify-center h-full">
@@ -35,7 +35,7 @@ const Booking = () => {
 			}
 			return <CustomerBookingPage customerId={data.user?.customerId} />;
 		}
-		if (data.user.role === ROLE.ARTIST) {
+		if (data?.user?.role === ROLE.ARTIST) {
 			if (!data.user?.artistId) {
 				return (
 					<div className="flex items-center justify-center h-full">

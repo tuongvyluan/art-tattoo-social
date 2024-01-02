@@ -36,7 +36,7 @@ const BookingDetails = () => {
 		}
 
 		if (
-			(data.user.role === ROLE.CUSTOMER || data.user.role === ROLE.ARTIST) &&
+			(data?.user?.role === ROLE.CUSTOMER || data?.user?.role === ROLE.ARTIST) &&
 			loading &&
 			!error
 		) {
@@ -44,15 +44,15 @@ const BookingDetails = () => {
 				.then((res) => {
 					let bookingDetails = res.bookingDetails;
 					if (
-						data.user.role === ROLE.CUSTOMER &&
-						res.customer?.accountId !== data.user.id
+						data?.user?.role === ROLE.CUSTOMER &&
+						res.customer?.accountId !== data?.user?.id
 					) {
 						setErrorMessage('Bạn không có quyền xem chi tiết đơn hàng này');
 						setError(true);
 					}
-					if (data.user.role === ROLE.ARTIST) {
+					if (data?.user?.role === ROLE.ARTIST) {
 						bookingDetails = res.bookingDetails?.filter(
-							(b) => b.artist?.id === data.user.id
+							(b) => b.artist?.id === data?.user?.id
 						);
 						if (bookingDetails.length === 0) {
 							setErrorMessage('Bạn không có quyền xem chi tiết đơn hàng này');
@@ -74,7 +74,7 @@ const BookingDetails = () => {
 				</div>
 			);
 		}
-		if (data.user.role === ROLE.CUSTOMER) {
+		if (data?.user?.role === ROLE.CUSTOMER) {
 			return (
 				<CustomerBookingDetailPage
 					setLoading={setLoading}
@@ -83,13 +83,13 @@ const BookingDetails = () => {
 				/>
 			);
 		}
-		if (data.user.role === ROLE.ARTIST) {
+		if (data?.user?.role === ROLE.ARTIST) {
 			return (
 				<BookingDetailsPage
 					setLoading={setLoading}
 					data={bookingData}
 					studioId={bookingData.studioId}
-					artistId={data.user.artistId}
+					artistId={data?.user?.artistId}
 				/>
 			);
 		}

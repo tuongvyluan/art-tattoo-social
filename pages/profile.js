@@ -31,13 +31,13 @@ const ProfilePage = () => {
 	if (status === 'authenticated') {
 		if (!profile) {
 			let myProfile = {
-				id: data.user.id,
-				fullName: data.user.fullName,
+				id: data?.user?.id,
+				fullName: data?.user?.fullName,
 				email: '',
 				phoneNumber: '',
-				avatar: data.user.avatar
+				avatar: data?.user?.avatar
 			};
-			if (data.user.role === ROLE.ARTIST) {
+			if (data?.user?.role === ROLE.ARTIST) {
 				myProfile = {
 					...myProfile,
 					bioContent: '',
@@ -45,8 +45,8 @@ const ProfilePage = () => {
 					studios: undefined,
 					role: ROLE.ARTIST
 				};
-				if (data.user.artistId) {
-					fetcher(`${BASE_URL}/artists/${data.user.artistId}/artist-details`)
+				if (data?.user?.artistId) {
+					fetcher(`${BASE_URL}/artists/${data?.user?.artistId}/artist-details`)
 						.then((data) => {
 							myProfile = {
 								id: data.id,
@@ -68,13 +68,13 @@ const ProfilePage = () => {
 							console.log(e);
 						});
 				}
-			} else if (data.user.role === ROLE.CUSTOMER) {
-				fetcher(`${BASE_URL}/customers/${data.user.customerId}`)
+			} else if (data?.user?.role === ROLE.CUSTOMER) {
+				fetcher(`${BASE_URL}/customers/${data?.user?.customerId}`)
 					.then((response) => {
 						myProfile = {
 							...myProfile,
-							id: data.user.id,
-							customerId: data.user.customerId,
+							id: data?.user?.id,
+							customerId: data?.user?.customerId,
 							email: response.email,
 							phoneNumber: response.phoneNumber
 						};

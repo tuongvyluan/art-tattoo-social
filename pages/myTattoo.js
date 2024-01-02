@@ -21,20 +21,25 @@ const MyTattooPage = () => {
 
 	if (status === 'unauthenticated') {
 		Router.replace('/');
+		return (
+			<div className="flex items-center justify-center h-full min-h-body">
+				<Loading />
+			</div>
+		);
 	} else if (!url) {
-		switch (data.user.role) {
+		switch (data?.user?.role) {
 			case ROLE.CUSTOMER:
 				setUrl(
-					`${BASE_URL}/TattooArts/TattooUser?customerId=${data.user.customerId}&accountId=${data.user.id}`
+					`${BASE_URL}/TattooArts/TattooUser?customerId=${data?.user?.customerId}&accountId=${data?.user?.id}`
 				);
 				break;
 			case ROLE.ARTIST:
 				setUrl(
-					`${BASE_URL}/TattooArts/TattooUser?artistId=${data.user.id}&accountId=${data.user.id}`
+					`${BASE_URL}/TattooArts/TattooUser?artistId=${data?.user?.id}&accountId=${data?.user?.id}`
 				);
 				break;
 			case ROLE.STUDIO:
-				setUrl(`${BASE_URL}/TattooArts/TattooUser?studioId=${data.user.studioId}`);
+				setUrl(`${BASE_URL}/TattooArts/TattooUser?studioId=${data?.user?.studioId}`);
 				break;
 		}
 		return (
@@ -44,10 +49,10 @@ const MyTattooPage = () => {
 		);
 	}
 
-	if (data.user.role !== ROLE.ARTIST) {
+	if (data?.user?.role !== ROLE.ARTIST) {
 		return (
 			<div className="min-h-body">
-				<TattooListUpdate role={data.user.role} url={url} showFilter={false} />
+				<TattooListUpdate role={data?.user?.role} url={url} showFilter={false} />
 			</div>
 		);
 	}

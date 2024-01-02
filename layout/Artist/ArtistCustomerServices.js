@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import {
 	BOOKING_DETAIL_STATUS,
 	SERVICE_CATEGORY,
+	getTattooArtStatusString,
 	stringBookingDetailStatus,
 	stringBookingDetailStatusColor,
 	stringPlacements,
@@ -28,7 +29,7 @@ import Router from 'next/router';
 import ScheduleBookingMeetingModal from 'layout/ScheduleBookingMeetingModal';
 import { noImageAvailable } from 'lib/tattooPhoto';
 import MyModal from 'components/MyModal';
-import { Tooltip } from 'flowbite-react';
+import { Badge, Tooltip } from 'flowbite-react';
 
 const ArtistCustomerServices = ({
 	bookingDetails,
@@ -194,7 +195,7 @@ const ArtistCustomerServices = ({
 							<div className="absolute top-4 right-4 flex flex-wrap justify-end gap-2 items-start">
 								{showDetails && (
 									<div className="cursor-pointer">
-										<Tooltip content='Xem lịch hẹn' className='w-max'>
+										<Tooltip content="Xem lịch hẹn" className="w-max">
 											<div
 												role="button"
 												onClick={() =>
@@ -211,7 +212,7 @@ const ArtistCustomerServices = ({
 									canEdit &&
 									bookingDetail.status === BOOKING_DETAIL_STATUS.PENDING && (
 										<div className="cursor-pointer">
-											<Tooltip content='Bắt đầu thực hiện' className='w-max'>
+											<Tooltip content="Bắt đầu thực hiện" className="w-max">
 												<div
 													role="button"
 													onClick={() => onProgressBookingDetail(bookingDetailIndex)}
@@ -232,8 +233,8 @@ const ArtistCustomerServices = ({
 										<Link
 											href={`/tattoo/update/${bookingDetail.tattooArt.id}?booking=${bookingDetail.tattooArt.bookingId}`}
 										>
-											<div className="cursor-pointer flex justify-start gap-3 flex-wrap">
-												<div className="relative w-24 h-24">
+											<div className="cursor-pointer">
+												<div className="relative w-28 h-28">
 													<Image
 														layout="fill"
 														src={
@@ -245,13 +246,31 @@ const ArtistCustomerServices = ({
 														className="object-contain rounded-2xl"
 													/>
 												</div>
+												<div className="pt-3 max-w-max mx-auto">
+													<Badge
+														color={
+															bookingDetail.tattooArt.status === 0
+																? 'warning'
+																: 'success'
+														}
+													>
+														{getTattooArtStatusString.at(
+															bookingDetail.tattooArt.status
+														)}
+													</Badge>
+												</div>
 											</div>
 										</Link>
 									) : (
 										<div>
 											<div className="border border-gray-300 rounded-xl w-24 h-24 cursor-default">
 												<div className="px-2 py-7 text-center text-gray-600">
-													Không có hình xăm
+													{bookingDetail.serviceCategoryId !==
+														SERVICE_CATEGORY.NEW_TATTOO &&
+													bookingDetail.serviceCategoryId !==
+														SERVICE_CATEGORY.COVER_UP
+														? 'Không có hình xăm'
+														: 'Chưa tạo hình xăm'}
 												</div>
 											</div>
 											{(bookingDetail.serviceCategoryId ===
@@ -323,11 +342,12 @@ const ArtistCustomerServices = ({
 									{
 										// Giá tiền
 									}
-									{bookingDetail.price > 0 && bookingDetail.status !== BOOKING_DETAIL_STATUS.CANCELLED && (
-										<div className="flex flex-wrap items-center text-base font-semibold bg-teal-300 px-2 rounded-full">
-											<div>{formatPrice(bookingDetail.price)}</div>
-										</div>
-									)}
+									{bookingDetail.price > 0 &&
+										bookingDetail.status !== BOOKING_DETAIL_STATUS.CANCELLED && (
+											<div className="flex flex-wrap items-center text-base font-semibold bg-teal-300 px-2 rounded-full">
+												<div>{formatPrice(bookingDetail.price)}</div>
+											</div>
+										)}
 									{
 										// Ngày hẹn
 									}

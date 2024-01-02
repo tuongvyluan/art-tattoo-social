@@ -36,7 +36,7 @@ const BookingFeedbackPage = () => {
 		}
 
 		if (
-			(data.user.role === ROLE.CUSTOMER || data.user.role === ROLE.ARTIST) &&
+			(data?.user?.role === ROLE.CUSTOMER || data?.user?.role === ROLE.ARTIST) &&
 			loading &&
 			!error
 		) {
@@ -46,15 +46,15 @@ const BookingFeedbackPage = () => {
 						(b) => b.status === BOOKING_DETAIL_STATUS.COMPLETED
 					);
 					if (
-						data.user.role === ROLE.CUSTOMER &&
-						res.customer?.accountId !== data.user.id
+						data?.user?.role === ROLE.CUSTOMER &&
+						res.customer?.accountId !== data?.user?.id
 					) {
 						setErrorMessage('Bạn không có quyền xem đánh giá của đơn hàng này');
 						setError(true);
 					}
-					if (data.user.role === ROLE.ARTIST) {
+					if (data?.user?.role === ROLE.ARTIST) {
 						bookingDetails = res.bookingDetails?.filter(
-							(b) => b.artist?.id === data.user.id
+							(b) => b.artist?.id === data?.user?.id
 						);
 						if (bookingDetails.length === 0) {
 							setErrorMessage('Bạn không có quyền xem đánh giá của đơn hàng này');
@@ -79,8 +79,8 @@ const BookingFeedbackPage = () => {
 		return (
 			<BookingFeedback
 				booking={bookingData}
-				accountId={data.user.customerId}
-				canFeedback={data.user.role === ROLE.CUSTOMER && bookingData?.bookingDetails?.at(0)?.feedback === null}
+				accountId={data?.user?.customerId}
+				canFeedback={data?.user?.role === ROLE.CUSTOMER && bookingData?.bookingDetails?.at(0)?.feedback === null}
 			/>
 		);
 	}

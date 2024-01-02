@@ -105,7 +105,7 @@ function UpdateArtistInfo({ account, onReload, setIsEdit }) {
 	};
 
 	const handleSubmit = async (newProfile, artistStyles, artistStudios) => {
-		if (data.user.artistId) {
+		if (data?.user?.artistId) {
 			await handleUpdateArtist(newProfile, artistStyles);
 		} else {
 			await handleCreateArtist(newProfile, artistStyles);

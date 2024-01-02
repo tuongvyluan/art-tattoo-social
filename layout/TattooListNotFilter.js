@@ -37,14 +37,14 @@ const TattooListNotFilter = ({ url, pageSize = 20 }) => {
 	const handleCallLikeApi = (tattoo) => {
 		if (tattoo.isLike) {
 			fetcherDelete(
-				`${BASE_URL}/Media/DeleteLikeById?userId=${data.user.id}&artTattooId=${tattoo.id}`
+				`${BASE_URL}/Media/DeleteLikeById?userId=${data?.user?.id}&artTattooId=${tattoo.id}`
 			).catch((e) => console.log(e));
 			tattoo.likeCount--;
 			tattoo.isLike = false;
 			setPostKey(Math.random());
 		} else {
 			fetcherPost(`${BASE_URL}/Media/CreateLike`, {
-				accountId: data.user.id,
+				accountId: data?.user?.id,
 				tattooArtId: tattoo.id
 			}).catch((e) => console.log(e));
 			tattoo.likeCount++;
