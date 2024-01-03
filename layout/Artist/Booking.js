@@ -20,6 +20,7 @@ import ArtistCustomerServices from './ArtistCustomerServices';
 import { ChevronDown } from 'icons/solid';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import FilterBookingStatus from './FilterBookingStatus';
 
 const ALL_TAB = '-1';
 const PENDING_TAB = '0';
@@ -33,7 +34,9 @@ function ArtistBookingPage({ artistId }) {
 	const [data, setData] = useState([]);
 	const router = useRouter();
 	const [studioList, setStudioList] = useState([]);
-	const [currentStudio, setCurrentStudio] = useState(null);
+	const [currentStudio, setCurrentStudio] = useState(
+		router.query.studioId ? router.query.studioId : null
+	);
 	const [activeTab, setActiveTab] = useState(
 		router.query.active ? router.query.active : ALL_TAB
 	);
@@ -91,7 +94,7 @@ function ArtistBookingPage({ artistId }) {
 				router.push(
 					`/booking?active=${filter}&page=${page}${
 						search?.trim()?.length > 0 ? '&search=' + search : ''
-					}`
+					}${currentStudio !== null ? '&studioId=' + currentStudio : ''}`
 				);
 			});
 	}, [filter, page, currentStudio, search]);
@@ -146,143 +149,18 @@ function ArtistBookingPage({ artistId }) {
 				}
 			});
 			setStudioList(list);
+			if (list.filter((a) => a.id === currentStudio).length === 0) {
+				setCurrentStudio(null);
+			}
 		});
 	}, []);
 
 	return (
 		<div className="sm:px-8 md:px-1 lg:px-6 xl:px-56">
-			<div className="mx-auto ring-1 ring-black ring-opacity-5 bg-white">
-				{
-					// Filter by status
-				}
-				<div className="flex flex-row w-0 min-w-full">
-					<ul className="list-none grid col-span-4 grid-flow-col place-items-center overflow-x-auto w-0 min-w-full -mb-10 pb-10">
-						<li
-							className={`text-center  cursor-pointer ${
-								activeTab === ALL_TAB
-									? 'border-b-2 border-solid border-gray-700'
-									: ''
-							}`}
-						>
-							<button
-								onClick={() => {
-									toggle(ALL_TAB);
-								}}
-								href="#"
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
-							>
-								Tất cả
-								<Ripple color="black" />
-							</button>
-						</li>
-						<li
-							className={`text-center cursor-pointer ${
-								activeTab === PENDING_TAB
-									? 'border-b-2 border-solid border-gray-700'
-									: ''
-							}`}
-						>
-							<button
-								onClick={() => {
-									toggle(PENDING_TAB);
-								}}
-								href="#"
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
-							>
-								Chờ xác nhận
-								<Ripple color="black" />
-							</button>
-						</li>
-						<li
-							className={`text-center cursor-pointer ${
-								activeTab === IN_PROGRESS_TAB
-									? 'border-b-2 border-solid border-gray-700'
-									: ''
-							}`}
-						>
-							<button
-								onClick={() => {
-									toggle(IN_PROGRESS_TAB);
-								}}
-								href="#"
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
-							>
-								Đang thực hiện
-								<Ripple color="black" />
-							</button>
-						</li>
-						<li
-							className={`text-center cursor-pointer ${
-								activeTab === COMPLETE_TAB
-									? 'border-b-2 border-solid border-gray-700'
-									: ''
-							}`}
-						>
-							<button
-								href="#"
-								onClick={() => {
-									toggle(COMPLETE_TAB);
-								}}
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
-							>
-								Hoàn thành
-								<Ripple color="black" />
-							</button>
-						</li>
-						<li
-							className={`text-center cursor-pointer ${
-								activeTab === CUSTOMER_CANCELLED_TAB
-									? 'border-b-2 border-solid border-gray-700'
-									: ''
-							}`}
-						>
-							<button
-								onClick={() => {
-									toggle(CUSTOMER_CANCELLED_TAB);
-								}}
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
-							>
-								Khách hàng huỷ
-								<Ripple color="black" />
-							</button>
-						</li>
-						<li
-							className={`text-center cursor-pointer ${
-								activeTab === STUDIO_CANCELLED_TAB
-									? 'border-b-2 border-solid border-gray-700'
-									: ''
-							}`}
-						>
-							<button
-								onClick={() => {
-									toggle(STUDIO_CANCELLED_TAB);
-								}}
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
-							>
-								Tiệm xăm huỷ
-								<Ripple color="black" />
-							</button>
-						</li>
-						<li
-							className={`text-center cursor-pointer ${
-								activeTab === NOT_COMPLETE_TAB
-									? 'border-b-2 border-solid border-gray-700'
-									: ''
-							}`}
-						>
-							<button
-								onClick={() => {
-									toggle(NOT_COMPLETE_TAB);
-								}}
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
-							>
-								Đã dừng
-								<Ripple color="black" />
-							</button>
-						</li>
-					</ul>
-				</div>
-			</div>
+			{
+				// Filter by status
+			}
+			<FilterBookingStatus activeTab={activeTab} toggle={toggle} />
 			{
 				// Filter by studio
 			}
@@ -294,7 +172,8 @@ function ArtistBookingPage({ artistId }) {
 							<div className="w-44 rounded-lg px-3 py-3 border border-gray-600 bg-white">
 								{
 									studioList?.filter((a) => a.id === currentStudio)?.at(0)
-										?.studioName
+										?.studioName ? studioList?.filter((a) => a.id === currentStudio)?.at(0)
+										?.studioName : 'Tất cả tiệm xăm'
 								}
 							</div>
 							<div className="absolute top-4 right-2">
@@ -351,7 +230,7 @@ function ArtistBookingPage({ artistId }) {
 							<Card key={booking.id}>
 								<CardBody>
 									<Link className="text-black" href={`/booking/${booking.id}`}>
-										<div className="cursor-pointer ">
+										<a className="cursor-pointer text-black">
 											{
 												// Booking header
 											}
@@ -446,7 +325,7 @@ function ArtistBookingPage({ artistId }) {
 													}
 												</div>
 											</div>
-										</div>
+										</a>
 									</Link>
 									{booking.status === BOOKING_STATUS.COMPLETED && (
 										<div className="flex justify-end pt-3">

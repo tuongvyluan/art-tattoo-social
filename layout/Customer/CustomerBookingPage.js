@@ -10,6 +10,7 @@ import { BASE_URL } from 'lib/env';
 import CustomerServices from 'layout/CustomerServices';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import FilterBookingStatus from 'layout/Artist/FilterBookingStatus';
 
 const ALL_TAB = '-1';
 const PENDING_TAB = '0';
@@ -113,134 +114,10 @@ function CustomerBookingPage({ customerId }) {
 
 	return (
 		<div className="sm:px-8 md:px-1 lg:px-6 xl:px-56">
-			<div className="mx-auto ring-1 ring-black ring-opacity-5 bg-white">
-				{
-					// Filter by status
-				}
-				<div className="flex flex-row w-0 min-w-full">
-					<ul className="list-none grid col-span-4 grid-flow-col place-items-center overflow-x-auto w-0 min-w-full -mb-10 pb-10">
-						<li
-							className={`text-center  cursor-pointer ${
-								activeTab === ALL_TAB
-									? 'border-b-2 border-solid border-gray-700'
-									: ''
-							}`}
-						>
-							<button
-								onClick={() => {
-									toggle(ALL_TAB);
-								}}
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
-							>
-								Tất cả
-								<Ripple color="black" />
-							</button>
-						</li>
-						<li
-							className={`text-center cursor-pointer ${
-								activeTab === PENDING_TAB
-									? 'border-b-2 border-solid border-gray-700'
-									: ''
-							}`}
-						>
-							<button
-								onClick={() => {
-									toggle(PENDING_TAB);
-								}}
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
-							>
-								Chờ xác nhận
-								<Ripple color="black" />
-							</button>
-						</li>
-						<li
-							className={`text-center cursor-pointer ${
-								activeTab === IN_PROGRESS_TAB
-									? 'border-b-2 border-solid border-gray-700'
-									: ''
-							}`}
-						>
-							<button
-								onClick={() => {
-									toggle(IN_PROGRESS_TAB);
-								}}
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
-							>
-								Đang thực hiện
-								<Ripple color="black" />
-							</button>
-						</li>
-						<li
-							className={`text-center cursor-pointer ${
-								activeTab === COMPLETE_TAB
-									? 'border-b-2 border-solid border-gray-700'
-									: ''
-							}`}
-						>
-							<button
-								onClick={() => {
-									toggle(COMPLETE_TAB);
-								}}
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
-							>
-								Hoàn thành
-								<Ripple color="black" />
-							</button>
-						</li>
-						<li
-							className={`text-center cursor-pointer ${
-								activeTab === CUSTOMER_CANCELLED_TAB
-									? 'border-b-2 border-solid border-gray-700'
-									: ''
-							}`}
-						>
-							<button
-								onClick={() => {
-									toggle(CUSTOMER_CANCELLED_TAB);
-								}}
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
-							>
-								Khách hàng huỷ
-								<Ripple color="black" />
-							</button>
-						</li>
-						<li
-							className={`text-center cursor-pointer ${
-								activeTab === STUDIO_CANCELLED_TAB
-									? 'border-b-2 border-solid border-gray-700'
-									: ''
-							}`}
-						>
-							<button
-								onClick={() => {
-									toggle(STUDIO_CANCELLED_TAB);
-								}}
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
-							>
-								Tiệm xăm huỷ
-								<Ripple color="black" />
-							</button>
-						</li>
-						<li
-							className={`text-center cursor-pointer ${
-								activeTab === NOT_COMPLETE_TAB
-									? 'border-b-2 border-solid border-gray-700'
-									: ''
-							}`}
-						>
-							<button
-								onClick={() => {
-									toggle(NOT_COMPLETE_TAB);
-								}}
-								className="relative text-gray-900 dark:text-white hover:text-indigo py-3 px-2 sm:px-3 md:px-2 lg:px-4 block"
-							>
-								Đã dừng
-								<Ripple color="black" />
-							</button>
-						</li>
-					</ul>
-				</div>
-			</div>
+			{
+				// Filter by status
+			}
+			<FilterBookingStatus activeTab={activeTab} toggle={toggle} />
 			<div className="my-3">
 				<div className="relative bg-gray-200 p-2 flex items-center px-3">
 					<span className="block">
@@ -272,7 +149,7 @@ function CustomerBookingPage({ customerId }) {
 							<Card key={booking.id}>
 								<CardBody>
 									<Link className="text-black" href={`/booking/${booking.id}`}>
-										<div className="cursor-pointer ">
+										<a className="cursor-pointer text-black">
 											{
 												// Booking header
 											}
@@ -349,7 +226,7 @@ function CustomerBookingPage({ customerId }) {
 													}
 												</div>
 											</div>
-										</div>
+										</a>
 									</Link>
 									{booking.status === BOOKING_STATUS.COMPLETED && (
 										<div className="flex justify-end pt-3">

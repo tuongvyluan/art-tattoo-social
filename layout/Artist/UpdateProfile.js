@@ -77,9 +77,7 @@ function UpdateArtistInfo({ account, onReload, setIsEdit }) {
 				fetcherPut(`${BASE_URL}/artists/${newProfile.id}/artist-style`, artistStyles)
 			);
 		}
-		promises.push(
-			fetcherPut(`${BASE_URL}/artist-profile`, newProfile)
-		);
+		promises.push(fetcherPut(`${BASE_URL}/artist-profile`, newProfile));
 		await Promise.all(promises);
 	};
 
@@ -112,20 +110,29 @@ function UpdateArtistInfo({ account, onReload, setIsEdit }) {
 		}
 	};
 
-	const handleFormSubmit = () => {
+	const handleFormSubmit = (e) => {
+		e.preventDefault();
 		handleAlert(true, '', 'Đang cập nhật thông tin cá nhân', 0);
-		handleSubmit(profile, artistStyles, studios).then(() => {
-			update({
-				...data,
-				user: {
-					...data?.user,
-					artistId: profile.id,
-					fullName: profile.fullName,
-					avatar: profile.avatar
-				}
+		if (profile?.fullName?.trim() === '') {
+			handleAlert(
+				true,
+				'Cập nhật thông tin thất bại.',
+				'Tên không được để trống.',
+				2
+			);
+		} else
+			handleSubmit(profile, artistStyles, studios).then(() => {
+				update({
+					...data,
+					user: {
+						...data?.user,
+						artistId: profile.id,
+						fullName: profile.fullName,
+						avatar: profile.avatar
+					}
+				});
+				onReload();
 			});
-			onReload();
-		});
 	};
 
 	const handleFormReset = () => {
@@ -154,7 +161,7 @@ function UpdateArtistInfo({ account, onReload, setIsEdit }) {
 			<div className="sm:px-12 md:px-16 lg:px-32 xl:px-56 flex justify-center">
 				<Card className={'w-full max-w-2xl'}>
 					<CardBody>
-						<div method="post" className="pt-3">
+						<form method="post" className="pt-3">
 							<div>
 								<div className="flex flex-wrap gap-3 items-center border-b border-gray-300">
 									<div className="cursor-pointer pb-2 flex gap-1 text-gray-500 hover:text-indigo-500">
@@ -307,7 +314,7 @@ function UpdateArtistInfo({ account, onReload, setIsEdit }) {
 									</div>
 								</div>
 							</div>
-						</div>
+						</form>
 					</CardBody>
 				</Card>
 			</div>

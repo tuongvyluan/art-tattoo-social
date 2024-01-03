@@ -44,6 +44,7 @@ export const Avatar = ({
 				<CldImage
 					quality='auto'
           format='auto'
+					crop='thumb'
           width={200}
           height={200}
 					src={src}
@@ -53,7 +54,7 @@ export const Avatar = ({
 				/>
 			) : (
 				<span
-					className={`flex items-center justify-center w-full h-full font-black bg-indigo-100 text-indigo-500 text-white ${
+					className={`flex items-center justify-center w-full h-full font-black bg-indigo-100 text-indigo-500 ${
 						circular ? 'rounded-full' : 'rounded-lg '
 					}`}
 				>
@@ -82,5 +83,6 @@ Avatar.propTypes = {
 		'pink'
 	]),
 	style: PropTypes.string,
-	className: PropTypes.string
+	className: PropTypes.string,
+	circular: PropTypes.bool
 };
