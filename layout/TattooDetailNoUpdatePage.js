@@ -19,7 +19,7 @@ function TattooDetailNoUpdatePage({ bookingId, artTattoo, myTattoo = false }) {
 			<Card>
 				<CardBody>
 					<div className="flex justify-between border-b border-gray-300 pb-3">
-						<Link
+						<Link prefetch={false}
 							href={
 								bookingId === '' || myTattoo ? '/myTattoo' : `/booking/${bookingId}`
 							}

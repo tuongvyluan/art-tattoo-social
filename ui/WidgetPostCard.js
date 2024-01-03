@@ -9,7 +9,7 @@ import { optimizeImage } from 'lib';
 export const WidgetPostCard = ({ children, image, imageHeight, link = '#' }) => {
 	return (
 		<Card>
-			<Link href={link} shallow={false}>
+			<Link prefetch={false} href={link} shallow={false}>
 				<div className="relative w-full cursor-pointer">
 					{imageHeight ? (
 						<BackgroundImg

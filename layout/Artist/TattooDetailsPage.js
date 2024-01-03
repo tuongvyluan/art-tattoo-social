@@ -330,7 +330,7 @@ function TattooDetailsPage({
 				<Card>
 					<CardBody>
 						<div className="flex justify-between border-b border-gray-300 pb-3">
-							<Link
+							<Link prefetch={false}
 								href={
 									bookingId === 'null' || myTattoo
 										? '/myTattoo'

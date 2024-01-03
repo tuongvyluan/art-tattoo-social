@@ -412,13 +412,13 @@ const BookingForm = ({ studio, hasLogin = true, customerId, role }) => {
 									</div>
 									<div className="flex justify-center gap-1">
 										<span>Đi tới trang</span>
-										<Link href="/auth/signin" target="_blank">
+										<Link prefetch={false} href="/auth/signin" target="_blank">
 											<span className="underline cursor-pointer text-blue-700">
 												đăng nhập
 											</span>
 										</Link>
 										<span>hoặc</span>
-										<Link href="/auth/register" target="_blank">
+										<Link prefetch={false} href="/auth/register" target="_blank">
 											<span>
 												<span className="underline cursor-pointer text-blue-700">
 													đăng ký

@@ -76,7 +76,7 @@ const VerifyPage = () => {
 											<div className="pb-10">
 												<div>Bạn đã xác thực tài khoản thành công.</div>
 												<div>
-													<Link href={'/auth/signin'}>Đăng nhập</Link> để sử dụng
+													<Link prefetch={false} href={'/auth/signin'}>Đăng nhập</Link> để sử dụng
 													dịch vụ của chúng tôi nhé.
 												</div>
 											</div>
@@ -96,7 +96,7 @@ const VerifyPage = () => {
 											<div className="pb-10">
 												<div>{errorMessage}</div>
 												<div>
-													<Link href={'/'}>Trở lại trang chủ</Link>
+													<Link prefetch={false} href={'/'}>Trở lại trang chủ</Link>
 												</div>
 											</div>
 										</div>

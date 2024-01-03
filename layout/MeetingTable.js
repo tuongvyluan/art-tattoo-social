@@ -8,8 +8,12 @@ import {
 } from 'lib/status';
 import Link from 'next/link';
 import PropTypes from 'propTypes';
+import { useState } from 'react';
+import { BsSortDownAlt, BsSortUpAlt } from 'react-icons/bs';
 
 const MeetingTable = ({ meetings, role }) => {
+	const [isAsc, setIsAsc] = useState(true);
+
 	const getArtistOrCustomer = (meeting) => {
 		if (role === ROLE.CUSTOMER) {
 			return meeting.artist?.account?.fullName
@@ -19,13 +23,26 @@ const MeetingTable = ({ meetings, role }) => {
 		return meeting.customer.fullName;
 	};
 
+	const getSortMeetings = (meetings) => {
+		return meetings?.sort((a, b) => {
+			return isAsc
+				? new Date(a.meetingTime).getTime() - new Date(b.meetingTime).getTime()
+				: new Date(b.meetingTime).getTime() - new Date(a.meetingTime).getTime();
+		});
+	};
+
 	return (
 		<div className="relative shadow-md sm:rounded-lg min-w-max overflow-x-auto mb-3">
 			<table className="w-full min-w-max text-sm text-left text-gray-500">
 				<thead className="text-xs text-gray-700 uppercase dark:text-gray-400">
 					<tr>
 						<th scope="col" className="px-4 py-3 w-40 bg-gray-50">
-							Thời gian hẹn
+							<div className="flex flex-wrap gap-2">
+								<div>Thời gian hẹn</div>
+								<div role='button' onClick={() => setIsAsc(!isAsc)}>
+									{isAsc ? <BsSortUpAlt size={18} /> : <BsSortDownAlt size={18} />}
+								</div>
+							</div>
 						</th>
 						<th scope="col" className="px-4 py-3 w-40 bg-gray-50">
 							{role === ROLE.CUSTOMER ? 'Nghệ sĩ' : 'Khách hàng'}
@@ -43,7 +60,7 @@ const MeetingTable = ({ meetings, role }) => {
 					</tr>
 				</thead>
 				<tbody>
-					{meetings?.map((meeting, meetingIndex) => (
+					{getSortMeetings(meetings)?.map((meeting, meetingIndex) => (
 						<tr key={meeting.id} className="text-base hover:bg-gray-50">
 							<td scope="col" className="text-left text-gray-900 px-4 py-3">
 								{formatTime(meeting.meetingTime)}
@@ -54,10 +71,7 @@ const MeetingTable = ({ meetings, role }) => {
 							<td scope="col" className="text-left text-gray-900 px-4 py-3">
 								{meeting.studio.studioName}
 							</td>
-							<td
-								scope="col"
-								className="w-1/3 text-left text-gray-900 px-4 py-3"
-							>
+							<td scope="col" className="w-1/3 text-left text-gray-900 px-4 py-3">
 								{extractServiceFromBookingDetail(meeting.bookingDetail)}
 							</td>
 							<td scope="col" className="text-left text-gray-900 px-4 py-3">
@@ -69,7 +83,10 @@ const MeetingTable = ({ meetings, role }) => {
 							</td>
 							<td scope="col" className="text-left text-gray-900 px-4 py-3">
 								<Tooltip content="Xem chi tiết đơn hàng">
-									<Link href={`/booking/${meeting?.bookingDetail?.bookingId}`}>
+									<Link
+										prefetch={false}
+										href={`/booking/${meeting?.bookingDetail?.bookingId}`}
+									>
 										<Search className="cursor-pointer" width={18} height={18} />
 									</Link>
 								</Tooltip>

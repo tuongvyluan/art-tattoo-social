@@ -67,7 +67,7 @@ const ArtistPage = ({ artist, account }) => {
 						<div className="pb-6 flex justify-center flex-wrap gap-2 w-full">
 							{artist.workAt && account?.customerId && (
 								<div className="w-20">
-									<Link
+									<Link prefetch={false}
 										target="_blank"
 										href={`/booking/new?studio=${artist.workAt?.at(0)?.id}`}
 									>
@@ -115,7 +115,7 @@ const ArtistPage = ({ artist, account }) => {
 								<div className="pb-5 border-b border-gray-300 pt-3">
 									<h1 className="font-semibold text-base pb-2">Tiệm xăm</h1>
 									{artist.workAt.map((studioArtist) => (
-										<Link
+										<Link prefetch={false}
 											href={`/studio/${studioArtist?.id}`}
 											key={studioArtist?.createdAt}
 										>
@@ -191,7 +191,7 @@ const ArtistPage = ({ artist, account }) => {
 							<div className="pb-3 flex justify-center flex-wrap gap-2 w-full min-w-max">
 								{artist.workAt && account?.customerId && (
 									<div className="w-20">
-										<Link
+										<Link prefetch={false}
 											target="_blank"
 											href={`/booking/new?studio=${artist.workAt?.at(0)?.id}`}
 										>
@@ -227,7 +227,7 @@ const ArtistPage = ({ artist, account }) => {
 										<div className="pb-5 border-b border-gray-300 pt-3">
 											<h1 className="font-semibold text-base pb-2">Tiệm xăm</h1>
 											{artist.workAt.map((studioArtist) => (
-												<Link
+												<Link prefetch={false}
 													href={`/studio/${studioArtist?.id}`}
 													key={studioArtist?.createdAt}
 												>

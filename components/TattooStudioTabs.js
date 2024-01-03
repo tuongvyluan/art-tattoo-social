@@ -11,7 +11,7 @@ const TattooStudioTabs = () => {
 					!isStudioTab && 'border-gray-600 font-semibold'
 				}`}
 			>
-				<Link href={'/tattoo'}>
+				<Link prefetch={false} href={'/tattoo'}>
 					<div className="text-black">Hình xăm</div>
 				</Link>
 			</div>
@@ -20,7 +20,7 @@ const TattooStudioTabs = () => {
 					isStudioTab && 'border-gray-600 font-semibold'
 				}`}
 			>
-				<Link className="text-black" href={'/studio'}>
+				<Link prefetch={false} className="text-black" href={'/studio'}>
 					<div className="text-black">Tiệm xăm</div>
 				</Link>
 			</div>

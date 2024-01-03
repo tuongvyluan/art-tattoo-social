@@ -190,7 +190,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 
 	return (
 		<div className="relative pb-5">
-			<Link href={'/tattoo'}>
+			<Link prefetch={false} href={'/tattoo'}>
 				<ChevronLeft
 					width={30}
 					height={30}
@@ -212,7 +212,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 							}
 							<div className="flex justify-between flex-wrap px-5">
 								<div className="flex gap-3 items-center pb-2">
-									<Link href={`/artist/${artist.id}`}>
+									<Link prefetch={false} href={`/artist/${artist.id}`}>
 										<div className="cursor-pointer">
 											<Avatar
 												size={40}
@@ -222,7 +222,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 										</div>
 									</Link>
 									<div>
-										<Link href={`/artist/${artist.id}`}>
+										<Link prefetch={false} href={`/artist/${artist.id}`}>
 											<div className="cursor-pointer">
 												<div className="font-semibold">{artist.fullName}</div>
 											</div>
@@ -230,7 +230,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 										{artist.workAt.id && (
 											<div className="flex flex-wrap gap-1">
 												<span>Làm việc tại: </span>
-												<Link href={`/studio/${artist.workAt.id}`}>
+												<Link prefetch={false} href={`/studio/${artist.workAt.id}`}>
 													<div>
 														<div className="font-semibold cursor-pointer">
 															{artist.workAt.name}
@@ -293,7 +293,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 								</div>
 								<div className="pb-1">{tattoo.description}</div>
 								{tattoo.doneAt.id && (
-									<Link href={`/studio/${tattoo.doneAt.id}`}>
+									<Link prefetch={false} href={`/studio/${tattoo.doneAt.id}`}>
 										<div className="pb-1">
 											<div className="font-semibold text-gray-500 pb-1">
 												Thực hiện ở:

@@ -43,7 +43,7 @@ const Header = ({ toggleOpen }) => {
 			<div className="w-full mx-auto h-full">
 				<div className="relative flex items-center justify-between h-full">
 					<div className="pl-4 cursor-pointer">
-						<Link href="/">
+						<Link prefetch={false} href="/">
 							<div>
 								<Image
 									width={39}
@@ -218,7 +218,7 @@ const Header = ({ toggleOpen }) => {
 									<DropdownMenu>
 										<div>
 											<div>
-												<Link href="/favorite">
+												<Link prefetch={false} href="/favorite">
 													<div className="flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
 														<IoMdHeartEmpty size={16} />{' '}
 														<span className="ml-3">Yêu thích</span>
@@ -227,32 +227,32 @@ const Header = ({ toggleOpen }) => {
 												{data?.user?.role != ROLE.ADMIN &&
 													data?.user?.role != ROLE.STUDIO && (
 														<div>
-															<Link href="/profile">
+															<Link prefetch={false} href="/profile">
 																<div className="cursor-pointer flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
 																	<User width={16} height={16} />{' '}
 																	<span className="ml-3">Hồ sơ</span>
 																</div>
 															</Link>
-															<Link href="/booking">
+															<Link prefetch={false} href="/booking">
 																<div className="cursor-pointer flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
 																	<Calendar width={16} height={16} />{' '}
 																	<span className="ml-3">Đơn hàng</span>
 																</div>
 															</Link>
-															<Link href="/myTattoo">
+															<Link prefetch={false} href="/myTattoo">
 																<div className="cursor-pointer flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
 																	<GiTwirlyFlower size={16} />{' '}
 																	<span className="ml-3">Hình xăm</span>
 																</div>
 															</Link>
-															<Link href="/meeting">
+															<Link prefetch={false} href="/meeting">
 																<div className="cursor-pointer flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
 																	<MdCalendarMonth size={16} />
 																	<span className="ml-3">Lịch hẹn</span>
 																</div>
 															</Link>
 															{data?.user?.role === ROLE.CUSTOMER && (
-																<Link href="/payment">
+																<Link prefetch={false} href="/payment">
 																	<div className="cursor-pointer flex items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
 																		<AiOutlineTransaction size={16} />{' '}
 																		<span className="ml-3">Giao dịch</span>
@@ -274,7 +274,7 @@ const Header = ({ toggleOpen }) => {
 									</DropdownMenu>
 								</Dropdown>
 							) : (
-								<Link href="/auth/signin">
+								<Link prefetch={false} href="/auth/signin">
 									<div className="flex cursor-pointer items-center px-5 py-3 leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
 										<div className="ml-3">Đăng nhập</div>
 									</div>

@@ -216,7 +216,7 @@ const StudioPage = ({ studio, account }) => {
 									<div className="flex justify-center gap-2 items-center">
 										{studio.artists?.map((artist) => (
 											<div className="w-40" key={artist.id}>
-												<Link href={`/artist/${artist.artist.id}`}>
+												<Link prefetch={false} href={`/artist/${artist.artist.id}`}>
 													<div className="mx-auto w-max cursor-pointer">
 														<div className="flex justify-center">
 															<Avatar

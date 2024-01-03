@@ -51,7 +51,7 @@ function AdminStudioPage() {
 			<TattooStudioTabs />
 			<div className="relative lg:mx-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-5 pb-5">
 				{items?.map((studio) => (
-					<Link key={studio.id} href={`/studio/${studio.id}`}>
+					<Link prefetch={false} key={studio.id} href={`/studio/${studio.id}`}>
 						<Card className="cursor-pointer">
 							<div>
 								<BackgroundImg

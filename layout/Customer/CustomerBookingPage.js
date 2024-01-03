@@ -148,7 +148,7 @@ function CustomerBookingPage({ customerId }) {
 						{data.map((booking, index) => (
 							<Card key={booking.id}>
 								<CardBody>
-									<Link className="text-black" href={`/booking/${booking.id}`}>
+									<Link prefetch={false} className="text-black" href={`/booking/${booking.id}`}>
 										<a className="cursor-pointer text-black">
 											{
 												// Booking header

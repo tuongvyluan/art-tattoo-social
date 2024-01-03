@@ -66,7 +66,7 @@ function BookingDetailsPage({ data, studioId, setLoading, artistId }) {
 								// Booking ID & back icon
 							}
 							<div className="flex justify-between border-b border-gray-300 pb-3">
-								<Link href="/booking">
+								<Link prefetch={false} href="/booking">
 									<div className="cursor-pointer flex gap-1 text-gray-500 hover:text-indigo-500">
 										<ChevronLeft width={20} heigh={20} /> TRỞ LẠI
 									</div>

@@ -527,7 +527,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true, exceptId = '' }
 																	</div>
 																</div>
 															</div>
-															<Link href={`/artist/${item.artistId}`}>
+															<Link prefetch={false} href={`/artist/${item.artistId}`}>
 																<div className="cursor-pointer font-semibold pt-2">
 																	<div className="flex gap-2">
 																		<Avatar
@@ -541,7 +541,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true, exceptId = '' }
 																</div>
 															</Link>
 														</div>
-														{/* <Link href={`/tattoo/${item.id}`}>
+														{/* <Link prefetch={false} href={`/tattoo/${item.id}`}>
 															<div className="cursor-pointer">
 																<div className="flex flex-wrap gap-1">
 																	<StylePill>

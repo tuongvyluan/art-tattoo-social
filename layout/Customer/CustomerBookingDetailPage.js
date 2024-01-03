@@ -142,7 +142,7 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 								// Booking ID & back icon
 							}
 							<div className="flex justify-between border-b border-gray-300 pb-3">
-								<Link href="/booking">
+								<Link prefetch={false} href="/booking">
 									<div className="cursor-pointer flex gap-1 text-gray-500 hover:text-indigo-500">
 										<ChevronLeft width={20} heigh={20} /> TRỞ LẠI
 									</div>
@@ -162,7 +162,7 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 									<div className="w-full md:pr-1 md:w-1/2 md:border-r mb-5 md:mb-0 md:border-b-0 border-b border-gray-300">
 										<div>
 											<Heading>Thông tin tiệm xăm</Heading>
-											<Link href={`/studio/${renderData.studioId}`}>
+											<Link prefetch={false} href={`/studio/${renderData.studioId}`}>
 												<div className="text-lg font-semibold cursor-pointer">
 													{renderData.studio.studioName}
 												</div>
@@ -291,7 +291,7 @@ function BookingDetailsPage({ data, studioId, setLoading }) {
 											// Chuyển qua màn hình payment
 										}
 										<div className="flex justify-center flex-wrap gap-3">
-											<Link href={`/payment/${renderData.id}`}>
+											<Link prefetch={false} href={`/payment/${renderData.id}`}>
 												<div className="flex">
 													<Button outline>Xem thanh toán</Button>
 												</div>

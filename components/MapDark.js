@@ -31,7 +31,7 @@ const CityInfo = ({ info }) => {
     <>
       <div>
         {displayName} |{" "}
-        <Link
+        <Link prefetch={false}
           href={`http://en.wikipedia.org/w/index.php?title=Special:Search&search=${displayName}`}
         >
           <a target="_new">Wikipedia</a>

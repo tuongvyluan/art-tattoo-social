@@ -146,7 +146,7 @@ const BookingFeedback = ({ booking, accountId, canFeedback = false }) => {
 										<div className="flex justify-start gap-2 items-center pl-5">
 											<div>
 												{bookingDetail.tattooArt ? (
-													<Link
+													<Link prefetch={false}
 														href={`/tattoo/update/${bookingDetail.tattooArt.id}?booking=${bookingDetail.tattooArt.bookingId}`}
 													>
 														<div className="cursor-pointer flex justify-start gap-3 flex-wrap">

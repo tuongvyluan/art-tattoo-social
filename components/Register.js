@@ -35,7 +35,7 @@ const Register = ({ user, setUser, handleSubmit }) => {
 									<div className="w-full flex justify-center mx-0 mt-5">
 										<div className="w-full px-5 flex justify-center">
 											<div className="w-full max-w-xl">
-												<Link href={'/'}>
+												<Link prefetch={false} href={'/'}>
 													<div className="text-center mb-5 text-gray-700 cursor-pointer">
 														<Logo height={50} width={50} />
 													</div>
@@ -144,7 +144,7 @@ const Register = ({ user, setUser, handleSubmit }) => {
 												<div className="text-center pb-3">
 													<small className="text-gray-700 text-center">
 														<span>{'Đã có tài khoản?'}</span>{' '}
-														<Link href="/auth/signin">
+														<Link prefetch={false} href="/auth/signin">
 															<a>{'Đăng nhập tại đây'}</a>
 														</Link>
 													</small>
