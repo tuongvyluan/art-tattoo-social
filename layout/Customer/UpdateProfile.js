@@ -58,19 +58,28 @@ function UpdateCustomerInfo({ account, onReload, setIsEdit }) {
 		});
 	};
 
-	const handleFormSubmit = () => {
+	const handleFormSubmit = (e) => {
+		e.preventDefault();
 		handleAlert(true, '', 'Đang cập nhật thông tin cá nhân', 0);
-		handleUpdateCustomer(profile).then(() => {
-			update({
-				...data,
-				user: {
-					...data?.user,
-					fullName: profile.fullName,
-					avatar: avatarKey
-				}
+		if (profile?.fullName?.trim() === '') {
+			handleAlert(
+				true,
+				'Cập nhật thông tin thất bại.',
+				'Tên không được để trống.',
+				2
+			);
+		} else
+			handleUpdateCustomer(profile).then(() => {
+				update({
+					...data,
+					user: {
+						...data?.user,
+						fullName: profile.fullName,
+						avatar: avatarKey
+					}
+				});
+				onReload();
 			});
-			onReload();
-		});
 	};
 
 	const handleFormReset = () => {
@@ -96,7 +105,7 @@ function UpdateCustomerInfo({ account, onReload, setIsEdit }) {
 				<div>
 					<Card className={'min-w-md md:min-w-xl lg:min-w-3xl'}>
 						<CardBody>
-							<div method="post">
+							<form method="post">
 								<div>
 									<div className="flex flex-wrap gap-3 items-center border-b border-gray-300">
 										<div className="cursor-pointer pb-2 flex gap-1 text-gray-500 hover:text-indigo-500">
@@ -163,7 +172,7 @@ function UpdateCustomerInfo({ account, onReload, setIsEdit }) {
 										</div>
 									</div>
 								</div>
-							</div>
+							</form>
 						</CardBody>
 					</Card>
 				</div>

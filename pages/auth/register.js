@@ -3,6 +3,7 @@ import MyModal from 'components/MyModal';
 import Register from 'components/Register';
 import { fetcherPost } from 'lib';
 import { BASE_URL } from 'lib/env';
+import { checkPhoneNumber } from 'lib/regex';
 import { ROLE } from 'lib/status';
 import { useSession } from 'next-auth/react';
 import Router from 'next/router';
@@ -68,16 +69,33 @@ const RegisterPage = () => {
 		}
 	};
 
+	const handleCheckInfo = () => {
+		let result = true;
+		let content = ''
+		if (!checkPhoneNumber(user.phoneNumber)) {
+			content = 'Số điện thoại không hợp lệ. '
+			result = false;
+		}
+
+		if (user.cpassword !== user.password) {
+			content = content.concat('Mật khẩu xác nhận không trùng khớp. ')
+			result = false;
+		}
+
+		if (user.fullName.trim() === '') {
+			content = content.concat('Tên không được để trống. ')
+			result = false;
+		}
+
+		if (!result) {
+			handleModal(true, 'Đăng ký tài khoản thất bại', content, 2);
+		}
+		return result;
+	};
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		if (user.cpassword !== user.password) {
-			handleModal(
-				true,
-				'Đăng ký tài khoản thất bại',
-				'Mật khẩu xác nhận không trùng khớp.',
-				2
-			);
-		} else {
+		if (handleCheckInfo()) {
 			handleModal(true, 'Đang đăng ký tài khoản...', '');
 
 			try {

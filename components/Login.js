@@ -1,10 +1,11 @@
-import { Alert, BackgroundImg, Link, Logo } from 'ui';
+import { Alert, BackgroundImg, Logo } from 'ui';
 import PropTypes from 'prop-types';
 import Button from './Button';
 import GoogleLogo from '/public/svg/google.svg';
 import { signIn } from 'next-auth/react';
 import { Modal } from 'flowbite-react';
 import { useState } from 'react';
+import Link from 'next/link';
 
 const Login = ({ user }) => {
 	const [profile, setProfile] = useState(user);
@@ -78,19 +79,23 @@ const Login = ({ user }) => {
 										<div className="w-full flex justify-center mx-0">
 											<div className="w-full md:w-2/3 px-2 flex justify-center">
 												<div className="w-full max-w-md">
-													<div className="text-center mb-3 text-indigo-500">
-														<Logo height={50} width={50} />
-													</div>
-													<form className="sign-in-form" onSubmit={handleSubmit}>
-														<div className="text-center mb-3">
-															<h1 className="uppercase text-2xl mb-3 font-bold leading-none ">
-																Art Tattoo Lover
-															</h1>
-															<p className="text-gray-800">
-																Đăng nhập để sử dụng dịch vụ quản lí tiệm xăm của Art
-																Tattoo Lover Platform
-															</p>
+													<Link href={'/'} prefetch={false}>
+														<div className="text-center mb-3 text-indigo-500 cursor-pointer">
+															<Logo height={50} width={50} />
 														</div>
+													</Link>
+													<form className="sign-in-form" onSubmit={handleSubmit}>
+														<Link href={'/'} prefetch={false}>
+															<div className="text-center mb-3 cursor-pointer">
+																<h1 className="uppercase text-2xl mb-3 font-bold leading-none ">
+																	Art Tattoo Lover
+																</h1>
+																<p className="text-gray-800">
+																	Đăng nhập để sử dụng dịch vụ quản lí tiệm xăm của
+																	Art Tattoo Lover Platform
+																</p>
+															</div>
+														</Link>
 														<div className="rounded-lg shadow-sm">
 															<div className="block mb-3">
 																<label>Email</label>
