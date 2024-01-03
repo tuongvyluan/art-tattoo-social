@@ -120,7 +120,7 @@ const TattooDetails = () => {
 				/>
 			);
 		}
-		if (data?.user?.role !== ROLE.ARTIST || data?.user?.id !== artTattoo?.artistId) {
+		if (data?.user?.role !== ROLE.ARTIST || data?.user?.id !== artTattoo?.artist?.id) {
 			return (
 				<TattooDetailNoUpdatePage
 					bookingId={booking}
