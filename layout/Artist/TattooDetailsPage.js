@@ -401,7 +401,7 @@ function TattooDetailsPage({
 								</div>
 								<div className="pb-3 flex items-center gap-1">
 									<div className="w-20">Kích thước: </div>
-									{bookingId !== 'null' ? (
+									{bookingId !== 'null' && tattoo.servicePlacement !== SERVICE_PLACEMENT.ANY ? (
 										<div>{stringSize.at(tattoo.size)}</div>
 									) : (
 										<Dropdown className="relative h-full flex items-center">

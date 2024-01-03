@@ -17,6 +17,7 @@ const TattooDetails = () => {
 	const back = typeof router.query['back'] !== 'undefined';
 	const [id, setId] = useState(router.query.id);
 	const [artTattoo, setArtTattoo] = useState(undefined);
+	const [loading, setLoading] = useState(false)
 
 	const handleSubmit = (newId) => {
 		if (newId !== id) {
@@ -35,33 +36,6 @@ const TattooDetails = () => {
 		);
 	}
 
-	// Nếu đang xem hình xăm cũ và chưa load hình xăm
-	if (id !== 'new' && !artTattoo) {
-		fetcher(`${BASE_URL}/TattooArts/Details?id=${id}`).then((data) => {
-			const renderData = {
-				...data,
-				artist: {
-					id: data.artistId,
-					fullName: data.fullName
-				},
-				bookingId: data.bookingId ? data.bookingId : '',
-				servicePlacement: data.bookingDetail?.servicePlacement ? data.bookingDetail.servicePlacement : 0,
-				stages: data.tattooArtStages?.map((stage) => {
-					return {
-						...stage,
-						tattooImages: stage?.tattooImages?.map((image) => {
-							return {
-								...image,
-								saved: true
-							};
-						})
-					};
-				})
-			};
-			setArtTattoo(renderData);
-		});
-	}
-
 	if (status === 'loading') {
 		return (
 			<div className="flex items-center justify-center h-full">
@@ -71,7 +45,35 @@ const TattooDetails = () => {
 	}
 
 	if (status === 'authenticated') {
-		if (id !== 'new' && !artTattoo) {
+
+		// Nếu đang xem hình xăm cũ và chưa load hình xăm
+		if (id !== 'new' && !loading && !artTattoo) {
+			setLoading(true)
+			fetcher(`${BASE_URL}/TattooArts/Details?id=${id}`).then((data) => {
+				const renderData = {
+					...data,
+					artist: {
+						id: data.artistId,
+						fullName: data.fullName
+					},
+					bookingId: data.bookingId ? data.bookingId : '',
+					servicePlacement: data.bookingDetail?.servicePlacement ? data.bookingDetail.servicePlacement : 0,
+					stages: data.tattooArtStages?.map((stage) => {
+						return {
+							...stage,
+							tattooImages: stage?.tattooImages?.map((image) => {
+								return {
+									...image,
+									saved: true
+								};
+							})
+						};
+					})
+				};
+				setArtTattoo(renderData);
+			});
+		}
+		if (id !== 'new' && (!loading || !artTattoo)) {
 			return (
 				<div className="flex items-center justify-center h-full">
 					<Loading />
@@ -118,7 +120,7 @@ const TattooDetails = () => {
 				/>
 			);
 		}
-		if (data?.user?.role !== ROLE.ARTIST || data?.user?.id !== artTattoo.artist.id) {
+		if (data?.user?.role !== ROLE.ARTIST || data?.user?.id !== artTattoo?.artistId) {
 			return (
 				<TattooDetailNoUpdatePage
 					bookingId={booking}
