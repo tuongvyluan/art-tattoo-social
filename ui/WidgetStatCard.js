@@ -16,12 +16,12 @@ export const WidgetStatCard = ({
     after = null;
 
   const cardIcon = (
-    <button
+    <div role='button'
       className={`${fill ? 'bg-white bg-opacity-20':'bg-'+type+'-100'} text-${type}-600 relative rounded-full flex justify-center w-12 h-12 flex items-center justify-center focus:outline-none`}
     >
       {icon}
       <Ripple className="rounded-full" />
-    </button>
+    </div>
   );
 
   if (icon) {

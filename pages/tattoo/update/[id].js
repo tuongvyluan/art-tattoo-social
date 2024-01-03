@@ -2,7 +2,7 @@ import TattooDetailsPage from 'layout/Artist/TattooDetailsPage';
 import TattooDetailNoUpdatePage from 'layout/TattooDetailNoUpdatePage';
 import { fetcher } from 'lib';
 import { BASE_URL } from 'lib/env';
-import { ROLE } from 'lib/status';
+import { ROLE, SERVICE_PLACEMENT } from 'lib/status';
 import { useSession } from 'next-auth/react';
 import Router, { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -45,6 +45,7 @@ const TattooDetails = () => {
 					fullName: data.fullName
 				},
 				bookingId: data.bookingId ? data.bookingId : '',
+				servicePlacement: data.bookingDetail?.servicePlacement ? data.bookingDetail.servicePlacement : 0,
 				stages: data.tattooArtStages?.map((stage) => {
 					return {
 						...stage,
@@ -86,6 +87,7 @@ const TattooDetails = () => {
 					fullName: data?.user?.fullName
 				},
 				styleId: 14,
+				servicePlacement: SERVICE_PLACEMENT.ANY,
 				stages: [
 					// {
 					// 	id: 1,

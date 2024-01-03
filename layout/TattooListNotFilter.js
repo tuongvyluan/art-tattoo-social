@@ -140,7 +140,7 @@ const TattooListNotFilter = ({ url, pageSize = 20 }) => {
 												{index % tattooCol === colIndex && (
 													<WidgetPostCard
 														image={
-															item.thumbnail
+															item.thumbnail !== '' && item.thumbnail
 																? item.thumbnail
 																: noImageAvailable
 														}
@@ -208,7 +208,10 @@ const TattooListNotFilter = ({ url, pageSize = 20 }) => {
 																	</div>
 																</div>
 															</div>
-															<Link prefetch={false} href={`/artist/${item.artistId}`}>
+															<Link
+																prefetch={false}
+																href={`/artist/${item.artistId}`}
+															>
 																<div className="cursor-pointer font-semibold pt-2">
 																	<div className="flex gap-2">
 																		<Avatar

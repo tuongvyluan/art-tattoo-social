@@ -17,7 +17,7 @@ import { CldUploadButton } from 'next-cloudinary';
 import { generateSHA1, generateSignature } from 'lib/cloudinary_signature';
 import { AiOutlineClose } from 'react-icons/ai';
 import { extractPublicId } from 'cloudinary-build-url';
-import { TATTOO_ART_STATUS, stringPlacements, stringSize, stringTattooStages } from 'lib/status';
+import { SERVICE_PLACEMENT, TATTOO_ART_STATUS, stringPlacements, stringSize, stringTattooStages } from 'lib/status';
 import { tattooStyleById, tattooStyleList } from 'lib/tattooStyle';
 import { API_KEY, API_SECRET, BASE_URL, CLOUD_NAME, UPLOAD_PRESET } from 'lib/env';
 import { v4 } from 'uuid';
@@ -332,7 +332,7 @@ function TattooDetailsPage({
 						<div className="flex justify-between border-b border-gray-300 pb-3">
 							<Link prefetch={false}
 								href={
-									bookingId === 'null' || myTattoo
+									bookingId === 'null' || myTattoo || bookingId === ''
 										? '/myTattoo'
 										: `/booking/${bookingId}`
 								}
@@ -435,7 +435,7 @@ function TattooDetailsPage({
 								</div>
 								<div className="pb-3 flex gap-1 items-center">
 									<div className="w-20">Vị trí xăm:</div>
-									{bookingId !== 'null' ? (
+									{tattoo.servicePlacement !== SERVICE_PLACEMENT.ANY ? (
 										<div className="">{stringPlacements.at(tattoo.placement)}</div>
 									) : (
 										<Dropdown className="relative h-full flex items-center">
@@ -538,12 +538,12 @@ function TattooDetailsPage({
 													// Remove stage icon
 												}
 												<div className="w-full pb-3 flex justify-end">
-													<button
+													<div role='button'
 														className={`hover:scale-125 hover:text-red-500`}
 														onClick={() => handleRemoveStage(stageIndex)}
 													>
 														<AiOutlineClose size={16} />
-													</button>
+													</div>
 												</div>
 												{
 													//Stage body
@@ -660,7 +660,7 @@ function TattooDetailsPage({
 																		<div className="toggle__handle absolute bg-white rounded-full shadow-sm transform transition duration-150 ease-in-out"></div>
 																	</div>
 																</div>
-																<button
+																<div role='button'
 																	onClick={() =>
 																		handleDeleteCloudinaryImage(
 																			media.url,
@@ -673,7 +673,7 @@ function TattooDetailsPage({
 																		className="absolute top-0 right-0 hover:scale-125 hover:text-red-500"
 																		size={16}
 																	/>
-																</button>
+																</div>
 																<Image
 																	width={0}
 																	height={0}

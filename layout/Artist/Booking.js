@@ -183,7 +183,7 @@ function ArtistBookingPage({ artistId }) {
 						<DropdownMenu className={'max-h-24 overflow-auto w-40 bg-white'}>
 							<div className="w-44">
 								{studioList.map((studio, index) => (
-									<button
+									<div role='button'
 										key={studio.id}
 										onClick={() => setCurrentStudio(studio.id)}
 										className={`block w-full px-3 py-1 cursor-pointer hover:bg-gray-100 ${
@@ -191,7 +191,7 @@ function ArtistBookingPage({ artistId }) {
 										}`}
 									>
 										{studio.studioName}
-									</button>
+									</div>
 								))}
 							</div>
 						</DropdownMenu>

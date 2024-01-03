@@ -272,19 +272,19 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 												</DropdownToggle>
 												<DropdownMenu className={'top-2 left-2'}>
 													{tattoo.artistId === data?.user?.id ? (
-														<button
+														<div role='button'
 															onClick={handleOpenHideTattooModal}
 															className="block w-full px-2 py-1.5 cursor-pointer hover:bg-gray-100 font-semibold"
 														>
 															Ẩn bài đăng
-														</button>
+														</div>
 													) : (
-														<button
+														<div role='button'
 															onClick={() => handleOpenReportModal(undefined)}
 															className="block w-full px-2 py-1.5 cursor-pointer hover:bg-gray-100 font-semibold"
 														>
 															Báo cáo bài đăng
-														</button>
+														</div>
 													)}
 												</DropdownMenu>
 											</Dropdown>
@@ -381,7 +381,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 										content={shareTooltipContent}
 										placement="bottom"
 									>
-										<button
+										<div role='button'
 											onClick={handleCopyLink}
 											className="w-full flex gap-1 items-center cursor-pointer"
 										>
@@ -394,7 +394,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 											<div className="text-left text-xs font-semibold w-14">
 												Chia sẻ
 											</div>
-										</button>
+										</div>
 									</Tooltip>
 								</div>
 							</div>
@@ -422,12 +422,12 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 												className="myInteraction appearance-none relative block w-full px-3 py-3 ring-1 ring-gray-300 dark:ring-gray-600 ring-opacity-80 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
 												placeholder={'Thêm bình luận'}
 											/>
-											<button onClick={sendCommend}>
+											<div role='button' onClick={sendCommend}>
 												<IoMdSend
 													className="hover:text-gray-600 cursor-pointer"
 													size={20}
 												/>
-											</button>
+											</div>
 										</div>
 									</Tooltip>
 									{commentList.map((cmt, cmtIndex) => (
@@ -461,21 +461,21 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 														</DropdownToggle>
 														<DropdownMenu className={'top-2 left-2'}>
 															{cmt.accountId === data?.user?.id ? (
-																<button
+																<div role='button'
 																	onClick={() =>
 																		handleOpenDeleteCommentModal(cmt.id)
 																	}
 																	className="block w-full px-2 py-1.5 cursor-pointer hover:bg-gray-100 font-semibold"
 																>
 																	Xoá bình luận
-																</button>
+																</div>
 															) : (
-																<button
+																<div role='button'
 																	onClick={() => handleOpenReportModal(cmt.id)}
 																	className="block w-full px-2 py-1.5 cursor-pointer hover:bg-gray-100 font-semibold"
 																>
 																	Báo cáo bình luận
-																</button>
+																</div>
 															)}
 														</DropdownMenu>
 													</Dropdown>

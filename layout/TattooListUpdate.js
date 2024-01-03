@@ -137,7 +137,7 @@ const TattooListUpdate = ({ url, pageSize = 20 }) => {
 											<div key={index}>
 												{index % tattooCol === colIndex && (
 													<WidgetPostCard
-														image={item.thumbnail ? item.thumbnail : noImageAvailable}
+														image={(item.thumbnail !== '' && item.thumbnail) ? item.thumbnail : noImageAvailable}
 														link={`/tattoo/update/${item.id}${
 															item.booking !== null && `?booking=${item.bookingId}`
 														}&back=myTattoo`}

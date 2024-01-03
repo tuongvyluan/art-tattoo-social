@@ -26,11 +26,16 @@ import { fetcherDelete, fetcherPost } from 'lib';
 import { BASE_URL } from 'lib/env';
 import MyInfiniteScroll from 'ui/MyInfiniteScroll';
 
-const TattooListPage = ({ url, pageSize = 20, showFilter = true, exceptId = '' }) => {
+const TattooListPage = ({
+	url,
+	pageSize = 20,
+	showFilter = true,
+	exceptId = ''
+}) => {
 	const [loading, setLoading] = useState(true);
 	const [baseUrl, setBaseUrl] = useState(url);
 	const [filterUrl, setFilterUrl] = useState(url);
-	const [except, setExcept] = useState(exceptId)
+	const [except, setExcept] = useState(exceptId);
 
 	const [items, setItems] = useState([]);
 	const [page, setPage] = useState(1);
@@ -190,8 +195,8 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true, exceptId = '' }
 	}, [filter]);
 
 	useEffect(() => {
-		setExcept(exceptId)
-	}, [exceptId])
+		setExcept(exceptId);
+	}, [exceptId]);
 
 	useEffect(() => {
 		//add eventlistener to window
@@ -226,6 +231,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true, exceptId = '' }
 	return (
 		<div className="relative lg:mx-6">
 			<div
+				role="button"
 				onClick={() => setVisible(!visible)}
 				className={`fixed ${
 					!showVisible ? 'hidden' : ''
@@ -262,7 +268,8 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true, exceptId = '' }
 									className="appearance-none relative block w-full px-3 py-3 border-2 border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 text-sm leading-none"
 									placeholder={'Tìm kiếm'}
 								/>
-								<button
+								<div
+									role="button"
 									className="absolute right-3 text-gray-500 z-20 top-3"
 									onClick={handleSearch}
 								>
@@ -270,7 +277,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true, exceptId = '' }
 										className="hover:text-gray-600 cursor-pointer"
 										size={20}
 									/>
-								</button>
+								</div>
 							</div>
 						</div>
 						<div className={`flex flex-wrap gap-3 px-1 ${visible ? 'mr-7' : ''}`}>
@@ -299,7 +306,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true, exceptId = '' }
 													{[...filterSize()].map(([key, value], sizeIndex) => (
 														<li
 															onClick={() => handleFilterChange('sizeList', key)}
-															className={`cursor-pointer p-2 text-center text-gray-800 ${
+															className={`cursor-pointer px-2 py-1 text-center text-gray-800 ${
 																key === filter.sizeList
 																	? 'text-black bg-gray-50'
 																	: 'hover:text-black hover:bg-gray-50'
@@ -342,7 +349,7 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true, exceptId = '' }
 															onClick={() =>
 																handleFilterChange('positions', placementIndex)
 															}
-															className={`cursor-pointer p-2 text-center text-gray-800 ${
+															className={`cursor-pointer px-2 py-1 text-center text-gray-800 ${
 																placementIndex === filter.positions
 																	? 'text-black bg-gray-50'
 																	: 'hover:text-black hover:bg-gray-50'
@@ -458,90 +465,101 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true, exceptId = '' }
 							>
 								{Array.from({ length: tattooCol }).map((col, colIndex) => (
 									<div key={colIndex}>
-										{items.filter((item) => item.id !== except).map((item, index) => (
-											<div key={item.id}>
-												{index % tattooCol === colIndex && (
-													<WidgetPostCard
-														image={item.thumbnail ? item.thumbnail : noImageAvailable}
-														link={`/tattoo/${item.id}`}
-													>
-														<div className="block">
-															<div className="flex items-start gap-1">
-																<Tooltip
-																	arrow={false}
-																	onMouseLeave={() =>
-																		setShareTooltipContent('Copy link bài viết')
-																	}
-																	content={shareTooltipContent}
-																	placement="bottom"
-																>
-																	<div
-																		onClick={() => handleCopyLink(item.id)}
-																		className="flex gap-1 items-center cursor-pointer"
+										{items
+											.filter((item) => item.id !== except)
+											.map((item, index) => (
+												<div key={item.id}>
+													{index % tattooCol === colIndex && (
+														<WidgetPostCard
+															image={
+																item.thumbnail !== '' && item.thumbnail
+																	? item.thumbnail
+																	: noImageAvailable
+															}
+															link={`/tattoo/${item.id}`}
+														>
+															<div className="block">
+																<div className="flex items-start gap-1">
+																	<Tooltip
+																		arrow={false}
+																		onMouseLeave={() =>
+																			setShareTooltipContent('Copy link bài viết')
+																		}
+																		content={shareTooltipContent}
+																		placement="bottom"
 																	>
-																		<IoIosLink
-																			className="hover:text-gray-600 cursor-pointer"
-																			size={20}
-																		/>
-																	</div>
-																</Tooltip>
-																<div className="flex gap-1 items-center">
-																	<div>
-																		{authen ? (
-																			<div onClick={() => handleSetLike(item)}>
-																				{item.isLike ? (
-																					<IoMdHeart
-																						className="text-red-500 hover:text-red-600 font-semibold cursor-pointer"
-																						size={20}
-																					/>
-																				) : (
-																					<IoMdHeartEmpty
-																						className="hover:text-gray-600 font-semibold cursor-pointer"
-																						size={20}
-																					/>
-																				)}
-																			</div>
-																		) : (
-																			<Tooltip
-																				arrow={false}
-																				content="Đăng nhập để thích bài viết"
-																				placement="bottom"
-																			>
-																				<div
-																					onClick={() => {
-																						window.open('/auth/signin', 'blank');
-																					}}
-																				>
-																					<IoMdHeartEmpty
-																						className="hover:text-gray-600 font-semibold cursor-pointer"
-																						size={20}
-																					/>
+																		<div
+																			onClick={() => handleCopyLink(item.id)}
+																			className="flex gap-1 items-center cursor-pointer"
+																		>
+																			<IoIosLink
+																				className="hover:text-gray-600 cursor-pointer"
+																				size={20}
+																			/>
+																		</div>
+																	</Tooltip>
+																	<div className="flex gap-1 items-center">
+																		<div>
+																			{authen ? (
+																				<div onClick={() => handleSetLike(item)}>
+																					{item.isLike ? (
+																						<IoMdHeart
+																							className="text-red-500 hover:text-red-600 font-semibold cursor-pointer"
+																							size={20}
+																						/>
+																					) : (
+																						<IoMdHeartEmpty
+																							className="hover:text-gray-600 font-semibold cursor-pointer"
+																							size={20}
+																						/>
+																					)}
 																				</div>
-																			</Tooltip>
-																		)}
-																	</div>
-																	<div className="flex gap-1 items-end text-gray-700">
-																		<div className="text-left text-xs font-semibold w-14">
-																			{item.likeCount} thích
+																			) : (
+																				<Tooltip
+																					arrow={false}
+																					content="Đăng nhập để thích bài viết"
+																					placement="bottom"
+																				>
+																					<div
+																						onClick={() => {
+																							window.open('/auth/signin', 'blank');
+																						}}
+																					>
+																						<IoMdHeartEmpty
+																							className="hover:text-gray-600 font-semibold cursor-pointer"
+																							size={20}
+																						/>
+																					</div>
+																				</Tooltip>
+																			)}
+																		</div>
+																		<div className="flex gap-1 items-end text-gray-700">
+																			<div className="text-left text-xs font-semibold w-14">
+																				{item.likeCount} thích
+																			</div>
 																		</div>
 																	</div>
 																</div>
-															</div>
-															<Link prefetch={false} href={`/artist/${item.artistId}`}>
-																<div className="cursor-pointer font-semibold pt-2">
-																	<div className="flex gap-2">
-																		<Avatar
-																			src={
-																				item.avatar ? item.avatar : '/images/ATL.png'
-																			}
-																			size={20}
-																		/>
-																		<div>{item.fullName}</div>
+																<Link
+																	prefetch={false}
+																	href={`/artist/${item.artistId}`}
+																>
+																	<div className="cursor-pointer font-semibold pt-2">
+																		<div className="flex gap-2">
+																			<Avatar
+																				src={
+																					item.avatar
+																						? item.avatar
+																						: '/images/ATL.png'
+																				}
+																				size={20}
+																			/>
+																			<div>{item.fullName}</div>
+																		</div>
 																	</div>
-																</div>
-															</Link>
-														</div>
-														{/* <Link prefetch={false} href={`/tattoo/${item.id}`}>
+																</Link>
+															</div>
+															{/* <Link prefetch={false} href={`/tattoo/${item.id}`}>
 															<div className="cursor-pointer">
 																<div className="flex flex-wrap gap-1">
 																	<StylePill>
@@ -554,10 +572,10 @@ const TattooListPage = ({ url, pageSize = 20, showFilter = true, exceptId = '' }
 																</div>
 															</div>
 														</Link> */}
-													</WidgetPostCard>
-												)}
-											</div>
-										))}
+														</WidgetPostCard>
+													)}
+												</div>
+											))}
 									</div>
 								))}
 							</div>

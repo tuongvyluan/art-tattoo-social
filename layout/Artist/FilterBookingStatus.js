@@ -18,7 +18,7 @@ const FilterBookingStatus = ({ toggle, activeTab }) => {
 							activeTab === ALL_TAB ? 'border-b-2 border-solid border-gray-700' : ''
 						}`}
 					>
-						<button
+						<div role='button'
 							onClick={() => {
 								toggle(ALL_TAB);
 							}}
@@ -26,7 +26,7 @@ const FilterBookingStatus = ({ toggle, activeTab }) => {
 						>
 							Tất cả
 							<Ripple color="black" />
-						</button>
+						</div>
 					</li>
 					<li
 						className={`text-center cursor-pointer ${
@@ -35,7 +35,7 @@ const FilterBookingStatus = ({ toggle, activeTab }) => {
 								: ''
 						}`}
 					>
-						<button
+						<div role='button'
 							onClick={() => {
 								toggle(PENDING_TAB);
 							}}
@@ -43,7 +43,7 @@ const FilterBookingStatus = ({ toggle, activeTab }) => {
 						>
 							Chờ xác nhận
 							<Ripple color="black" />
-						</button>
+						</div>
 					</li>
 					<li
 						className={`text-center cursor-pointer ${
@@ -52,7 +52,7 @@ const FilterBookingStatus = ({ toggle, activeTab }) => {
 								: ''
 						}`}
 					>
-						<button
+						<div role='button'
 							onClick={() => {
 								toggle(IN_PROGRESS_TAB);
 							}}
@@ -60,7 +60,7 @@ const FilterBookingStatus = ({ toggle, activeTab }) => {
 						>
 							Đang thực hiện
 							<Ripple color="black" />
-						</button>
+						</div>
 					</li>
 					<li
 						className={`text-center cursor-pointer ${
@@ -69,7 +69,7 @@ const FilterBookingStatus = ({ toggle, activeTab }) => {
 								: ''
 						}`}
 					>
-						<button
+						<div role='button'
 							onClick={() => {
 								toggle(COMPLETE_TAB);
 							}}
@@ -77,7 +77,7 @@ const FilterBookingStatus = ({ toggle, activeTab }) => {
 						>
 							Hoàn thành
 							<Ripple color="black" />
-						</button>
+						</div>
 					</li>
 					<li
 						className={`text-center cursor-pointer ${
@@ -86,7 +86,7 @@ const FilterBookingStatus = ({ toggle, activeTab }) => {
 								: ''
 						}`}
 					>
-						<button
+						<div role='button'
 							onClick={() => {
 								toggle(CUSTOMER_CANCELLED_TAB);
 							}}
@@ -94,7 +94,7 @@ const FilterBookingStatus = ({ toggle, activeTab }) => {
 						>
 							Khách hàng huỷ
 							<Ripple color="black" />
-						</button>
+						</div>
 					</li>
 					<li
 						className={`text-center cursor-pointer ${
@@ -103,7 +103,7 @@ const FilterBookingStatus = ({ toggle, activeTab }) => {
 								: ''
 						}`}
 					>
-						<button
+						<div role='button'
 							onClick={() => {
 								toggle(STUDIO_CANCELLED_TAB);
 							}}
@@ -111,7 +111,7 @@ const FilterBookingStatus = ({ toggle, activeTab }) => {
 						>
 							Tiệm xăm huỷ
 							<Ripple color="black" />
-						</button>
+						</div>
 					</li>
 					<li
 						className={`text-center cursor-pointer ${
@@ -120,7 +120,7 @@ const FilterBookingStatus = ({ toggle, activeTab }) => {
 								: ''
 						}`}
 					>
-						<button
+						<div role='button'
 							onClick={() => {
 								toggle(NOT_COMPLETE_TAB);
 							}}
@@ -128,7 +128,7 @@ const FilterBookingStatus = ({ toggle, activeTab }) => {
 						>
 							Đã dừng
 							<Ripple color="black" />
-						</button>
+						</div>
 					</li>
 				</ul>
 			</div>
