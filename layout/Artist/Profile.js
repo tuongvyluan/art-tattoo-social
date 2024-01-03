@@ -95,7 +95,7 @@ function ArtistInfo({ account, onReload }) {
 													<Avatar
 														circular={true}
 														src={
-															profile.avatar ? profile.avatar : '/images/avatar.png'
+															data?.user?.avatar ? data?.user?.avatar : '/images/avatar.png'
 														}
 														alt={'Avatar'}
 														size={150}

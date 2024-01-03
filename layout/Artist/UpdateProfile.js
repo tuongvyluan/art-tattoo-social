@@ -77,7 +77,10 @@ function UpdateArtistInfo({ account, onReload, setIsEdit }) {
 				fetcherPut(`${BASE_URL}/artists/${newProfile.id}/artist-style`, artistStyles)
 			);
 		}
-		promises.push(fetcherPut(`${BASE_URL}/artist-profile`, newProfile));
+		promises.push(fetcherPut(`${BASE_URL}/artist-profile`, {
+			...newProfile,
+			avatar: avatarKey
+		}));
 		await Promise.all(promises);
 	};
 
@@ -87,7 +90,7 @@ function UpdateArtistInfo({ account, onReload, setIsEdit }) {
 			bioContent: newProfile.bioContent,
 			status: 0,
 			fullName: newProfile.fullName,
-			avatar: newProfile.avatar
+			avatar: avatarKey
 		})
 			.then(() => {
 				if (JSON.stringify(profile.styles) !== JSON.stringify(artistStyles)) {
@@ -110,6 +113,10 @@ function UpdateArtistInfo({ account, onReload, setIsEdit }) {
 		}
 	};
 
+	const handleAvatar = (url) => {
+		setAvatarKey(url)
+	}
+
 	const handleFormSubmit = (e) => {
 		e.preventDefault();
 		handleAlert(true, '', 'Đang cập nhật thông tin cá nhân', 0);
@@ -122,13 +129,19 @@ function UpdateArtistInfo({ account, onReload, setIsEdit }) {
 			);
 		} else
 			handleSubmit(profile, artistStyles, studios).then(() => {
+				if (avatarKey !== profile.avatar) {
+					setProfile({
+						...profile,
+						avatar: avatarKey
+					})
+				}
 				update({
 					...data,
 					user: {
 						...data?.user,
 						artistId: profile.id,
 						fullName: profile.fullName,
-						avatar: profile.avatar
+						avatar: avatarKey
 					}
 				});
 				onReload();
@@ -137,6 +150,7 @@ function UpdateArtistInfo({ account, onReload, setIsEdit }) {
 
 	const handleFormReset = () => {
 		setProfile(JSON.parse(JSON.stringify(defaultAccount)));
+		setAvatarKey(defaultAccount.avatar)
 		setArtistStyles(
 			JSON.parse(JSON.stringify(defaultAccount.styles.map((style) => style.id)))
 		);
@@ -180,7 +194,7 @@ function UpdateArtistInfo({ account, onReload, setIsEdit }) {
 										<div key={avatarKey}>
 											<Avatar
 												circular={true}
-												src={profile.avatar ? profile.avatar : '/images/avatar.png'}
+												src={avatarKey ? avatarKey : '/images/avatar.png'}
 												alt={'Avatar'}
 												size={150}
 											/>
@@ -190,9 +204,7 @@ function UpdateArtistInfo({ account, onReload, setIsEdit }) {
 										<div className="mx-auto">
 											<CldUploadButton
 												onSuccess={(result, options) =>
-													handleFormChange({
-														target: { name: 'avatar', value: result.info?.url }
-													})
+													handleAvatar(result.info?.url)
 												}
 												uploadPreset={UPLOAD_PRESET}
 												className="text-gray-800 bg-white ring-1 ring-gray-300 hover:text-white hover:bg-gray-700 font-medium rounded-lg text-sm py-2 px-2 w-full"
