@@ -35,6 +35,7 @@ const statusList = [
 );
 
 const MeetingSchedule = ({ role, id }) => {
+	const [isAsc, setIsAsc] = useState(true)
 	const [meetings, setMeetings] = useState([]);
 	const [timeRange, setTimeRange] = useState({
 		from: new Date(moment()),
@@ -47,6 +48,14 @@ const MeetingSchedule = ({ role, id }) => {
 	const [totalPage, setTotalPage] = useState(0);
 	const pageSize = 10;
 
+	const getSortMeetings = (meetings) => {
+		return meetings?.sort((a, b) => {
+			return isAsc
+				? new Date(a.meetingTime).getTime() - new Date(b.meetingTime).getTime()
+				: new Date(b.meetingTime).getTime() - new Date(a.meetingTime).getTime();
+		});
+	};
+
 	const getMeetings = () => {
 		if (hasChanged) {
 			fetcher(
@@ -56,10 +65,10 @@ const MeetingSchedule = ({ role, id }) => {
 					role === ROLE.ARTIST ? 'artist' : 'customer'
 				}Id=${id}&orderBy=MeetingTime${
 					status > -1 ? '&status=' + status : ''
-				}&pageSize=${pageSize}&page=${page}`
+				}&pageSize=${pageSize}&page=${page}&isDescending=${!isAsc}`
 			).then((data) => {
 				setTotalPage(Math.ceil(data.total / pageSize));
-				setMeetings(data.bookingMeetings);
+				setMeetings(getSortMeetings(data.bookingMeetings));
 				setHasChanged(false);
 			});
 		}
@@ -81,7 +90,7 @@ const MeetingSchedule = ({ role, id }) => {
 	useEffect(() => {
 		setHasChanged(true);
 		setSearchKey(Math.random() + page);
-	}, [page]);
+	}, [page, isAsc]);
 
 	useEffect(() => {
 		getMeetings();
@@ -182,7 +191,7 @@ const MeetingSchedule = ({ role, id }) => {
 			}
 			{meetings?.length > 0 ? (
 				<div>
-					<MeetingTable role={role} meetings={meetings} />
+					<MeetingTable role={role} meetings={meetings} sort={(isAsc) => setIsAsc(isAsc)} isAsc={isAsc} />
 					{totalPage > 0 && (
 						<MyPagination
 							current={page}
