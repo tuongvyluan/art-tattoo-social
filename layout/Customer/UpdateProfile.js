@@ -1,9 +1,7 @@
 import Button from 'components/Button';
 import Pill from 'components/Pill';
-import { fetcherPost, fetcherPut, formatDate } from 'lib';
+import { fetcherPut } from 'lib';
 import { BASE_URL, UPLOAD_PRESET } from 'lib/env';
-import { ROLE } from 'lib/status';
-import { tattooStyleList } from 'lib/tattooStyle';
 import { useSession } from 'next-auth/react';
 import { CldUploadButton } from 'next-cloudinary';
 import PropTypes from 'prop-types';
@@ -18,7 +16,6 @@ function UpdateCustomerInfo({ account, onReload, setIsEdit }) {
 	const { update, data } = useSession();
 	const [defaultAccount, setDefaultAccount] = useState(account);
 	const [profile, setProfile] = useState(JSON.parse(JSON.stringify(account)));
-	const [studios, setStudios] = useState(account.studios);
 	const [avatarKey, setAvatarKey] = useState(account.avatar);
 	const [showAlert, setShowAlert] = useState(false);
 
@@ -57,23 +54,19 @@ function UpdateCustomerInfo({ account, onReload, setIsEdit }) {
 		await fetcherPut(`${BASE_URL}/customers/${account.customerId}`, {
 			accountId: account.id,
 			fullName: newProfile.fullName,
-			avatar: newProfile.avatar
+			avatar: avatarKey
 		});
-	};
-
-	const handleSubmit = async (newProfile) => {
-		await handleUpdateCustomer(newProfile);
 	};
 
 	const handleFormSubmit = () => {
 		handleAlert(true, '', 'Đang cập nhật thông tin cá nhân', 0);
-		handleSubmit(profile).then(() => {
+		handleUpdateCustomer(profile).then(() => {
 			update({
 				...data,
 				user: {
 					...data?.user,
 					fullName: profile.fullName,
-					avatar: profile.avatar
+					avatar: avatarKey
 				}
 			});
 			onReload();
@@ -122,9 +115,7 @@ function UpdateCustomerInfo({ account, onReload, setIsEdit }) {
 											<div key={avatarKey}>
 												<Avatar
 													circular={true}
-													src={
-														profile.avatar ? profile.avatar : '/images/avatar.png'
-													}
+													src={avatarKey ? avatarKey : '/images/avatar.png'}
 													alt={'Avatar'}
 													size={150}
 												/>
@@ -134,9 +125,7 @@ function UpdateCustomerInfo({ account, onReload, setIsEdit }) {
 											<div className="mx-auto">
 												<CldUploadButton
 													onSuccess={(result, options) =>
-														handleFormChange({
-															target: { name: 'avatar', value: result.info?.url }
-														})
+														setAvatarKey(result.info?.url)
 													}
 													uploadPreset={UPLOAD_PRESET}
 													className="text-gray-800 bg-white ring-1 ring-gray-300 hover:text-white hover:bg-gray-700 font-medium rounded-lg text-sm py-2 px-2 w-full"
