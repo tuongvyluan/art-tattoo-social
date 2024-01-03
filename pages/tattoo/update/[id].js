@@ -17,7 +17,7 @@ const TattooDetails = () => {
 	const back = typeof router.query['back'] !== 'undefined';
 	const [id, setId] = useState(router.query.id);
 	const [artTattoo, setArtTattoo] = useState(undefined);
-	const [loading, setLoading] = useState(false)
+	const [loading, setLoading] = useState(false);
 
 	const handleSubmit = (newId) => {
 		if (newId !== id) {
@@ -44,100 +44,99 @@ const TattooDetails = () => {
 		);
 	}
 
-	if (status === 'authenticated') {
-
-		// Nếu đang xem hình xăm cũ và chưa load hình xăm
-		if (id !== 'new' && !loading && !artTattoo) {
-			setLoading(true)
-			fetcher(`${BASE_URL}/TattooArts/Details?id=${id}`).then((data) => {
-				const renderData = {
-					...data,
-					artist: {
-						id: data.artistId,
-						fullName: data.fullName
-					},
-					bookingId: data.bookingId ? data.bookingId : '',
-					servicePlacement: data.bookingDetail?.servicePlacement ? data.bookingDetail.servicePlacement : 0,
-					stages: data.tattooArtStages?.map((stage) => {
-						return {
-							...stage,
-							tattooImages: stage?.tattooImages?.map((image) => {
-								return {
-									...image,
-									saved: true
-								};
-							})
-						};
-					})
-				};
-				setArtTattoo(renderData);
-			});
-		}
-		if (id !== 'new' && (!loading || !artTattoo)) {
-			return (
-				<div className="flex items-center justify-center h-full">
-					<Loading />
-				</div>
-			);
-		}
-		if (id === 'new' && data?.user?.role === ROLE.ARTIST && !artTattoo) {
-			const tattoo = {
-				id: '',
-				bookingId: booking,
+	// Nếu đang xem hình xăm cũ và chưa load hình xăm
+	if (id !== 'new' && !loading && !artTattoo) {
+		setLoading(true);
+		fetcher(`${BASE_URL}/TattooArts/Details?id=${id}`).then((data) => {
+			const renderData = {
+				...data,
 				artist: {
-					id: data?.user?.id,
-					fullName: data?.user?.fullName
+					id: data.artistId,
+					fullName: data.fullName
 				},
-				styleId: 14,
-				servicePlacement: SERVICE_PLACEMENT.ANY,
-				stages: [
-					// {
-					// 	id: 1,
-					// 	stageStyle: 0,
-					// 	description: '',
-					// 	medias: [
-					// {
-					// id: '',
-					// url: '',
-					// description: '',
-					// isPublicized: false
-					// }
-					// 	]
-					// }
-				],
-				thumbnail: '',
-				isPublicized: false,
-				size: 0,
-				placement: 0
+				bookingId: data.bookingId ? data.bookingId : '',
+				servicePlacement: data.bookingDetail?.servicePlacement
+					? data.bookingDetail.servicePlacement
+					: 0,
+				stages: data.tattooArtStages?.map((stage) => {
+					return {
+						...stage,
+						tattooImages: stage?.tattooImages?.map((image) => {
+							return {
+								...image,
+								saved: true
+							};
+						})
+					};
+				})
 			};
-			setArtTattoo(tattoo);
-			return (
-				<TattooDetailsPage
-					bookingId={booking}
-					myTattoo={back}
-					artTattoo={tattoo}
-					handleSubmit={handleSubmit}
-				/>
-			);
-		}
-		if (data?.user?.role !== ROLE.ARTIST || data?.user?.id !== artTattoo?.artist?.id) {
-			return (
-				<TattooDetailNoUpdatePage
-					bookingId={booking}
-					myTattoo={back}
-					artTattoo={artTattoo}
-				/>
-			);
-		}
+			setArtTattoo(renderData);
+		});
+	}
+	if (id !== 'new' && (!loading || !artTattoo)) {
+		return (
+			<div className="flex items-center justify-center h-full">
+				<Loading />
+			</div>
+		);
+	}
+	if (id === 'new' && data?.user?.role === ROLE.ARTIST && !artTattoo) {
+		const tattoo = {
+			id: '',
+			bookingId: booking,
+			artist: {
+				id: data?.user?.id,
+				fullName: data?.user?.fullName
+			},
+			styleId: 14,
+			servicePlacement: SERVICE_PLACEMENT.ANY,
+			stages: [
+				// {
+				// 	id: 1,
+				// 	stageStyle: 0,
+				// 	description: '',
+				// 	medias: [
+				// {
+				// id: '',
+				// url: '',
+				// description: '',
+				// isPublicized: false
+				// }
+				// 	]
+				// }
+			],
+			thumbnail: '',
+			isPublicized: false,
+			size: 0,
+			placement: 0
+		};
+		setArtTattoo(tattoo);
 		return (
 			<TattooDetailsPage
 				bookingId={booking}
-				artTattoo={artTattoo}
 				myTattoo={back}
+				artTattoo={tattoo}
 				handleSubmit={handleSubmit}
 			/>
 		);
 	}
+	if (data?.user?.role !== ROLE.ARTIST || data?.user?.id !== artTattoo?.artist?.id) {
+		return (
+			<TattooDetailNoUpdatePage
+				bookingId={booking}
+				myTattoo={back}
+				artTattoo={artTattoo}
+			/>
+		);
+	}
+	return (
+		<TattooDetailsPage
+			bookingId={booking}
+			artTattoo={artTattoo}
+			myTattoo={back}
+			handleSubmit={handleSubmit}
+		/>
+	);
 };
 
 TattooDetails.getInitialProps = async () => ({
