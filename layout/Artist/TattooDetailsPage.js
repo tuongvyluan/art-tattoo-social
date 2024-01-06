@@ -17,7 +17,7 @@ import { CldUploadButton } from 'next-cloudinary';
 import { generateSHA1, generateSignature } from 'lib/cloudinary_signature';
 import { AiOutlineClose } from 'react-icons/ai';
 import { extractPublicId } from 'cloudinary-build-url';
-import { SERVICE_PLACEMENT, TATTOO_ART_STATUS, stringPlacements, stringSize, stringTattooStages } from 'lib/status';
+import { SERVICE_PLACEMENT, stringPlacements, stringSize, stringTattooStages } from 'lib/status';
 import { tattooStyleById, tattooStyleList } from 'lib/tattooStyle';
 import { API_KEY, API_SECRET, BASE_URL, CLOUD_NAME, UPLOAD_PRESET } from 'lib/env';
 import { v4 } from 'uuid';
@@ -197,7 +197,7 @@ function TattooDetailsPage({
 				'Hình xăm phải có ảnh thumbnail mới được public.',
 				2
 			);
-		} else if (key === 'status' && thumbnail === '' && !tattoo.status) {
+		} else if (key === 'isCompleted' && thumbnail === '' && !tattoo.isCompleted) {
 			handleAlert(
 				true,
 				'Cập nhật trạng thái không thành công.',
@@ -236,7 +236,7 @@ function TattooDetailsPage({
 			defaultTattoo.placement !== tattoo.placement ||
 			defaultTattoo.thumbnail !== thumbnail ||
 			defaultTattoo.isPublicized !== tattoo.isPublicized ||
-			defaultTattoo.status !== tattoo.status
+			defaultTattoo.isCompleted !== tattoo.isCompleted
 		);
 	};
 
@@ -268,7 +268,7 @@ function TattooDetailsPage({
 				placement: tattoo.placement,
 				thumbnail: thumbnail,
 				isPublicized: tattoo.isPublicized && thumbnail !== '',
-				status: tattoo.status ? TATTOO_ART_STATUS.COMPLETED : TATTOO_ART_STATUS.PENDING
+				isCompleted: tattoo.isCompleted
 			};
 			fetcherPut(`${BASE_URL}/TattooArts/UpdateTattoo`, newTattoo)
 				.then(() => {
@@ -702,11 +702,11 @@ function TattooDetailsPage({
 								<div className="font-semibold">Đã hoàn thành:</div>
 								<div
 									role="button"
-									onClick={() => setTattooState('status', !tattoo.status)}
+									onClick={() => setTattooState('isCompleted', !tattoo.isCompleted)}
 									className="relative"
 								>
 									<input
-										checked={tattoo.status}
+										checked={tattoo.isCompleted}
 										type="checkbox"
 										readOnly
 										className="hidden"

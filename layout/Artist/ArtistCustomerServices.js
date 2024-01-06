@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import {
 	BOOKING_DETAIL_STATUS,
 	SERVICE_CATEGORY,
+	getTattooArtIsCompleted,
 	getTattooArtStatusString,
 	stringBookingDetailStatus,
 	stringBookingDetailStatusColor,
@@ -252,13 +253,13 @@ const ArtistCustomerServices = ({
 													<div className="pt-3 max-w-max mx-auto">
 														<Badge
 															color={
-																bookingDetail.tattooArt.status === 0
-																	? 'warning'
-																	: 'success'
+																bookingDetail.tattooArt.isCompleted
+																	? 'success'
+																	: 'warning'
 															}
 														>
-															{getTattooArtStatusString.at(
-																bookingDetail.tattooArt.status
+															{getTattooArtIsCompleted(
+																bookingDetail.tattooArt.isCompleted
 															)}
 														</Badge>
 													</div>

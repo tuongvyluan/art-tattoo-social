@@ -85,6 +85,7 @@ function ArtistBookingPage({ artistId }) {
 				setLoading(false);
 			})
 			.catch((e) => {
+				setPage(1);
 				setData([]);
 				setTotal(0);
 				setError(true);

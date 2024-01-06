@@ -108,7 +108,8 @@ const TattooDetails = () => {
 			thumbnail: '',
 			isPublicized: false,
 			size: 0,
-			placement: 0
+			placement: 0,
+			isCompleted: false
 		};
 		setArtTattoo(tattoo);
 		return (

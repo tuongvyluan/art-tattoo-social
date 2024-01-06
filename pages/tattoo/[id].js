@@ -23,43 +23,47 @@ const TattooDetails = () => {
 	useEffect(() => {
 		setLikes([]);
 		setComments([]);
-		setId(router.query.id)
+		setId(router.query.id);
 		fetcher(
 			`${BASE_URL}/TattooArts/GetTattooArtMediaById?id=${router.query.id}&isAll=false`
-		).then((data) => {
-			setArtTattoo({
-				id: data.id,
-				style: data.style,
-				placement: {
-					id: data.placement,
-					name: data.placementName
-				},
-				size: data.size,
-				description: data.description,
-				doneAt: {
-					id: data.studio.id,
-					avatar: data.studio.avatar,
-					name: data.studio.studioName,
-					city: cityMap.get(data.studio.city)
-				},
-				feedback: data.feedback
+		)
+			.then((data) => {
+				setArtTattoo({
+					id: data.id,
+					style: data.style,
+					placement: {
+						id: data.placement,
+						name: data.placementName
+					},
+					size: data.size,
+					description: data.description,
+					doneAt: {
+						id: data.studio.id,
+						avatar: data.studio.avatar,
+						name: data.studio.studioName,
+						city: cityMap.get(data.studio.city)
+					},
+					feedback: data.feedback
+				});
+				setArtist({
+					id: data.artistId,
+					avatar: data.avatar,
+					fullName: data.artist.fullName,
+					isVerified: true,
+					workAt: {
+						id: data.studioWorkedAtId,
+						name: data.nameStudioWorkedAtId,
+						city: cityMap.get(data.cityStudioWorkedAt)
+					}
+				});
+				setLikes(data.likes);
+				setComments(data.comments);
+				setTattooImages([{ url: data.thumbnail }].concat(data.tattooImages));
+				// setArtist(data.artist);
+			})
+			.catch(() => {
+				router.replace('/tattoo');
 			});
-			setArtist({
-				id: data.artistId,
-				avatar: data.avatar,
-				fullName: data.artist.fullName,
-				isVerified: true,
-				workAt: {
-					id: data.studioWorkedAtId,
-					name: data.nameStudioWorkedAtId,
-					city: cityMap.get(data.cityStudioWorkedAt)
-				}
-			});
-			setLikes(data.likes);
-			setComments(data.comments);
-			setTattooImages([{ url: data.thumbnail }].concat(data.tattooImages));
-			// setArtist(data.artist);
-		});
 	}, [router.query.id]);
 
 	if (!artTattoo) {

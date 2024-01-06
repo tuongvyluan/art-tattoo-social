@@ -153,7 +153,7 @@ function TattooDetailNoUpdatePage({ bookingId, artTattoo, myTattoo = false }) {
 							className="relative"
 						>
 							<input
-								checked={tattoo.status}
+								checked={tattoo.isCompleted}
 								type="checkbox"
 								readOnly
 								className="hidden"
