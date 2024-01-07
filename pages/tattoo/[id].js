@@ -43,7 +43,8 @@ const TattooDetails = () => {
 						name: data.studio.studioName,
 						city: cityMap.get(data.studio.city)
 					},
-					feedback: data.feedback
+					feedback: data.feedback,
+					canBooking: data.canBooking
 				});
 				setArtist({
 					id: data.artistId,

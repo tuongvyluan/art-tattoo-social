@@ -242,7 +242,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 										)}
 									</div>
 								</div>
-								{artist.workAt?.id && data?.user?.customerId && (
+								{artist.workAt?.id && data?.user?.customerId && tattoo.canBooking && (
 									<div className="pb-1">
 										<a
 											target="_blank"
@@ -444,7 +444,7 @@ const TattooSocial = ({ tattoo, tattooImages, artist, likes, comments }) => {
 													/>
 												</div>
 												<div className="break-words overflow-hidden ml-1">
-													<span className="font-semibold pr-1">{cmt.fullName}</span>
+													<span className="font-semibold pr-1 min-w-max">{cmt.fullName}</span>
 													{cmt.content}
 												</div>
 											</div>

@@ -9,13 +9,13 @@ const ArtistPage = ({ artist, account }) => {
 			{
 				// Artist profile
 			}
-			<ArtistIndexProfileSection artist={artist} />
+			<ArtistIndexProfileSection artist={artist} account={account} />
 			<div className="hidden md:block pb-5 pt-0 text-center text-3xl text-gray-700">
 				Tác phẩm
 			</div>
 			<TattooListNotFilter
 				url={`${BASE_URL}/TattooArts/TattooUser?artistId=${artist.id}${
-					account?.id ? '&accountId=' + account.id : ''
+					account?.id ? '&accountId=' + account?.id : ''
 				}`}
 				pageSize={12}
 			/>

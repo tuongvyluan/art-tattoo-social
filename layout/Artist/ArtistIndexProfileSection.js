@@ -9,7 +9,7 @@ import PropTypes from 'propTypes';
 import { useState } from 'react';
 import { Avatar, Card, CardBody } from 'ui';
 
-const ArtistIndexProfileSection = ({ artist }) => {
+const ArtistIndexProfileSection = ({ artist, account }) => {
 	const [showMoreInfo, setShowMoreInfo] = useState(false);
 	const [isFollowed, setIsFollowed] = useState(artist.isFollow);
 
@@ -271,7 +271,8 @@ const ArtistIndexProfileSection = ({ artist }) => {
 };
 
 ArtistIndexProfileSection.propTypes = {
-	artist: PropTypes.object
+	artist: PropTypes.object,
+	account: PropTypes.object
 };
 
 export default ArtistIndexProfileSection;
